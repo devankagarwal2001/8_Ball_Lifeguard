@@ -1,19 +1,3 @@
-#TODO: Figure out how to read input from Jimmys CV Systems
-#TODO: Once given a system of points/balls,
-#TODO: Seperate shots out into solids and stripes
-#TODO: Once we have solids or stripes, for selected category:
-    # 1. Calculate distance from cue ball
-    # 2. Calculate distance from each pocket 
-    # 3. Calculate angle of hit required 
-    # 4. Check if any bounces need to be made
-    # 5. Do this for all 6 pockets. Discount shots where a different colored ball interfers
-    # 6. Find minimum hardness from each pocket. 
-    # 7. Store this value in an array (15 ints one for each ball)
-    # 8. find the minimum of this array for the selectod category.
-#TODO: Once we have the ball calculated, we tell the projector to display this:
-    # 1. Make an image of cue stick, lines and selected pocket.
-    # 2. Send an image to projector. 
-
 import math
 from array import *
 radius = 0.02
@@ -44,8 +28,8 @@ def create_first_lines(listX,listY):
             first_lines[i-1][0] = slope
             first_lines[i-1][1] = b
         else:
-            first_lines[i-1][0] = 0
-            first_lines[i-1][1] = 0
+            first_lines[i-1][0] = -3
+            first_lines[i-1][1] = -3
     print(first_lines)
         #now check for collisions
 
@@ -55,7 +39,7 @@ def create_first_lines(listX,listY):
 # Definition: Checks if the line given bt (x0,y0) and (x1,y1) lies on the circle given by (cx,cy) and radius
 # Return Value: True if the line interesects at one point or two, False if not
 # Errors: NA
-def lineCircle( x1,  y1,  x2,  y2,  cx,  cy,  r):
+def lineCircle(x1,y1,x2,y2,cx,cy,r):
 
     #is either end INSIDE the circle?
     #if so, return true immediately
@@ -90,7 +74,7 @@ def lineCircle( x1,  y1,  x2,  y2,  cx,  cy,  r):
 
 
 #OINT/CIRCLE
-def pointCircle( px,  py,  cx,  cy,  r):
+def pointCircle(px,py,cx,cy,r):
     #get distance between the point and circle's center
     #using the Pythagorean Theorem
     distX = px - cx
@@ -105,7 +89,7 @@ def pointCircle( px,  py,  cx,  cy,  r):
 
 
 # LINE/POINT
-def linePoint( x1,  y1,  x2,  y2,  px,  py):
+def linePoint(x1,y1,x2,y2,px,py):
     # get distance from the point to the two ends of the line
     d1 = math.sqrt(((px-x1)*(px-x1)) + ((py-y1)*(py-y1)))
     d2 = math.sqrt(((px-x2)*(px-x2)) + ((py-y2)*(py-y2)))
@@ -116,7 +100,7 @@ def linePoint( x1,  y1,  x2,  y2,  px,  py):
 
     # since floats are so minutely accurate, add
     # a little buffer zone that will give collision
-    buffer = 0.1    # higher # = less accurate
+    buffer = 0.001    # higher # = less accurate
 
     # if the two distances are equal to the line's
     # length, the point is on the line!
@@ -128,8 +112,12 @@ def linePoint( x1,  y1,  x2,  y2,  px,  py):
     
 
 
-listX = [73,98,102,449,419,450,475,489,-1,-1,-1,-1,-1,-1,-1]
-listY = [676,613,394,240,462,525,108,420,-1,-1,-1,-1,-1,-1,-1]
+listX = [449,73,98,102,419,450,475,489,-1,-1,-1,-1,-1,-1,-1]
+listY = [240,676,613,394,462,525,108,420,-1,-1,-1,-1,-1,-1,-1]
+create_first_lines(listX,listY)
+for i in range(1,15):
+    listX[i] = listX[i]*3
+    listY[i] = listY[i]*5
 create_first_lines(listX,listY)
 #print(first_lines)
 
