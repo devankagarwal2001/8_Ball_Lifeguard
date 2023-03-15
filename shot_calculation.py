@@ -1,6 +1,6 @@
 import math
 from array import *
-radius = 0.02
+radius = 1
 first_lines = [[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1]]
 #print(first_lines)
 #assuming all x and y are positive and -1 would mean that the ball is not on table
@@ -112,12 +112,8 @@ def linePoint(x1,y1,x2,y2,px,py):
     
 
 
-listX = [449,73,98,102,419,450,475,489,-1,-1,-1,-1,-1,-1,-1]
-listY = [240,676,613,394,462,525,108,420,-1,-1,-1,-1,-1,-1,-1]
-create_first_lines(listX,listY)
-for i in range(1,15):
-    listX[i] = listX[i]*3
-    listY[i] = listY[i]*5
+listX = [1,30,50,99,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listY = [1,50,50,100,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 create_first_lines(listX,listY)
 #print(first_lines)
 
