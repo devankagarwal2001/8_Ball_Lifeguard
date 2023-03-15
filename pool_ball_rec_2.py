@@ -30,6 +30,7 @@ def Test(img):
     contours = GetContours(hsv, lower_color, upper_color,15)
         
     centers = FindTheBalls(img, contours)
+    print(centers)
 
 def LoadImage(filename):
     """
