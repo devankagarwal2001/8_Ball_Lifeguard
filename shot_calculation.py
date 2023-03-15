@@ -1,13 +1,17 @@
 import math
 from array import *
 radius = 1
+radius_pocket = 1.5
 first_lines = [[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1]]
+second_lines = [[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1]]
 #print(first_lines)
 #assuming all x and y are positive and -1 would mean that the ball is not on table
 #assuming the format of lists as follows:
 #list_ = [cue_ball,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+#assuming the pockets are at [0,0] [0,400], [400,400], [800,400], [800,0], [400.0]
+pockets = [[0,0],[0,400],[400,400],[800,400],[800,0],[400,0]]
 def create_first_lines(listX,listY):
-    if listX[0] == -1 or listY[0] == -1 : printf("Cue Ball Pocketed")
+    if listX[0] == 0 or listY[0] == 0 : printf("Cue Ball Pocketed")
     for i in range(1,15):
         if(listX[i]== -1 and listY[i]== -1): continue
         slope = 0
@@ -32,6 +36,58 @@ def create_first_lines(listX,listY):
             first_lines[i-1][1] = -3
     print(first_lines)
         #now check for collisions
+
+
+#buggy
+def create_second_lines(listX, listY):
+    if listX[0] == 0 or listY[0] == 0 : printf("Cue Ball Pocketed")
+    for i in range(1,15):
+        if (listX[i]==-1 or listY[i]==-1): continue
+        #for each ball create possible shots if no collision
+        all_shots_for_current_ball = [[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1]]
+        pocket_ind = 0
+        for pocket in pockets:
+            diffX = pocket[0] - listX[i]
+            diffY = pocket[1] - listY[i]
+            slope = diffY/diffX
+            b = listY[i] - (slope * listX[i])
+            for j in range(15):
+                if i == j: continue
+                if (listX[j] == -1 and listY[j] == -1): continue
+                first_check = lineCircle(listX[i],listY[i]+radius,listX[j],listY[j]+radius,pocket[0],pocket[1],radius_pocket)
+                second_check = lineCircle(listX[i],listY[i]-radius,listX[j],listY[j]-radius,pocket[0],pocket[1],radius_pocket)
+                if not (first_check or second_check):
+                    all_shots_for_current_ball[pocket_ind][0] = slope
+                    all_shots_for_current_ball[pocket_ind][1] = b
+            pocket_ind += 1
+        #at this point all possible shots should be caculated with no collisions 
+        min_delta = 100000000
+        min_ind = 0
+        cur_ind = 0
+        possible_shot = False
+        #now chose the best pocket
+        for shot in all_shots_for_current_ball:
+            if shot[0] == -1: continue;
+            else:
+                slope_delta = abs(shot[0] - first_lines[i][0])
+                if slope_delta<min_delta:
+                    min_delta = slope_delta
+                    min_ind = cur_ind
+                cur_ind += 1
+                possible_shot = True
+        if (possible_shot):
+            second_lines[i-1][0] = all_shots_for_current_ball[min_ind][0]
+            second_lines[i-1][1] = all_shots_for_current_ball[min_ind][1]
+        else:
+            second_lines[i-1][0] = -3
+            second_lines[i-1][1] = -3
+        print(second_lines)
+
+                    
+
+        
+
+
 
 
 #taken from: https://www.jeffreythompson.org/collision-detection/line-circle.php
@@ -112,8 +168,8 @@ def linePoint(x1,y1,x2,y2,px,py):
     
 
 
-listX = [1,30,50,99,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-listY = [1,50,50,100,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listX = [1,30,50,101,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listY = [1,50,50,99,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 create_first_lines(listX,listY)
-#print(first_lines)
+create_second_lines(listX,listY)
 
