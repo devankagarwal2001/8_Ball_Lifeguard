@@ -16,7 +16,7 @@ def Test(img):
     
     lower_color, upper_color = GetClothColor(hsv)
     
-    contours = GetContours(hsv, lower_color, upper_color,7)
+    contours = GetContours(hsv, lower_color, upper_color,15)
     
     TableContour = MaskTableBed(contours)
     
@@ -27,10 +27,10 @@ def Test(img):
     
     lower_color, upper_color = GetClothColor(hsv)    
     
-    contours = GetContours(hsv, lower_color, upper_color,15)
+    contours = GetContours(hsv, lower_color, upper_color,31)
         
     centers = FindTheBalls(img, contours)
-    print(centers)
+    #print(centers)
 
 def LoadImage(filename):
     """
@@ -52,7 +52,7 @@ def GetClothColor(hsv,search_width=45):
     In a well lit image, this will be the cloth
     """
 
-    hist = cv2.calcHist([hsv], [1], None, [180], [0, 180])
+    hist = cv2.calcHist([hsv], [0], None, [180], [0, 180])
     h_max = Indexer.get_index_of_max(hist)[0]
     
     hist = cv2.calcHist([hsv], [1], None, [256], [0, 256])
@@ -64,6 +64,7 @@ def GetClothColor(hsv,search_width=45):
     # define range of blue color in HSV
     lower_color = np.array([h_max-search_width,s_max-search_width,v_max-search_width])
     upper_color = np.array([h_max+search_width,s_max+search_width,v_max+search_width])
+    print(lower_color,upper_color)
     return lower_color, upper_color
 
 
@@ -172,9 +173,10 @@ def TransformToOverhead(img,contour):
     # the perspective to grab the screen
     M = cv2.getPerspectiveTransform(rect, dst)
     warp = cv2.warpPerspective(img, M, (maxWidth, maxHeight))    
-    plt.axis("off")
-    plt.imshow(warp)
 
+
+    plt.show()
+    
     plt.show()
     return warp    
 
@@ -182,19 +184,20 @@ def GetContours(hsv, lower_color, upper_color,filter_radius):
     """
     Returns the contours generated from the given color range
     """
-    
+    cv2.imshow('hsv', hsv)
     # Threshold the HSV image to get only cloth colors
     mask = cv2.inRange(hsv, lower_color, upper_color)
-
+    cv2.imshow('mask', mask)
     #use a median filter to get rid of speckle noise
     median = cv2.medianBlur(mask,filter_radius)
+    cv2.imshow('median_detect', median)
     
     #get the contours of the filtered mask
     #this modifies median in place!
     contours, _ = cv2.findContours(median,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
     return contours
 
-def FindTheBalls(img, contours, similarity_threshold=10):
+def FindTheBalls(img, contours, similarity_threshold=11):
     """
     Find and circle all of the balls on the table.
     
@@ -204,7 +207,7 @@ def FindTheBalls(img, contours, similarity_threshold=10):
     #compare the difference in area of a min bounding circle and the cotour area
     diffs = []
     indexes = []
-    
+    print(len(contours))
     for i,contour in enumerate(contours):
         contourArea = cv2.contourArea(contour)
         (x,y),radius = cv2.minEnclosingCircle(contour)
@@ -229,15 +232,25 @@ def FindTheBalls(img, contours, similarity_threshold=10):
             radius = int(radius)
             cv2.circle(img,center,radius,(0,0,255),2)
             centers.append(center)
-    plt.axis("off")
-    plt.imshow(img)
-
-    plt.show()
+    
+    cv2.imshow('pool_ball_detect', img)
 
     return centers
 
-img = LoadImage('img/pool_balls.jpeg')
-Test(img)
+imcap = cv2.VideoCapture(0) #1 or -1 once the camera is added I think
+#imcap.set(3, 640) # set width as 640
+#imcap.set(4, 480)
+while True:
+    success,img = imcap.read()
+    #img = LoadImage('img/test_2.jpeg')
+    cv2.imshow('orig_img', img)
+    Test(img)
+    if cv2.waitKey(10) & 0xFF == ord('q'):
+        break
+#imcap.release()
+cv2.destroyWindow('pool_ball_detect')
+#img = LoadImage('img/pool_balls.jpeg')
+#Test(img)
 #img = LoadImage('img/pool_crop.png')
 #Test(img)
 #img = LoadImage('img/pool_crop_2.png') 
