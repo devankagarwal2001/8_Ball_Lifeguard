@@ -34,7 +34,6 @@ def create_first_lines(listX,listY):
         else:
             first_lines[i-1][0] = -3
             first_lines[i-1][1] = -3
-    print(first_lines)
         #now check for collisions
 
 
@@ -54,8 +53,8 @@ def create_second_lines(listX, listY):
             for j in range(15):
                 if i == j: continue
                 if (listX[j] == -1 and listY[j] == -1): continue
-                first_check = lineCircle(listX[i],listY[i]+radius,listX[j],listY[j]+radius,pocket[0],pocket[1],radius_pocket)
-                second_check = lineCircle(listX[i],listY[i]-radius,listX[j],listY[j]-radius,pocket[0],pocket[1],radius_pocket)
+                first_check = lineCircle(listX[i],listY[i]+radius,pocket[0],pocket[1],listX[j],listY[j],radius)
+                second_check = lineCircle(listX[i],listY[i]-radius,pocket[0],pocket[1],listX[j],listY[j],radius)
                 if not (first_check or second_check):
                     all_shots_for_current_ball[pocket_ind][0] = slope
                     all_shots_for_current_ball[pocket_ind][1] = b
@@ -69,19 +68,24 @@ def create_second_lines(listX, listY):
         for shot in all_shots_for_current_ball:
             if shot[0] == -1: continue;
             else:
-                slope_delta = abs(shot[0] - first_lines[i][0])
+                slope_delta = abs(shot[0] - first_lines[i-1][0]) #incorrect since i need to account for direction of each slope as well
+                if ((shot[0]*first_lines[i-1][0])<0): 
+                    continue
                 if slope_delta<min_delta:
                     min_delta = slope_delta
                     min_ind = cur_ind
                 cur_ind += 1
                 possible_shot = True
         if (possible_shot):
-            second_lines[i-1][0] = all_shots_for_current_ball[min_ind][0]
-            second_lines[i-1][1] = all_shots_for_current_ball[min_ind][1]
+            if(first_lines[i-1][0] != -3):
+                second_lines[i-1][0] = all_shots_for_current_ball[min_ind][0]
+                second_lines[i-1][1] = all_shots_for_current_ball[min_ind][1]
+            else:
+                second_lines[i-1][0] = -3
+                second_lines[i-1][1] = -3
         else:
             second_lines[i-1][0] = -3
             second_lines[i-1][1] = -3
-        print(second_lines)
 
                     
 
@@ -172,4 +176,5 @@ listX = [1,30,50,101,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 listY = [1,50,50,99,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 create_first_lines(listX,listY)
 create_second_lines(listX,listY)
-
+print(first_lines)
+print(second_lines)
