@@ -8,6 +8,8 @@ radius_pocket = 1.5
 first_lines = [[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1]]
 second_lines = [[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1]]
 pockets_for_each_ball = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+distance_cue_pocket = [-1,-1,-1,-1,-1,-1]
+cloests_pocket_for_each_ball = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 #print(first_lines)
 #assuming all x and y are positive and -1 would mean that the ball is not on table
 #assuming the format of lists as follows:
@@ -15,7 +17,7 @@ pockets_for_each_ball = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 #assuming the pockets are at [0,0] [0,400], [400,400], [800,400], [800,0], [400.0]
 pockets = [[100,300],[500,300],[900,300],[900,700],[500,700],[100,700]]
 def create_first_lines(listX,listY):
-    if listX[0] == 0 or listY[0] == 0 : printf("Cue Ball Pocketed")
+    if listX[0] == 0 or listY[0] == 0 : print("Cue Ball Pocketed")
     for i in range(1,15):
         if(listX[i]== -1 and listY[i]== -1): continue
         slope = 0
@@ -40,10 +42,32 @@ def create_first_lines(listX,listY):
             first_lines[i-1][1] = -3
         #now check for collisions
 
+def distance_bw_cue_ball_and_pocket():
+    if(listX[0]==-1): return
+    pocket_indx = 0
+    for pocket in pockets:
+        distanceX = (listX[0] - pocket[0]) * (listX[0] - pocket[0])
+        distanceY = (listY[0] - pocket[1]) * (listY[0] - pocket[1])
+        dist = math.sqrt(distanceX + distanceY)
+        distance_cue_pocket[pocket_indx] = dist
+        pocket_indx+=1
+
+def closest_pocket_to_cue():
+    closest_dist = 1000000
+    cur_ind = 0
+    min_ind = 0
+    for dist in distance_cue_pocket:
+        if (dist<closest_dist):
+            closest_dist = dist
+            min_ind = cur_ind
+        cur_ind += 1
+    return min_ind
 
 #buggy
 def create_second_lines(listX, listY):
-    if listX[0] == 0 or listY[0] == 0 : printf("Cue Ball Pocketed")
+    if listX[0] == 0 or listY[0] == 0 : print("Cue Ball Pocketed")
+    distance_bw_cue_ball_and_pocket()
+    closest_pocket =  closest_pocket_to_cue()
     for i in range(1,15):
         if (listX[i]==-1 or listY[i]==-1): continue
         #for each ball create possible shots if no collision
@@ -55,6 +79,16 @@ def create_second_lines(listX, listY):
             slope = diffY/diffX
             b = listY[i] - (slope * listX[i])
             success = True
+            if(pocket[0]>listX[0] and pocket[0]<listX[i]):
+                all_shots_for_current_ball[pocket_ind][0] = 100000000
+                all_shots_for_current_ball[pocket_ind][1] = 100000000
+                pocket_ind+=1
+                continue
+            elif(pocket[0]<listX[0] and pocket[0]>listX[i]):
+                all_shots_for_current_ball[pocket_ind][0] = 100000000
+                all_shots_for_current_ball[pocket_ind][1] = 100000000
+                pocket_ind +=1
+                continue
             for j in range(15):
                 if i == j: continue
                 if (listX[j] == -1 and listY[j] == -1): continue
@@ -71,25 +105,25 @@ def create_second_lines(listX, listY):
             pocket_ind += 1
         #at this point all possible shots should be caculated with no collisions 
         min_delta = 100000000
-        min_ind = 0
-        cur_ind = 0
+        min_ind = -1
         possible_shot = False
-        if (i==2):
-            print("All Possible shots are:")
+        if (i==3):
+            print("All Possible Shots")
             print(all_shots_for_current_ball)
-            print("Balls First Line is ")
-            print(first_lines[1])
-        for shot in all_shots_for_current_ball:
-            if shot[0] == -1: continue;
-            else:
-                slope_delta = abs(shot[0] - first_lines[i-1][0]) #incorrect since i need to account for direction of each slope as well
-                if ((shot[0]*first_lines[i-1][0])<0): 
-                    continue
-                if slope_delta<min_delta:
-                    min_delta = slope_delta
-                    min_ind = cur_ind
-                cur_ind += 1
-                possible_shot = True
+            print("First Line for 3rd Ball")
+            print(first_lines[2])
+        
+        for j in range(5):
+            if j == closest_pocket: 
+                continue
+            shot = all_shots_for_current_ball[j]
+            if(shot[0] == 100000000): continue
+            possible_shot = True
+            slope_delta = abs(shot[0] - first_lines[i-1][0])
+            if(slope_delta<min_delta):
+                min_delta = slope_delta
+                min_ind = j
+        
         if (possible_shot):
             if(first_lines[i-1][0] != -3):
                 second_lines[i-1][0] = all_shots_for_current_ball[min_ind][0]
