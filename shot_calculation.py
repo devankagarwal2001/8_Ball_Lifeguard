@@ -24,8 +24,14 @@ def create_first_lines(listX,listY):
         b = -1
         diffX = listX[i]-listX[0]
         diffY = listY[i]-listY[0]
-        slope = diffY/diffX
-        b = listY[i] - (slope*listX[i])
+        if diffX != 0:
+            slope = diffY/diffX
+            b = listY[i] - (slope*listX[i])
+        else:
+            slope = 100000000000
+            b = listY[i] - (slope*listX[i])
+        first_check = False
+        second_check = False
         #check collisions for each ball with every other ball
         for j in range(1,15):
             #cant check with itself
@@ -76,8 +82,12 @@ def create_second_lines(listX, listY):
         for pocket in pockets:
             diffX = pocket[0] - listX[i]
             diffY = pocket[1] - listY[i]
-            slope = diffY/diffX
-            b = listY[i] - (slope * listX[i])
+            if diffX == 0: 
+                slope = 10000000
+                b = 10000000
+            else: 
+                slope = diffY/diffX
+                b = listY[i] - (slope * listX[i])
             success = True
             if(pocket[0]>listX[0] and pocket[0]<listX[i]):
                 all_shots_for_current_ball[pocket_ind][0] = 100000000
@@ -244,6 +254,11 @@ def drawImage():
 
     cv.imwrite('img.jpg',img)
 
-listX = [108,130,150,800,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-listY = [308,350,350,500,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listX = [150,699,850,850,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listY = [350,699,350,650,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 drawImage();
+
+#cases not working 
+#when the target and cue ball are in the closest balls to a particular pocket. 
+#120,600 when ball is at 150,350, 
+#these are both cases when the target ball is behind the cue ball, why so. 
