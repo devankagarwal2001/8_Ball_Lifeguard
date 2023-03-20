@@ -1,0 +1,104 @@
+diff --git a/shot_calculation.py b/shot_calculation.py
+index f1f1d26..8d2b17e 100644
+--- a/shot_calculation.py
++++ b/shot_calculation.py
+@@ -1,15 +1,19 @@
+ import math
+ from array import *
++import cv2 as cv
++import numpy as np
++
+ radius = 1
+ radius_pocket = 1.5
+ first_lines = [[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1]]
+ second_lines = [[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1]]
++pockets_for_each_ball = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+ #print(first_lines)
+ #assuming all x and y are positive and -1 would mean that the ball is not on table
+ #assuming the format of lists as follows:
+ #list_ = [cue_ball,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+ #assuming the pockets are at [0,0] [0,400], [400,400], [800,400], [800,0], [400.0]
+-pockets = [[0,0],[0,400],[400,400],[800,400],[800,0],[400,0]]
++pockets = [[100,300],[500,300],[900,300],[900,700],[500,700],[100,700]]
+ def create_first_lines(listX,listY):
+     if listX[0] == 0 or listY[0] == 0 : printf("Cue Ball Pocketed")
+     for i in range(1,15):
+@@ -50,12 +54,16 @@ def create_second_lines(listX, listY):
+             diffY = pocket[1] - listY[i]
+             slope = diffY/diffX
+             b = listY[i] - (slope * listX[i])
++            success = True
+             for j in range(15):
+                 if i == j: continue
+                 if (listX[j] == -1 and listY[j] == -1): continue
+                 first_check = lineCircle(listX[i],listY[i]+radius,pocket[0],pocket[1],listX[j],listY[j],radius)
+                 second_check = lineCircle(listX[i],listY[i]-radius,pocket[0],pocket[1],listX[j],listY[j],radius)
+-                if not (first_check or second_check):
++                if (first_check or second_check):
++                    success = False
++                    break
++            if (success):
+                     all_shots_for_current_ball[pocket_ind][0] = slope
+                     all_shots_for_current_ball[pocket_ind][1] = b
+             pocket_ind += 1
+@@ -69,8 +77,8 @@ def create_second_lines(listX, listY):
+             if shot[0] == -1: continue;
+             else:
+                 slope_delta = abs(shot[0] - first_lines[i-1][0]) #incorrect since i need to account for direction of each slope as well
+-                if ((shot[0]*first_lines[i-1][0])<0): 
+-                    continue
++                #if ((shot[0]*first_lines[i-1][0])>0): 
++                    #continue
+                 if slope_delta<min_delta:
+                     min_delta = slope_delta
+                     min_ind = cur_ind
+@@ -80,6 +88,7 @@ def create_second_lines(listX, listY):
+             if(first_lines[i-1][0] != -3):
+                 second_lines[i-1][0] = all_shots_for_current_ball[min_ind][0]
+                 second_lines[i-1][1] = all_shots_for_current_ball[min_ind][1]
++                pockets_for_each_ball[i-1] = min_ind
+             else:
+                 second_lines[i-1][0] = -3
+                 second_lines[i-1][1] = -3
+@@ -170,11 +179,33 @@ def linePoint(x1,y1,x2,y2,px,py):
+     else: return False
+     
+     
++def drawImage():    
++    img = np.zeros((1000,1000,3), np.uint8)
++    cv.rectangle (img,(100,300),(900,700),(0,255,0),1)
++    for i in range(15):
++        if listX[i]!=-1:
++            if (i==0):
++                cv.circle(img,(listX[i],listY[i]),radius,(255,255,255),3)
++            else:
++                cv.circle(img,(listX[i],listY[i]),radius,(0,255,255),3)
++    for pocket in pockets:
++        cv.circle(img,(pocket[0],pocket[1]),radius*3,(255,0,0),3)   
++    create_first_lines(listX,listY)
++    create_second_lines(listX,listY)
++    print(first_lines)
++    print(second_lines)
++    print(pockets_for_each_ball)
++    for i in range(1,15):
++        if ((listX[i]!=-1) and (first_lines[i-1]!=-3)):
++            cv.line(img,(listX[0],listY[0]),(listX[i],listY[i]),(0,0,255),2);
++    for i in range(1,15):
++        if ((listX[i]!=-1) and (pockets_for_each_ball[i-1]!=-1)):
++            pocketX = pockets[pockets_for_each_ball[i-1]][0]
++            pocketY = pockets[pockets_for_each_ball[i-1]][1]
++            cv.line(img,(listX[i],listY[i]),(pocketX,pocketY),(0,0,255),2);
+ 
++    cv.imwrite('img.jpg',img)
+ 
+-listX = [1,30,50,101,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+-listY = [1,50,50,99,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+-create_first_lines(listX,listY)
+-create_second_lines(listX,listY)
+-print(first_lines)
+-print(second_lines)
+\ No newline at end of file
++listX = [108,130,150,800,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
++listY = [308,350,350,500,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
++drawImage();
+\ No newline at end of file
