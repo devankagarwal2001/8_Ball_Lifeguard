@@ -10,7 +10,7 @@ second_lines = [[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],
 pockets_for_each_ball = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 distance_cue_pocket = [-1,-1,-1,-1,-1,-1]
 cloests_pocket_for_each_ball = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-#print(first_lines)
+
 #assuming all x and y are positive and -1 would mean that the ball is not on table
 #assuming the format of lists as follows:
 #list_ = [cue_ball,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
@@ -124,8 +124,13 @@ def create_second_lines(listX, listY):
             print(first_lines[2])
         
         for j in range(5):
-            if j == closest_pocket: 
-                continue
+            if j == closest_pocket:
+                #ignore closest pocket only if target ball is not between cue ball and pocket 
+                #TODO
+                if not (listX[i]>pockets[j][0] and listX[0]<pockets[j][0]):
+                    continue
+                elif not(listX[i]<pockets[j][0] and listX[0]>pockets[j][0]):
+                    continue
             shot = all_shots_for_current_ball[j]
             if(shot[0] == 100000000): continue
             possible_shot = True
@@ -254,8 +259,8 @@ def drawImage():
 
     cv.imwrite('incorrect_img_2.jpg',img)
 
-listX = [500,699,850,850,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-listY = [500,699,350,650,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listX = [150,108,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listY = [350,308,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 drawImage();
 
 #cases not working 
@@ -265,3 +270,7 @@ drawImage();
 
 
 #really buggy need to fix up a lot of stuff and clean up code
+
+
+
+#eat the ball
