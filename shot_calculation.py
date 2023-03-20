@@ -22,7 +22,7 @@ def create_first_lines(listX,listY):
         b = -1
         diffX = listX[i]-listX[0]
         diffY = listY[i]-listY[0]
-        slope = diffX/diffY
+        slope = diffY/diffX
         b = listY[i] - (slope*listX[i])
         #check collisions for each ball with every other ball
         for j in range(1,15):
@@ -74,12 +74,17 @@ def create_second_lines(listX, listY):
         min_ind = 0
         cur_ind = 0
         possible_shot = False
+        if (i==2):
+            print("All Possible shots are:")
+            print(all_shots_for_current_ball)
+            print("Balls First Line is ")
+            print(first_lines[1])
         for shot in all_shots_for_current_ball:
             if shot[0] == -1: continue;
             else:
                 slope_delta = abs(shot[0] - first_lines[i-1][0]) #incorrect since i need to account for direction of each slope as well
-                #if ((shot[0]*first_lines[i-1][0])>0): 
-                    #continue
+                if ((shot[0]*first_lines[i-1][0])<0): 
+                    continue
                 if slope_delta<min_delta:
                     min_delta = slope_delta
                     min_ind = cur_ind
@@ -192,10 +197,8 @@ def drawImage():
     for pocket in pockets:
         cv.circle(img,(pocket[0],pocket[1]),radius*3,(255,0,0),3)   
     create_first_lines(listX,listY)
+    print(first_lines)
     create_second_lines(listX,listY)
-    #print(first_lines)
-    #print(second_lines)
-    #print(pockets_for_each_ball)
     for i in range(1,15):
         if ((listX[i]!=-1) and (first_lines[i-1]!=-3)):
             cv.line(img,(listX[0],listY[0]),(listX[i],listY[i]),(0,0,255),2);
