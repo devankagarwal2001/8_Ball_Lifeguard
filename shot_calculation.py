@@ -252,13 +252,16 @@ def drawImage():
             pocketY = pockets[pockets_for_each_ball[i-1]][1]
             cv.line(img,(listX[i],listY[i]),(pocketX,pocketY),(0,0,255),2);
 
-    cv.imwrite('img.jpg',img)
+    cv.imwrite('incorrect_img_2.jpg',img)
 
-listX = [150,699,850,850,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-listY = [350,699,350,650,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listX = [500,699,850,850,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listY = [500,699,350,650,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 drawImage();
 
 #cases not working 
 #when the target and cue ball are in the closest balls to a particular pocket. 
 #120,600 when ball is at 150,350, 
 #these are both cases when the target ball is behind the cue ball, why so. 
+
+
+#really buggy need to fix up a lot of stuff and clean up code
