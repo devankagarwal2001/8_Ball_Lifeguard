@@ -11,6 +11,29 @@ pockets_for_each_ball = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 distance_cue_pocket = [-1,-1,-1,-1,-1,-1]
 closest_pocket_for_each_ball = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 
+ball_to_shots = {1:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                2:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                3:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                4:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                5:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                6:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                7:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                8:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                9:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                10:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                11:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                12:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                13:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                14:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                15:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]]}
+#idea behind this, is to create a a dictionary that follows the following format:
+#int (ball number) -> [[distance of ball to each pocket],[slope of line to each pocket if shot is possible]]
+
+
+def find_distace_to_each_pocket():
+    for i in range(1,15):
+        
+
 #assuming all x and y are positive and -1 would mean that the ball is not on table
 #assuming the format of lists as follows:
 #list_ = [cue_ball,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
@@ -88,6 +111,8 @@ def closest_pocket_ball():
                 closest_dist = dist
                 min_ind = cur_ind
             cur_ind +=1
+        print("For Ball, distance to closest pocket =")
+        print(closest_dist)
         closest_pocket_for_each_ball[i-1] = min_ind
 
 
@@ -300,7 +325,7 @@ def drawImage():
             cv.line(img,(listX[i],listY[i]),(pocketX,pocketY),(0,0,255),2);
 
     cv.imwrite('img.jpeg',img)
-
+    print(ball_to_shots)
 listX = [290,150,400,850,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 listY = [400,350,400,650,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 drawImage();
