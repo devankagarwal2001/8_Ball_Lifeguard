@@ -9,7 +9,7 @@ first_lines = [[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[
 second_lines = [[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1]]
 pockets_for_each_ball = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 distance_cue_pocket = [-1,-1,-1,-1,-1,-1]
-cloests_pocket_for_each_ball = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+closest_pocket_for_each_ball = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 
 #assuming all x and y are positive and -1 would mean that the ball is not on table
 #assuming the format of lists as follows:
@@ -68,6 +68,28 @@ def closest_pocket_to_cue():
             min_ind = cur_ind
         cur_ind += 1
     return min_ind
+
+def closest_pocket_ball():
+    for i in range (1,15):
+        if(listX[i]==-1): continue
+        distances = [-1,-1,-1,-1,-1,-1]
+        pocket_idx = 0
+        for pocket in pockets:
+            distanceX = (listX[i] - pocket[0]) * (listX[i] - pocket[0])
+            distanceY = (listY[i] - pocket[1]) * (listY[i] - pocket[1])
+            dist = math.sqrt(distanceX + distanceY)
+            distances[pocket_idx] = dist
+            pocket_idx+=1
+        closest_dist = 1000000
+        cur_ind = 0
+        min_ind = 0
+        for dist in distances:
+            if(dist<closest_dist):
+                closest_dist = dist
+                min_ind = cur_ind
+            cur_ind +=1
+        closest_pocket_for_each_ball[i-1] = min_ind
+
 
 #buggy
 def create_second_lines(listX, listY):
@@ -233,6 +255,26 @@ def linePoint(x1,y1,x2,y2,px,py):
     if (d1+d2 >= lineLen-buffer and d1+d2 <= lineLen+buffer): return True
     else: return False
     
+def chose_pocket():
+    closest_pocket_ball()
+    for i in range(1,15):
+        pocket = pockets[closest_pocket_for_each_ball[i-1]]
+        if(listX[0]>listX[i]):
+            if (pocket[0]>listX[0]):
+                pockets_for_each_ball[i-1]=-1
+            else:
+                pockets_for_each_ball[i-1] = closest_pocket_for_each_ball[i-1]
+        elif(listX[0]<listX[i]):
+            if (listX[0]>pocket[0]):
+                pockets_for_each_ball[i-1]=-1
+            else:
+                pockets_for_each_ball[i-1] = closest_pocket_for_each_ball[i-1]
+        else:
+            pockets_for_each_ball[i-1] = closest_pocket_for_each_ball[i-1]
+    print(closest_pocket_for_each_ball)
+    print(pockets_for_each_ball)
+        
+
     
 def drawImage():    
     img = np.zeros((1000,1000,3), np.uint8)
@@ -246,8 +288,8 @@ def drawImage():
     for pocket in pockets:
         cv.circle(img,(pocket[0],pocket[1]),radius*3,(255,0,0),3)   
     create_first_lines(listX,listY)
-    print(first_lines)
-    create_second_lines(listX,listY)
+    #create_second_lines(listX,listY)
+    chose_pocket()
     for i in range(1,15):
         if ((listX[i]!=-1) and (first_lines[i-1]!=-3)):
             cv.line(img,(listX[0],listY[0]),(listX[i],listY[i]),(0,0,255),2);
@@ -257,10 +299,10 @@ def drawImage():
             pocketY = pockets[pockets_for_each_ball[i-1]][1]
             cv.line(img,(listX[i],listY[i]),(pocketX,pocketY),(0,0,255),2);
 
-    cv.imwrite('incorrect_img_2.jpg',img)
+    cv.imwrite('img.jpeg',img)
 
-listX = [150,108,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-listY = [350,308,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listX = [290,150,400,850,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listY = [400,350,400,650,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 drawImage();
 
 #cases not working 
@@ -269,8 +311,15 @@ drawImage();
 #these are both cases when the target ball is behind the cue ball, why so. 
 
 
+
 #really buggy need to fix up a lot of stuff and clean up code
 
 
 
-#eat the ball
+#okay for chosing optimal shot I am just comparing slope. 
+#What factors can make a shot easy. 
+#the closeness to a pocket. (i think this takes prio over slope)
+#so new algorithm would look like this:
+#1. Ffirst Find the closest pocket to each ball that can be reached without a collision
+#2. See if that shot is possible. How to check possibility of shot:
+    #a. if the cue ball is in bw the target ball and the pocket, then shot is not possible
