@@ -18,6 +18,11 @@ RADIUS_BALL = 1
 RADIUS_POCKET = 2
 CUE_BALL = 0
 NO_POCKETS = 6
+BLUE = (255,0,0)
+GREEN = (0,255,0)
+RED = (0,0,255)
+WHITE = (255,255,255)
+YELLOW = (0,255,255)
 
 #int (ball number) -> list
 #list = index 0 -> DISTACNE
@@ -46,8 +51,8 @@ ball_to_shots = {1: [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,
 pockets = [[100,300],[500,300],[900,300],[900,700],[500,700],[100,700]]
 
 
-listX = [120,150,400,850,290,450,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-listY = [320,350,400,650,600,650,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listX = [120,150,200,650,108,120,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listY = [320,350,400,650,308,650,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 
 
 
@@ -168,35 +173,37 @@ def create_first_lines():
             shot_params[FIRST_SLOPE] = np.nan
             shot_params[FIRST_INTERCEPT] = np.nan
         return
-    for i in range(FIRST_BALL,NUMBER_OF_BALLS):
+    for target_ball in range(FIRST_BALL,NUMBER_OF_BALLS):
         #check if ball has been potted
-        if(listX[i]<0): continue
-        if(listY[i]<0): continue
-
+        if(listX[target_ball]<0 or listY[target_ball]<0): 
+            shot_params = ball_to_shots.get(target_ball)
+            shot_params[FIRST_SLOPE] = np.nan
+            shot_params[FIRST_INTERCEPT] = np.nan
+            continue
         #check if there exists a collision between the cue ball and this ball for everyball 
         # but itself 
         collision = False
-        for j in range(FIRST_BALL,NUMBER_OF_BALLS):
-            if (i == j): continue
-            if (listX[j]<0): continue
-            if (listY[j]<0): continue
-            upperCheck = checkCollision(listX[CUE_BALL],listY[CUE_BALL]+RADIUS_BALL,listX[i],listY[i]+RADIUS_BALL,listX[j],listY[j],RADIUS_BALL)
-            lowerCheck = checkCollision(listX[CUE_BALL],listY[CUE_BALL]-RADIUS_BALL,listX[i],listY[i]-RADIUS_BALL,listX[j],listY[j],RADIUS_BALL)
+        for collision_ball in range(FIRST_BALL,NUMBER_OF_BALLS):
+            if (target_ball == collision_ball): continue
+            if (listX[collision_ball]<0): continue
+            if (listY[collision_ball]<0): continue
+            upperCheck = checkCollision(listX[CUE_BALL],listY[CUE_BALL]+RADIUS_BALL,listX[target_ball],listY[target_ball]+RADIUS_BALL,listX[collision_ball],listY[collision_ball],RADIUS_BALL)
+            lowerCheck = checkCollision(listX[CUE_BALL],listY[CUE_BALL]-RADIUS_BALL,listX[target_ball],listY[target_ball]-RADIUS_BALL,listX[collision_ball],listY[collision_ball],RADIUS_BALL)
             #shot is not possible
             if (upperCheck or lowerCheck):
                 collision = True
                 break
         #no collision shot is possible
         if(not collision):
-            if (listX[i]==listX[CUE_BALL]): slope = np.inf
-            else: slope = (listY[i]-listY[CUE_BALL])/(listX[i]-listX[CUE_BALL])
+            if (listX[target_ball]==listX[CUE_BALL]): slope = np.inf
+            else: slope = (listY[target_ball]-listY[CUE_BALL])/(listX[target_ball]-listX[CUE_BALL])
             if (slope == np.inf): intercept = np.inf
-            else: intercept = listY[i] - (slope * listX[i])
+            else: intercept = listY[target_ball] - (slope * listX[target_ball])
         #shot is not possible cause collision 
         else:
             slope = np.nan
             intercept = np.nan
-        shot_params = ball_to_shots.get(i)
+        shot_params = ball_to_shots.get(target_ball)
         shot_params[FIRST_SLOPE] = slope
         shot_params[FIRST_INTERCEPT] = intercept
 
@@ -239,6 +246,28 @@ def create_second_lines():
             pocket_index+=1
     print_dimensions();
 
+
+def drawImage():
+    img = np.zeros((1000,1000,3), np.uint8)
+    cv.rectangle (img,(100,300),(900,700),GREEN,1)
+    for target_ball in range(NUMBER_OF_BALLS):
+        if listX[target_ball]>0:
+            if (target_ball==CUE_BALL):
+                cv.circle(img,(listX[target_ball],listY[target_ball]),RADIUS_BALL*2,WHITE,3)
+            else:
+                cv.circle(img,(listX[target_ball],listY[target_ball]),RADIUS_BALL*2,YELLOW,3)
+    for pocket in pockets:
+        cv.circle(img,(pocket[0],pocket[1]),RADIUS_POCKET*2,BLUE,6)   
+    
+    for target_ball in range(FIRST_BALL,NUMBER_OF_BALLS):
+        shot_params = ball_to_shots.get(target_ball)
+        if(not math.isnan(shot_params[FIRST_SLOPE])):
+            cv.line(img,(listX[CUE_BALL],listY[CUE_BALL]),(listX[target_ball],listY[target_ball]),RED,2);
+        
+    cv.imwrite('img.jpeg',img)
+
+
 find_distance_to_all_pockets();
 create_first_lines();
 create_second_lines();
+drawImage();
