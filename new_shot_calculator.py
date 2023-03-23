@@ -266,6 +266,10 @@ def drawImage():
         
     cv.imwrite('img.jpeg',img)
 
+#@TODO: Now FIGURE OUT HOW TO CHOOSE A POCKET
+
+
+
 
 find_distance_to_all_pockets();
 create_first_lines();
