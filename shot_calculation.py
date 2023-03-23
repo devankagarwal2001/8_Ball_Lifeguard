@@ -52,14 +52,17 @@ ball_to_shots = {1: [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,
                 14: [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
                 15: [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]]}
 
+# the chosen pocket for each ball
+pocket_for_each_ball = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+
 
 #A list of pockets with each element being an x-y coordinate for the pocket
 pockets = [[100,300],[500,300],[900,300],[900,700],[500,700],[100,700]]
 
 
 #A list of X and Y coordinates for each ball
-listX = [120,150,200,650,108,120,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-listY = [320,350,400,650,308,650,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listX = [120,700,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listY = [320,350,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 
 
 
@@ -156,20 +159,14 @@ def print_dimensions():
 def find_distance_to_all_pockets():
     for i in range(FIRST_BALL,NUMBER_OF_BALLS):
         if(listX[i]<0): continue
-        distances_to_each_pocket = [-1,-1,-1,-1,-1,-1]
+        shot_params = ball_to_shots.get(i)
         pocket_idx = 0
         for pocket in pockets:
             distanceX = (listX[i] - pocket[POCKETX]) * (listX[i] - pocket[POCKETX])
             distanceY = (listY[i] - pocket[POCKETY]) * (listY[i] - pocket[POCKETY])
             dist = math.sqrt(distanceX + distanceY)
-            distances_to_each_pocket[pocket_idx] = dist
+            shot_params[DISTANCES][pocket_idx] = dist
             pocket_idx+=1
-        shot_params = ball_to_shots.get(i)
-        shot_idx = 0
-        for dist in distances_to_each_pocket:
-            shot_params[DISTANCES][shot_idx] = dist
-            shot_idx+=1
-
 
 #brief: Checks if the shot between the cue ball and the target ball is possible. If so
 #       the value is stored in the Dictionary
@@ -225,8 +222,16 @@ def create_second_lines():
         if(listX[target_ball]<0): continue
         if(listY[target_ball]<0): continue
         shot_params = ball_to_shots.get(target_ball)
-        if(shot_params[FIRST_SLOPE]==np.nan): continue
-        if(shot_params[FIRST_INTERCEPT]==np.nan): continue
+        if(math.isnan(shot_params[FIRST_SLOPE])): 
+            for pocket in range(NO_POCKETS):
+                shot_params[SECOND_SLOPES][pocket] = np.nan
+                shot_params[SECOND_INTERCEPT][pocket] = np.nan
+            continue
+        if(math.isnan(shot_params[FIRST_INTERCEPT])):
+            for pocket in range(NO_POCKETS):
+                shot_params[SECOND_SLOPES][pocket] = np.nan
+                shot_params[SECOND_INTERCEPT][pocket] = np.nan
+            continue
         #create a line for each pocket
         pocket_index = 0;
         for pocket in pockets:
@@ -254,7 +259,6 @@ def create_second_lines():
                 shot_params[SECOND_SLOPES][pocket_index] = np.nan
                 shot_params[SECOND_INTERCEPT][pocket_index] = np.nan
             pocket_index+=1
-    print_dimensions();
 
 #brief: Draws the image that is going to be projected onto the pool table
 def drawImage():
@@ -269,19 +273,75 @@ def drawImage():
     for pocket in pockets:
         cv.circle(img,(pocket[0],pocket[1]),RADIUS_POCKET*2,BLUE,6)   
     
+    i = 0
     for target_ball in range(FIRST_BALL,NUMBER_OF_BALLS):
         shot_params = ball_to_shots.get(target_ball)
         if(not math.isnan(shot_params[FIRST_SLOPE])):
-            cv.line(img,(listX[CUE_BALL],listY[CUE_BALL]),(listX[target_ball],listY[target_ball]),RED,2);
+            cv.line(img,(listX[CUE_BALL],listY[CUE_BALL]),(listX[target_ball],listY[target_ball]),(0,0,255 - (i*10)),2);
+        if((not math.isnan(pocket_for_each_ball[target_ball-1])) and pocket_for_each_ball[target_ball-1]>0):
+            pocketX = pockets[pocket_for_each_ball[target_ball-1]][POCKETX]
+            pocketY = pockets[pocket_for_each_ball[target_ball-1]][POCKETY]
+            cv.line(img,(listX[target_ball],listY[target_ball]),(pocketX,pocketY),(0,0,255 - (i*20)),2);
         
     cv.imwrite('img.jpeg',img)
 
 #@TODO: Now FIGURE OUT HOW TO CHOOSE A POCKET
 
+#not fully correct
+def remove_impossible_pockets():
+    
+    if(listX[CUE_BALL]<0 or listY[CUE_BALL]<0): return
+    for target_ball in range(FIRST_BALL, NUMBER_OF_BALLS):
+        if(listX[target_ball]<0 or listY[target_ball]<0): continue
+        shot_params=ball_to_shots.get(target_ball)
+        pocket_idx = 0
+        for pocket in pockets:
+            if (pocket[POCKETX]<listX[CUE_BALL] and listX[CUE_BALL]<=listX[target_ball]):
+                shot_params[DISTANCES][pocket_idx] = np.nan
+                shot_params[SECOND_SLOPES][pocket_idx] = np.nan
+                shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan 
+            elif(pocket[POCKETX]>listX[CUE_BALL] and listX[CUE_BALL]>=listX[target_ball]):
+                shot_params[DISTANCES][pocket_idx] = np.nan
+                shot_params[SECOND_SLOPES][pocket_idx] = np.nan
+                shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan
+            if(pocket[POCKETY] < listY[CUE_BALL] and listY[CUE_BALL] < listY[target_ball]):
+                shot_params[DISTANCES][pocket_idx] = np.nan
+                shot_params[SECOND_SLOPES][pocket_idx] = np.nan
+                shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan 
+            elif(pocket[POCKETY] > listY[CUE_BALL] and listY[CUE_BALL] > listY[target_ball]):
+                shot_params[DISTANCES][pocket_idx] = np.nan
+                shot_params[SECOND_SLOPES][pocket_idx] = np.nan
+                shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan 
+            pocket_idx+=1
+
+def chose_pocket():
+    if(listX[CUE_BALL]<0 or listY[CUE_BALL]<0): return
+    for target_ball in range(FIRST_BALL, NUMBER_OF_BALLS):
+        if(listX[target_ball]<0 or listY[target_ball]<0): continue
+        shot_params=ball_to_shots.get(target_ball)
+        if(math.isnan(shot_params[FIRST_SLOPE])): continue
+        pocket_idx=0
+        min_dist = 10000000000
+        min_ind = -1
+        for dist in shot_params[DISTANCES]:
+            if (math.isnan(dist)): 
+                pocket_idx+=1
+                continue
+            if(dist<min_dist):
+                min_ind = pocket_idx
+                min_dist = dist
+            pocket_idx +=1
+
+        if(min_ind>0): pocket_for_each_ball[target_ball-1] = min_ind
+        else: pocket_for_each_ball[target_ball-1] = np.nan
+    print('Pockets For Each Ball Are = {list}'.format(list = pocket_for_each_ball))
 
 
 
 find_distance_to_all_pockets();
 create_first_lines();
 create_second_lines();
+remove_impossible_pockets();
+print_dimensions();
+chose_pocket();
 drawImage();
