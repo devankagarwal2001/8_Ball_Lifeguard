@@ -1,207 +1,65 @@
+#Author: Devank Agarwal, devanka@andrew.cmu.edu
+
+''' The Following File Contains Code for a working implementation of a pool table real time 
+    optimal shot calculator'''
+
 import math
 from array import *
 import cv2 as cv
 import numpy as np
 
-radius = 1
-radius_pocket = 1.5
-first_lines = [[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1]]
-second_lines = [[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1]]
-pockets_for_each_ball = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-distance_cue_pocket = [-1,-1,-1,-1,-1,-1]
-closest_pocket_for_each_ball = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+#MACROS FOR ME TO USE
+NUMBER_OF_BALLS = 16    #The total number of balls on the table
+FIRST_BALL = 1          #Solid Ball 1
+DISTANCES = 0           #The Index which gets the distances of each ball to each pocket
+FIRST_SLOPE = 1         #The Index which gets the slope of each ball to cue ball
+FIRST_INTERCEPT = 2     #The Index which gets the intercept of each ball to cue ball
+SECOND_SLOPES = 3       #The Index which gets the slope of each ball to each pocket
+SECOND_INTERCEPT = 4    #The Index which gets the intercept of the line of each ball to each pocket
+POCKETX = 0             #The Index which gets the x corrdinate of the pocket
+POCKETY = 1             #The Index which gets the y corrdinate of the pocket
+NUMBER_OF_PARAMS = 5    #The Number of parameters in the dictionary 
+RADIUS_BALL = 1         #The Radius of each ball
+RADIUS_POCKET = 2       #The Radius of  each pocket
+CUE_BALL = 0            #The Cue ball Index
+NO_POCKETS = 6          #The Number of Pockets on a standard pool table
+BLUE = (255,0,0)        #BGR Color Representation of the Color Blue
+GREEN = (0,255,0)       #BGR Color Representation of the Color Green
+RED = (0,0,255)         #BGR Color Representation of the Color Red
+WHITE = (255,255,255)   #BGR Color Representation of the Color White
+YELLOW = (0,255,255)    #BGR Color Representation of the Color Yellow
 
-ball_to_shots = {1:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                2:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                3:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                4:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                5:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                6:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                7:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                8:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                9:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                10:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                11:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                12:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                13:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                14:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                15:[[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]]}
-#idea behind this, is to create a a dictionary that follows the following format:
-#int (ball number) -> [[distance of ball to each pocket],[slope of line to each pocket if shot is possible]]
+#int (ball number) -> list
+#list = index 0 -> DISTACNE
+#       index 1 -> Slope of first set of lines (cue ball to ball)
+#       index 2 -> intercepts of first set of lines (cue ball to ball)
+#       index 3 -> Slopes of second set of lines (ball to pockets)
+#       index 4 -> intercept of second set of lines (ball to pockets)
+
+ball_to_shots = {1: [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                2:  [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                3:  [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                4:  [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                5:  [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                6:  [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                7:  [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                8:  [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                9:  [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                10: [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                11: [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                12: [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                13: [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                14: [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
+                15: [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]]}
 
 
-def find_distace_to_each_pocket():
-    for i in range(1,15):
-        
-
-#assuming all x and y are positive and -1 would mean that the ball is not on table
-#assuming the format of lists as follows:
-#list_ = [cue_ball,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
-#assuming the pockets are at [0,0] [0,400], [400,400], [800,400], [800,0], [400.0]
+#A list of pockets with each element being an x-y coordinate for the pocket
 pockets = [[100,300],[500,300],[900,300],[900,700],[500,700],[100,700]]
-def create_first_lines(listX,listY):
-    if listX[0] == 0 or listY[0] == 0 : print("Cue Ball Pocketed")
-    for i in range(1,15):
-        if(listX[i]== -1 and listY[i]== -1): continue
-        slope = 0
-        b = -1
-        diffX = listX[i]-listX[0]
-        diffY = listY[i]-listY[0]
-        if diffX != 0:
-            slope = diffY/diffX
-            b = listY[i] - (slope*listX[i])
-        else:
-            slope = 100000000000
-            b = listY[i] - (slope*listX[i])
-        first_check = False
-        second_check = False
-        #check collisions for each ball with every other ball
-        for j in range(1,15):
-            #cant check with itself
-            if i == j: continue
-            if (listX[j] == -1 and listY[j] == -1): continue
-            #increase the y coordinates with the radius of the cue ball
-            first_check = lineCircle(listX[0],listY[0]+radius,listX[i],listY[i]+radius,listX[j],listY[j],radius)
-            second_check = lineCircle(listX[0],listY[0]-radius,listX[i],listY[i]-radius,listX[j],listY[j],radius)
-        if not (first_check or second_check):
-            first_lines[i-1][0] = slope
-            first_lines[i-1][1] = b
-        else:
-            first_lines[i-1][0] = -3
-            first_lines[i-1][1] = -3
-        #now check for collisions
-
-def distance_bw_cue_ball_and_pocket():
-    if(listX[0]==-1): return
-    pocket_indx = 0
-    for pocket in pockets:
-        distanceX = (listX[0] - pocket[0]) * (listX[0] - pocket[0])
-        distanceY = (listY[0] - pocket[1]) * (listY[0] - pocket[1])
-        dist = math.sqrt(distanceX + distanceY)
-        distance_cue_pocket[pocket_indx] = dist
-        pocket_indx+=1
-
-def closest_pocket_to_cue():
-    closest_dist = 1000000
-    cur_ind = 0
-    min_ind = 0
-    for dist in distance_cue_pocket:
-        if (dist<closest_dist):
-            closest_dist = dist
-            min_ind = cur_ind
-        cur_ind += 1
-    return min_ind
-
-def closest_pocket_ball():
-    for i in range (1,15):
-        if(listX[i]==-1): continue
-        distances = [-1,-1,-1,-1,-1,-1]
-        pocket_idx = 0
-        for pocket in pockets:
-            distanceX = (listX[i] - pocket[0]) * (listX[i] - pocket[0])
-            distanceY = (listY[i] - pocket[1]) * (listY[i] - pocket[1])
-            dist = math.sqrt(distanceX + distanceY)
-            distances[pocket_idx] = dist
-            pocket_idx+=1
-        closest_dist = 1000000
-        cur_ind = 0
-        min_ind = 0
-        for dist in distances:
-            if(dist<closest_dist):
-                closest_dist = dist
-                min_ind = cur_ind
-            cur_ind +=1
-        print("For Ball, distance to closest pocket =")
-        print(closest_dist)
-        closest_pocket_for_each_ball[i-1] = min_ind
 
 
-#buggy
-def create_second_lines(listX, listY):
-    if listX[0] == 0 or listY[0] == 0 : print("Cue Ball Pocketed")
-    distance_bw_cue_ball_and_pocket()
-    closest_pocket =  closest_pocket_to_cue()
-    for i in range(1,15):
-        if (listX[i]==-1 or listY[i]==-1): continue
-        #for each ball create possible shots if no collision
-        all_shots_for_current_ball = [[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1],[-1,-1]]
-        pocket_ind = 0
-        for pocket in pockets:
-            diffX = pocket[0] - listX[i]
-            diffY = pocket[1] - listY[i]
-            if diffX == 0: 
-                slope = 10000000
-                b = 10000000
-            else: 
-                slope = diffY/diffX
-                b = listY[i] - (slope * listX[i])
-            success = True
-            if(pocket[0]>listX[0] and pocket[0]<listX[i]):
-                all_shots_for_current_ball[pocket_ind][0] = 100000000
-                all_shots_for_current_ball[pocket_ind][1] = 100000000
-                pocket_ind+=1
-                continue
-            elif(pocket[0]<listX[0] and pocket[0]>listX[i]):
-                all_shots_for_current_ball[pocket_ind][0] = 100000000
-                all_shots_for_current_ball[pocket_ind][1] = 100000000
-                pocket_ind +=1
-                continue
-            for j in range(15):
-                if i == j: continue
-                if (listX[j] == -1 and listY[j] == -1): continue
-                first_check = lineCircle(listX[i],listY[i]+radius,pocket[0],pocket[1],listX[j],listY[j],radius)
-                second_check = lineCircle(listX[i],listY[i]-radius,pocket[0],pocket[1],listX[j],listY[j],radius)
-                if (first_check or second_check):
-                    success = False
-            if (success):
-                    all_shots_for_current_ball[pocket_ind][0] = slope
-                    all_shots_for_current_ball[pocket_ind][1] = b
-            else:
-                all_shots_for_current_ball[pocket_ind][0] = 100000000
-                all_shots_for_current_ball[pocket_ind][1] = 100000000
-            pocket_ind += 1
-        #at this point all possible shots should be caculated with no collisions 
-        min_delta = 100000000
-        min_ind = -1
-        possible_shot = False
-        if (i==3):
-            print("All Possible Shots")
-            print(all_shots_for_current_ball)
-            print("First Line for 3rd Ball")
-            print(first_lines[2])
-        
-        for j in range(5):
-            if j == closest_pocket:
-                #ignore closest pocket only if target ball is not between cue ball and pocket 
-                #TODO
-                if not (listX[i]>pockets[j][0] and listX[0]<pockets[j][0]):
-                    continue
-                elif not(listX[i]<pockets[j][0] and listX[0]>pockets[j][0]):
-                    continue
-            shot = all_shots_for_current_ball[j]
-            if(shot[0] == 100000000): continue
-            possible_shot = True
-            slope_delta = abs(shot[0] - first_lines[i-1][0])
-            if(slope_delta<min_delta):
-                min_delta = slope_delta
-                min_ind = j
-        
-        if (possible_shot):
-            if(first_lines[i-1][0] != -3):
-                second_lines[i-1][0] = all_shots_for_current_ball[min_ind][0]
-                second_lines[i-1][1] = all_shots_for_current_ball[min_ind][1]
-                pockets_for_each_ball[i-1] = min_ind
-            else:
-                second_lines[i-1][0] = -3
-                second_lines[i-1][1] = -3
-        else:
-            second_lines[i-1][0] = -3
-            second_lines[i-1][1] = -3
-
-                    
-
-        
-
+#A list of X and Y coordinates for each ball
+listX = [120,150,200,650,108,120,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listY = [320,350,400,650,308,650,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 
 
 
@@ -210,7 +68,7 @@ def create_second_lines(listX, listY):
 # Definition: Checks if the line given bt (x0,y0) and (x1,y1) lies on the circle given by (cx,cy) and radius
 # Return Value: True if the line interesects at one point or two, False if not
 # Errors: NA
-def lineCircle(x1,y1,x2,y2,cx,cy,r):
+def checkCollision(x1,y1,x2,y2,cx,cy,r):
 
     #is either end INSIDE the circle?
     #if so, return true immediately
@@ -243,7 +101,7 @@ def lineCircle(x1,y1,x2,y2,cx,cy,r):
     else: return False
 
 
-
+#taken from: https://www.jeffreythompson.org/collision-detection/line-circle.php
 #OINT/CIRCLE
 def pointCircle(px,py,cx,cy,r):
     #get distance between the point and circle's center
@@ -258,7 +116,7 @@ def pointCircle(px,py,cx,cy,r):
     else: return False
 
 
-
+#taken from: https://www.jeffreythompson.org/collision-detection/line-circle.php
 # LINE/POINT
 def linePoint(x1,y1,x2,y2,px,py):
     # get distance from the point to the two ends of the line
@@ -279,72 +137,151 @@ def linePoint(x1,y1,x2,y2,px,py):
     # rather than one #
     if (d1+d2 >= lineLen-buffer and d1+d2 <= lineLen+buffer): return True
     else: return False
-    
-def chose_pocket():
-    closest_pocket_ball()
-    for i in range(1,15):
-        pocket = pockets[closest_pocket_for_each_ball[i-1]]
-        if(listX[0]>listX[i]):
-            if (pocket[0]>listX[0]):
-                pockets_for_each_ball[i-1]=-1
-            else:
-                pockets_for_each_ball[i-1] = closest_pocket_for_each_ball[i-1]
-        elif(listX[0]<listX[i]):
-            if (listX[0]>pocket[0]):
-                pockets_for_each_ball[i-1]=-1
-            else:
-                pockets_for_each_ball[i-1] = closest_pocket_for_each_ball[i-1]
+
+#breif: Print helper Function for clarity of Code
+def print_dimensions():
+    for i in range(FIRST_BALL,NUMBER_OF_BALLS):
+        shot_params = ball_to_shots.get(i)
+        print("For Ball {index}".format(index = i))
+        print("Distances to Each Pocket = {distance}".format(distance = shot_params[DISTANCES]))
+        print("First Slope = {slope}".format(slope = shot_params[FIRST_SLOPE]))
+        print("First Intercept = {intercept}".format(intercept = shot_params[FIRST_INTERCEPT]))
+        print("Second Slopes = {slopes}".format(slopes = shot_params[SECOND_SLOPES]))
+        print("Second Intercepts = {intercepts}".format(intercepts = shot_params[SECOND_INTERCEPT]))
+        print("-------------------------------------------------")
+
+
+
+#brief: Finds the distance of each ball to each pocket and stores it in the dictionary 
+def find_distance_to_all_pockets():
+    for i in range(FIRST_BALL,NUMBER_OF_BALLS):
+        if(listX[i]<0): continue
+        distances_to_each_pocket = [-1,-1,-1,-1,-1,-1]
+        pocket_idx = 0
+        for pocket in pockets:
+            distanceX = (listX[i] - pocket[POCKETX]) * (listX[i] - pocket[POCKETX])
+            distanceY = (listY[i] - pocket[POCKETY]) * (listY[i] - pocket[POCKETY])
+            dist = math.sqrt(distanceX + distanceY)
+            distances_to_each_pocket[pocket_idx] = dist
+            pocket_idx+=1
+        shot_params = ball_to_shots.get(i)
+        shot_idx = 0
+        for dist in distances_to_each_pocket:
+            shot_params[DISTANCES][shot_idx] = dist
+            shot_idx+=1
+
+
+#brief: Checks if the shot between the cue ball and the target ball is possible. If so
+#       the value is stored in the Dictionary
+def create_first_lines():
+    #cue ball has been pocketed, remove all existing lines
+    if(listX[CUE_BALL]<0 or listY[CUE_BALL]<0):
+        for i in range(FIRST_BALL,NUMBER_OF_BALLS):
+            shot_params = ball_to_shots.get(i)
+            shot_params[FIRST_SLOPE] = np.nan
+            shot_params[FIRST_INTERCEPT] = np.nan
+        return
+    for target_ball in range(FIRST_BALL,NUMBER_OF_BALLS):
+        #check if ball has been potted
+        if(listX[target_ball]<0 or listY[target_ball]<0): 
+            shot_params = ball_to_shots.get(target_ball)
+            shot_params[FIRST_SLOPE] = np.nan
+            shot_params[FIRST_INTERCEPT] = np.nan
+            continue
+        #check if there exists a collision between the cue ball and this ball for everyball 
+        # but itself 
+        collision = False
+        for collision_ball in range(FIRST_BALL,NUMBER_OF_BALLS):
+            if (target_ball == collision_ball): continue
+            if (listX[collision_ball]<0): continue
+            if (listY[collision_ball]<0): continue
+            upperCheck = checkCollision(listX[CUE_BALL],listY[CUE_BALL]+RADIUS_BALL,listX[target_ball],listY[target_ball]+RADIUS_BALL,listX[collision_ball],listY[collision_ball],RADIUS_BALL)
+            lowerCheck = checkCollision(listX[CUE_BALL],listY[CUE_BALL]-RADIUS_BALL,listX[target_ball],listY[target_ball]-RADIUS_BALL,listX[collision_ball],listY[collision_ball],RADIUS_BALL)
+            #shot is not possible
+            if (upperCheck or lowerCheck):
+                collision = True
+                break
+        #no collision shot is possible
+        if(not collision):
+            if (listX[target_ball]==listX[CUE_BALL]): slope = np.inf
+            else: slope = (listY[target_ball]-listY[CUE_BALL])/(listX[target_ball]-listX[CUE_BALL])
+            if (slope == np.inf): intercept = np.inf
+            else: intercept = listY[target_ball] - (slope * listX[target_ball])
+        #shot is not possible cause collision 
         else:
-            pockets_for_each_ball[i-1] = closest_pocket_for_each_ball[i-1]
-    print(closest_pocket_for_each_ball)
-    print(pockets_for_each_ball)
-        
+            slope = np.nan
+            intercept = np.nan
+        shot_params = ball_to_shots.get(target_ball)
+        shot_params[FIRST_SLOPE] = slope
+        shot_params[FIRST_INTERCEPT] = intercept
 
-    
-def drawImage():    
-    img = np.zeros((1000,1000,3), np.uint8)
-    cv.rectangle (img,(100,300),(900,700),(0,255,0),1)
-    for i in range(15):
-        if listX[i]!=-1:
-            if (i==0):
-                cv.circle(img,(listX[i],listY[i]),radius,(255,255,255),3)
+#brief: Checks if the shot between the cue ball and each pocket ball is possible. If so
+#       the value is stored in the Dictionary
+def create_second_lines():
+    #first go though all balls, 
+    #for each ball check if first line is non nan
+    #if not nan, check for each pocket without collisions and store that value
+    for target_ball in range(FIRST_BALL, NUMBER_OF_BALLS):
+        if(listX[target_ball]<0): continue
+        if(listY[target_ball]<0): continue
+        shot_params = ball_to_shots.get(target_ball)
+        if(shot_params[FIRST_SLOPE]==np.nan): continue
+        if(shot_params[FIRST_INTERCEPT]==np.nan): continue
+        #create a line for each pocket
+        pocket_index = 0;
+        for pocket in pockets:
+            collision = False
+            #check collision for that pocket with every ball
+            for collision_ball in range(CUE_BALL, NUMBER_OF_BALLS):
+                if (collision_ball == target_ball): continue
+                if (listX[collision_ball]<0): continue
+                if (listY[collision_ball]<0): continue
+                upperCheck = checkCollision(listX[target_ball],listY[target_ball]+RADIUS_BALL,pocket[POCKETX],pocket[POCKETY]+RADIUS_POCKET,listX[collision_ball],listY[collision_ball],RADIUS_BALL)
+                lowerCheck = checkCollision(listX[target_ball],listY[target_ball]-RADIUS_BALL,pocket[POCKETX],pocket[POCKETY]-RADIUS_POCKET,listX[collision_ball],listY[collision_ball],RADIUS_BALL)
+                if (upperCheck or lowerCheck): 
+                    collision = True
+                    break
+            # a successful shot can be made to that pocket
+            if(not collision):
+                if (listX[target_ball] == pocket[POCKETX]): slope = np.inf
+                else: slope = (pocket[POCKETY] - listY[target_ball])/(pocket[POCKETX] - listX[target_ball])
+                if (slope == np.inf): intercept = np.inf
+                else: intercept = pocket[POCKETY] - (slope * pocket[POCKETX])
+                shot_params[SECOND_SLOPES][pocket_index] = slope
+                shot_params[SECOND_INTERCEPT][pocket_index] = intercept
+            # a successful shot canot be made to that pocket
             else:
-                cv.circle(img,(listX[i],listY[i]),radius,(0,255,255),3)
+                shot_params[SECOND_SLOPES][pocket_index] = np.nan
+                shot_params[SECOND_INTERCEPT][pocket_index] = np.nan
+            pocket_index+=1
+    print_dimensions();
+
+#brief: Draws the image that is going to be projected onto the pool table
+def drawImage():
+    img = np.zeros((1000,1000,3), np.uint8)
+    cv.rectangle (img,(100,300),(900,700),GREEN,1)
+    for target_ball in range(NUMBER_OF_BALLS):
+        if listX[target_ball]>0:
+            if (target_ball==CUE_BALL):
+                cv.circle(img,(listX[target_ball],listY[target_ball]),RADIUS_BALL*2,WHITE,3)
+            else:
+                cv.circle(img,(listX[target_ball],listY[target_ball]),RADIUS_BALL*2,YELLOW,3)
     for pocket in pockets:
-        cv.circle(img,(pocket[0],pocket[1]),radius*3,(255,0,0),3)   
-    create_first_lines(listX,listY)
-    #create_second_lines(listX,listY)
-    chose_pocket()
-    for i in range(1,15):
-        if ((listX[i]!=-1) and (first_lines[i-1]!=-3)):
-            cv.line(img,(listX[0],listY[0]),(listX[i],listY[i]),(0,0,255),2);
-    for i in range(1,15):
-        if ((listX[i]!=-1) and (pockets_for_each_ball[i-1]!=-1)):
-            pocketX = pockets[pockets_for_each_ball[i-1]][0]
-            pocketY = pockets[pockets_for_each_ball[i-1]][1]
-            cv.line(img,(listX[i],listY[i]),(pocketX,pocketY),(0,0,255),2);
-
+        cv.circle(img,(pocket[0],pocket[1]),RADIUS_POCKET*2,BLUE,6)   
+    
+    for target_ball in range(FIRST_BALL,NUMBER_OF_BALLS):
+        shot_params = ball_to_shots.get(target_ball)
+        if(not math.isnan(shot_params[FIRST_SLOPE])):
+            cv.line(img,(listX[CUE_BALL],listY[CUE_BALL]),(listX[target_ball],listY[target_ball]),RED,2);
+        
     cv.imwrite('img.jpeg',img)
-    print(ball_to_shots)
-listX = [290,150,400,850,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-listY = [400,350,400,650,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+
+#@TODO: Now FIGURE OUT HOW TO CHOOSE A POCKET
+
+
+
+
+find_distance_to_all_pockets();
+create_first_lines();
+create_second_lines();
 drawImage();
-
-#cases not working 
-#when the target and cue ball are in the closest balls to a particular pocket. 
-#120,600 when ball is at 150,350, 
-#these are both cases when the target ball is behind the cue ball, why so. 
-
-
-
-#really buggy need to fix up a lot of stuff and clean up code
-
-
-
-#okay for chosing optimal shot I am just comparing slope. 
-#What factors can make a shot easy. 
-#the closeness to a pocket. (i think this takes prio over slope)
-#so new algorithm would look like this:
-#1. Ffirst Find the closest pocket to each ball that can be reached without a collision
-#2. See if that shot is possible. How to check possibility of shot:
-    #a. if the cue ball is in bw the target ball and the pocket, then shot is not possible
