@@ -15,7 +15,9 @@ POCKETX = 0
 POCKETY = 1
 NUMBER_OF_PARAMS = 5
 RADIUS_BALL = 1
+RADIUS_POCKET = 2
 CUE_BALL = 0
+NO_POCKETS = 6
 
 #int (ball number) -> list
 #list = index 0 -> DISTACNE
@@ -44,8 +46,8 @@ ball_to_shots = {1: [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,
 pockets = [[100,300],[500,300],[900,300],[900,700],[500,700],[100,700]]
 
 
-listX = [290,150,400,850,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-listY = [400,350,400,650,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listX = [120,150,400,850,290,450,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listY = [320,350,400,650,600,650,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 
 
 
@@ -154,12 +156,18 @@ def find_distance_to_all_pockets():
         for dist in distances_to_each_pocket:
             shot_params[DISTANCES][shot_idx] = dist
             shot_idx+=1
-    print_dimensions()
 
 
 #brief: Checks if the shot between the cue ball and the target ball is possible. If so
 #       the value is stored in the Dictionary
 def create_first_lines():
+    #cue ball has been pocketed, remove all existing lines
+    if(listX[CUE_BALL]<0 or listY[CUE_BALL]<0):
+        for i in range(FIRST_BALL,NUMBER_OF_BALLS):
+            shot_params = ball_to_shots.get(i)
+            shot_params[FIRST_SLOPE] = np.nan
+            shot_params[FIRST_INTERCEPT] = np.nan
+        return
     for i in range(FIRST_BALL,NUMBER_OF_BALLS):
         #check if ball has been potted
         if(listX[i]<0): continue
@@ -191,13 +199,46 @@ def create_first_lines():
         shot_params = ball_to_shots.get(i)
         shot_params[FIRST_SLOPE] = slope
         shot_params[FIRST_INTERCEPT] = intercept
-    print_dimensions()
 
-
-
-
-
-
+def create_second_lines():
+    #first go though all balls, 
+    #for each ball check if first line is non nan
+    #if not nan, check for each pocket without collisions and store that value
+    for target_ball in range(FIRST_BALL, NUMBER_OF_BALLS):
+        if(listX[target_ball]<0): continue
+        if(listY[target_ball]<0): continue
+        shot_params = ball_to_shots.get(target_ball)
+        if(shot_params[FIRST_SLOPE]==np.nan): continue
+        if(shot_params[FIRST_INTERCEPT]==np.nan): continue
+        #create a line for each pocket
+        pocket_index = 0;
+        for pocket in pockets:
+            collision = False
+            #check collision for that pocket with every ball
+            for collision_ball in range(CUE_BALL, NUMBER_OF_BALLS):
+                if (collision_ball == target_ball): continue
+                if (listX[collision_ball]<0): continue
+                if (listY[collision_ball]<0): continue
+                upperCheck = checkCollision(listX[target_ball],listY[target_ball]+RADIUS_BALL,pocket[POCKETX],pocket[POCKETY]+RADIUS_POCKET,listX[collision_ball],listY[collision_ball],RADIUS_BALL)
+                lowerCheck = checkCollision(listX[target_ball],listY[target_ball]-RADIUS_BALL,pocket[POCKETX],pocket[POCKETY]-RADIUS_POCKET,listX[collision_ball],listY[collision_ball],RADIUS_BALL)
+                if (upperCheck or lowerCheck): 
+                    collision = True
+                    break
+            # a successful shot can be made to that pocket
+            if(not collision):
+                if (listX[target_ball] == pocket[POCKETX]): slope = np.inf
+                else: slope = (pocket[POCKETY] - listY[target_ball])/(pocket[POCKETX] - listX[target_ball])
+                if (slope == np.inf): intercept = np.inf
+                else: intercept = pocket[POCKETY] - (slope * pocket[POCKETX])
+                shot_params[SECOND_SLOPES][pocket_index] = slope
+                shot_params[SECOND_INTERCEPT][pocket_index] = intercept
+            # a successful shot canot be made to that pocket
+            else:
+                shot_params[SECOND_SLOPES][pocket_index] = np.nan
+                shot_params[SECOND_INTERCEPT][pocket_index] = np.nan
+            pocket_index+=1
+    print_dimensions();
 
 find_distance_to_all_pockets();
 create_first_lines();
+create_second_lines();
