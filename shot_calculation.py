@@ -28,6 +28,10 @@ GREEN = (0,255,0)       #BGR Color Representation of the Color Green
 RED = (0,0,255)         #BGR Color Representation of the Color Red
 WHITE = (255,255,255)   #BGR Color Representation of the Color White
 YELLOW = (0,255,255)    #BGR Color Representation of the Color Yellow
+TABLE_X_HI = 900
+TABLE_X_LO = 100
+TABLE_Y_HI = 700
+TABLE_Y_LO = 300
 
 #int (ball number) -> list
 #list = index 0 -> DISTACNE
@@ -52,6 +56,39 @@ ball_to_shots = {1: [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,
                 14: [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
                 15: [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]]}
 
+#the maximum and minimum x the ball will be able to take after a shot
+balls_to_x_boundary = {1: [-1,-1],
+                    2: [-1,-1],
+                    3: [-1,-1],
+                    4: [-1,-1],
+                    5: [-1,-1],
+                    6: [-1,-1],
+                    7: [-1,-1],
+                    8: [-1,-1],
+                    9: [-1,-1],
+                    10: [-1,-1],
+                    11: [-1,-1],
+                    12: [-1,-1],
+                    13: [-1,-1],
+                    14: [-1,-1],
+                    15: [-1,-1]}
+
+#themaximum and minimum y the ball will be able to take after a shot
+balls_to_y_boundary = {1: [-1,-1],
+                    2: [-1,-1],
+                    3: [-1,-1],
+                    4: [-1,-1],
+                    5: [-1,-1],
+                    6: [-1,-1],
+                    7: [-1,-1],
+                    8: [-1,-1],
+                    9: [-1,-1],
+                    10: [-1,-1],
+                    11: [-1,-1],
+                    12: [-1,-1],
+                    13: [-1,-1],
+                    14: [-1,-1],
+                    15: [-1,-1]}
 # the chosen pocket for each ball
 pocket_for_each_ball = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 
@@ -61,8 +98,8 @@ pockets = [[100,300],[500,300],[900,300],[900,700],[500,700],[100,700]]
 
 
 #A list of X and Y coordinates for each ball
-listX = [120,700,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-listY = [320,350,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listX = [120,700,400,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listY = [320,350,400,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 
 
 
@@ -145,13 +182,18 @@ def linePoint(x1,y1,x2,y2,px,py):
 def print_dimensions():
     for i in range(FIRST_BALL,NUMBER_OF_BALLS):
         shot_params = ball_to_shots.get(i)
+        x_bound = balls_to_x_boundary.get(i)
+        y_bound = balls_to_y_boundary.get(i)
         print("For Ball {index}".format(index = i))
         print("Distances to Each Pocket = {distance}".format(distance = shot_params[DISTANCES]))
         print("First Slope = {slope}".format(slope = shot_params[FIRST_SLOPE]))
         print("First Intercept = {intercept}".format(intercept = shot_params[FIRST_INTERCEPT]))
         print("Second Slopes = {slopes}".format(slopes = shot_params[SECOND_SLOPES]))
         print("Second Intercepts = {intercepts}".format(intercepts = shot_params[SECOND_INTERCEPT]))
+        print("Bounday X Values are = {bound}".format(bound = x_bound))
+        print("Bounday Y Values are = {bound}".format(bound = y_bound))
         print("-------------------------------------------------")
+
 
 
 
@@ -285,34 +327,73 @@ def drawImage():
         
     cv.imwrite('img.jpeg',img)
 
+
+def find_edges():
+    if(listX[CUE_BALL]<0 or listY[CUE_BALL]<0): return
+    for target_ball in range(FIRST_BALL,NUMBER_OF_BALLS):
+        if(listX[target_ball]<0 or listY[target_ball]<0): continue
+        shot_params=ball_to_shots.get(target_ball)
+        if(math.isnan(shot_params[FIRST_SLOPE])):
+            shot_max[POCKETX] = np.nan
+            shot_max[POCKETY] = np.nan
+            shot_min[POCKETX] = np.nan
+            shot_min[POCKETY] = np.nan
+            continue
+        elif(math.isinf(shot_params[FIRST_SLOPE])): 
+            tangent_slope = 0
+            y_bound = balls_to_y_boundary.get(target_ball)
+            if(listY[CUE_BALL] > listY[target_ball]):
+                y_bound[0] = TABLE_Y_LO
+                y_bound[1] = listY[target_ball]
+            else:
+                y_bound[0] = listY[target_ball]
+                y_bound[1] = TABLE_Y_HI
+            x_bound = balls_to_x_boundary.get(target_ball)
+            x_bound[0] = TABLE_X_LO
+            x_bound[1] = TABLE_X_HI
+        elif(shot_params[FIRST_SLOPE]==0):
+            y_bound = balls_to_y_boundary.get(target_ball)
+            x_bound = balls_to_x_boundary.get(target_ball)
+            if(listX[CUE_BALL] > listX[target_ball]):
+                x_bound[0] = TABLE_X_LO
+                x_bound[1] = listX[target_ball]
+            else:
+                x_bound[0] = listX[target_ball]
+                x_bound[1] = TABLE_X_HI
+            y_bound[0] = TABLE_Y_LO
+            y_bound[1] = TABLE_Y_HI
+        else:
+            tangent_slope = -1/shot_params[FIRST_SLOPE]
+            new_line_b = listY[target_ball] - (tangent_slope*listX[target_ball])
+            new_x = (TABLE_Y_LO - new_line_b)/tangent_slope
+            if(new_x>TABLE_X_HI) : new_x = TABLE_X_HI
+            elif(new_x<TABLE_X_LO) : new_x = TABLE_X_LO
+            x_bound = balls_to_x_boundary.get(target_ball)
+            x_bound[0] = new_x
+            new_x = (TABLE_Y_HI - new_line_b)/tangent_slope
+            if(new_x>TABLE_X_HI) : new_x = TABLE_X_HI
+            elif(new_x<TABLE_X_LO) : new_x = TABLE_X_LO
+            x_bound[1] = new_x
+            y_bound = balls_to_y_boundary.get(target_ball)
+            new_y = (tangent_slope * TABLE_X_HI) + new_line_b
+            if(new_y>TABLE_Y_HI) : new_y = TABLE_Y_HI
+            elif(new_y<TABLE_Y_LO) : new_y = TABLE_Y_LO
+            y_bound[0] = new_y
+            new_y = (tangent_slope * TABLE_X_LO) + new_line_b
+            if(new_y>TABLE_Y_HI) : new_y = TABLE_Y_HI
+            elif(new_y<TABLE_Y_LO) : new_y = TABLE_Y_LO
+            y_bound[1] = new_y
+
 #@TODO: Now FIGURE OUT HOW TO CHOOSE A POCKET
 
 #not fully correct
 def remove_impossible_pockets():
-    
     if(listX[CUE_BALL]<0 or listY[CUE_BALL]<0): return
     for target_ball in range(FIRST_BALL, NUMBER_OF_BALLS):
         if(listX[target_ball]<0 or listY[target_ball]<0): continue
         shot_params=ball_to_shots.get(target_ball)
-        pocket_idx = 0
-        for pocket in pockets:
-            if (pocket[POCKETX]<listX[CUE_BALL] and listX[CUE_BALL]<=listX[target_ball]):
-                shot_params[DISTANCES][pocket_idx] = np.nan
-                shot_params[SECOND_SLOPES][pocket_idx] = np.nan
-                shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan 
-            elif(pocket[POCKETX]>listX[CUE_BALL] and listX[CUE_BALL]>=listX[target_ball]):
-                shot_params[DISTANCES][pocket_idx] = np.nan
-                shot_params[SECOND_SLOPES][pocket_idx] = np.nan
-                shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan
-            if(pocket[POCKETY] < listY[CUE_BALL] and listY[CUE_BALL] < listY[target_ball]):
-                shot_params[DISTANCES][pocket_idx] = np.nan
-                shot_params[SECOND_SLOPES][pocket_idx] = np.nan
-                shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan 
-            elif(pocket[POCKETY] > listY[CUE_BALL] and listY[CUE_BALL] > listY[target_ball]):
-                shot_params[DISTANCES][pocket_idx] = np.nan
-                shot_params[SECOND_SLOPES][pocket_idx] = np.nan
-                shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan 
-            pocket_idx+=1
+        x_bounds = balls_to_x_boundary.get(target_ball )
+        y_bounds = balls_to_y_boundary.get(target_ball)
 
 def chose_pocket():
     if(listX[CUE_BALL]<0 or listY[CUE_BALL]<0): return
@@ -341,7 +422,8 @@ def chose_pocket():
 find_distance_to_all_pockets();
 create_first_lines();
 create_second_lines();
-remove_impossible_pockets();
+find_edges();
+#remove_impossible_pockets();
 print_dimensions();
 chose_pocket();
 drawImage();
