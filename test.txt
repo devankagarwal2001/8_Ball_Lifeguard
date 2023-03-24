@@ -1,20 +1,22 @@
+I NEED TO BE FIGURED OUT
+I NEED TO BE FIGURED OUT
 For Ball 1
 Distances to Each Pocket = [nan, nan, 206.15528128088303, 403.11288741492746, nan, nan]
-First Slope = -0.75
-First Intercept = 875.0
+First Slope = -3.0
+First Intercept = 2450.0
 Second Slopes = [nan, nan, -0.25, 1.75, nan, nan]
 Second Intercepts = [nan, nan, 525.0, -875.0, nan, nan]
-Bounday X Values are = [662.5, 900]
-Bounday Y Values are = [616.6666666666667, 300]
+Bounday X Values are = [550.0, 900]
+Bounday Y Values are = [300, 416.6666666666667]
 -------------------------------------------------
 For Ball 2
-Distances to Each Pocket = [316.22776601683796, 141.4213562373095, nan, nan, nan, 424.26406871192853]
-First Slope = 1.0
-First Intercept = 0.0
-Second Slopes = [0.3333333333333333, -1.0, nan, nan, nan, -1.0]
-Second Intercepts = [266.6666666666667, 800.0, nan, nan, nan, 800.0]
-Bounday X Values are = [500.0, 100.0]
-Bounday Y Values are = [300, 700.0]
+Distances to Each Pocket = [316.22776601683796, nan, nan, nan, nan, 424.26406871192853]
+First Slope = 0.4
+First Intercept = 240.0
+Second Slopes = [0.3333333333333333, nan, nan, nan, nan, -1.0]
+Second Intercepts = [266.6666666666667, nan, nan, nan, nan, 800.0]
+Bounday X Values are = [440.0, 280.0]
+Bounday Y Values are = [700, 300]
 -------------------------------------------------
 For Ball 3
 Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
@@ -133,4 +135,4 @@ Second Intercepts = [-1, -1, -1, -1, -1, -1]
 Bounday X Values are = [-1, -1]
 Bounday Y Values are = [-1, -1]
 -------------------------------------------------
-Pockets For Each Ball Are = [2, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
+Pockets For Each Ball Are = [2, nan, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
