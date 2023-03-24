@@ -98,8 +98,8 @@ pockets = [[100,300],[500,300],[900,300],[900,700],[500,700],[100,700]]
 
 
 #A list of X and Y coordinates for each ball
-listX = [120,700,400,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-listY = [320,350,400,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listX = [500,700,400,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listY = [500,350,400,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 
 
 
@@ -392,8 +392,45 @@ def remove_impossible_pockets():
     for target_ball in range(FIRST_BALL, NUMBER_OF_BALLS):
         if(listX[target_ball]<0 or listY[target_ball]<0): continue
         shot_params=ball_to_shots.get(target_ball)
-        x_bounds = balls_to_x_boundary.get(target_ball )
+        x_bounds = balls_to_x_boundary.get(target_ball)
         y_bounds = balls_to_y_boundary.get(target_ball)
+        if(listX[CUE_BALL] == listX[target_ball]):
+            pocket_idx = 0
+            for pocket in pockets: 
+                if(pocket[POCKETY]<listY[target_ball]):
+                    shot_params[DISTANCES][pocket_idx] = np.nan
+                    shot_params[SECOND_SLOPES][pocket_idx] = np.nan
+                    shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan
+                    pocket_idx+=1
+        elif(listX[CUE_BALL]<listX[target_ball]):
+            pocket_idx = 0
+            for pocket in pockets: 
+                if (pocket_idx<3):
+                    if(pocket[POCKETX]<x_bounds[0]):
+                        shot_params[DISTANCES][pocket_idx] = np.nan
+                        shot_params[SECOND_SLOPES][pocket_idx] = np.nan
+                        shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan
+                else:
+                    if(pocket[POCKETX]<x_bounds[1]):
+                        shot_params[DISTANCES][pocket_idx] = np.nan
+                        shot_params[SECOND_SLOPES][pocket_idx] = np.nan
+                        shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan
+                pocket_idx+=1
+        else:
+            pocket_idx = 0
+            for pocket in pockets:
+                if (pocket_idx<3):
+                    if(pocket[POCKETX]>x_bounds[0]):
+                        shot_params[DISTANCES][pocket_idx] = np.nan
+                        shot_params[SECOND_SLOPES][pocket_idx] = np.nan
+                        shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan
+                else:
+                    if(pocket[POCKETX]>x_bounds[1]):
+                        shot_params[DISTANCES][pocket_idx] = np.nan
+                        shot_params[SECOND_SLOPES][pocket_idx] = np.nan
+                        shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan
+                pocket_idx+=1
+        
 
 def chose_pocket():
     if(listX[CUE_BALL]<0 or listY[CUE_BALL]<0): return
@@ -423,7 +460,7 @@ find_distance_to_all_pockets();
 create_first_lines();
 create_second_lines();
 find_edges();
-#remove_impossible_pockets();
+remove_impossible_pockets();
 print_dimensions();
 chose_pocket();
 drawImage();
