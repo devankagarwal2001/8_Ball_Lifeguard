@@ -11,26 +11,16 @@ import Indexer
 
 def Test(img):
     
-    
-    """hsv = ToHSV(img)    
-    
-    lower_color, upper_color = GetClothColor(hsv)
-    
-    contours = GetContours(hsv, lower_color, upper_color,15)
-    
-    TableContour = MaskTableBed(contours)
-    
-    warp = TransformToOverhead(img,TableContour)"""
-    
     #Now the table is cropped and warped, lets find the balls
     hsv = ToHSV(img)
     
     lower_color, upper_color = GetClothColor(hsv)    
     
-    contours = GetContours(hsv, lower_color, upper_color,31)
+    contours = GetContours(hsv, lower_color, upper_color,15)
         
     centers = FindTheBalls(img, contours)
-    #print(centers)
+    
+    FindTheColors(img,centers)
 
 def LoadImage(filename):
     """
@@ -64,7 +54,6 @@ def GetClothColor(hsv,search_width=45):
     # define range of blue color in HSV
     lower_color = np.array([h_max-search_width,s_max-search_width,v_max-search_width])
     upper_color = np.array([h_max+search_width,s_max+search_width,v_max+search_width])
-    print(lower_color,upper_color)
     return lower_color, upper_color
 
 
@@ -197,7 +186,7 @@ def GetContours(hsv, lower_color, upper_color,filter_radius):
     contours, _ = cv2.findContours(median,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
     return contours
 
-def FindTheBalls(img, contours, similarity_threshold=11):
+def FindTheBalls(img, contours, similarity_threshold=15):
     """
     Find and circle all of the balls on the table.
     
@@ -207,7 +196,6 @@ def FindTheBalls(img, contours, similarity_threshold=11):
     #compare the difference in area of a min bounding circle and the cotour area
     diffs = []
     indexes = []
-    print(len(contours))
     for i,contour in enumerate(contours):
         contourArea = cv2.contourArea(contour)
         (x,y),radius = cv2.minEnclosingCircle(contour)
@@ -218,33 +206,77 @@ def FindTheBalls(img, contours, similarity_threshold=11):
     sorted_data = sorted(zip(diffs,indexes))
     
     diffs = [x[0] for x in sorted_data]
-    indexes = [x[1] for x in sorted_data]
     
     #list of center coords as tuples
     centers = []    
     
-    for i,d in zip(indexes,diffs):
+    for d,i in sorted_data:#zip(indexes,diffs):
         #if the contour is a similar shape to the circle it is likely to be a ball.
         if (d < diffs[0] * similarity_threshold):
             (x,y),radius = cv2.minEnclosingCircle(contours[i])
-        
-            center = (int(x),int(y))
-            radius = int(radius)
-            cv2.circle(img,center,radius,(0,0,255),2)
-            centers.append(center)
+    
+            #cv2.circle(img,(int(x),int(y)),int(radius),(0,0,255),2)
+            centers.append((int(y),int(x), int(radius)))
+            print(int(y),int(x), int(radius))
     
     cv2.imshow('pool_ball_detect', img)
-
+    print(len(centers))
     return centers
 
-imcap = cv2.VideoCapture(0) #1 or -1 once the camera is added I think
+def FindTheColors(img, centers):
+    stripes = []
+    solids = []
+    cue = []
+    eight_ball = []
+    for (centerX,centerY,radius) in centers:
+        print(centerX,centerY,radius)
+        numOfWhitePixels = 0
+        numOfBlackPixels = 0
+        for x in range(centerX - radius, centerX + radius):
+            for y in range(centerY - radius, centerY + radius):
+                if (img[x,y][0] > 200 and img[x,y][1] > 200 and img[x,y][2] > 200):
+                    numOfWhitePixels +=1
+                elif (img[x,y][0] < 60 and img[x,y][1] < 60 and img[x,y][2] < 60):
+                    numOfBlackPixels +=1
+        print(numOfWhitePixels, numOfBlackPixels)
+        if numOfBlackPixels > 10:
+            eight_ball.append((centerX,centerY,radius))
+            cv2.circle(img,(int(centerY),int(centerX)),int(radius),(0,0,0),2)
+        elif numOfWhitePixels > 10:
+            cue.append((centerX,centerY,radius))
+            cv2.circle(img,(int(centerY),int(centerX)),int(radius),(255,255,255),2)
+        elif numOfWhitePixels > 5:
+            stripes.append((centerX,centerY,radius))
+            cv2.circle(img,(int(centerY),int(centerX)),int(radius),(0,0,255),2)
+        else:
+            solids.append((centerX,centerY,radius))
+            cv2.circle(img,(int(centerY),int(centerX)),int(radius),(0,255,0),2)
+    cv2.imshow('colors_detected', img)
+
+def mse(img1, img2):
+   (h, w, x)= img1.shape
+   diff = cv2.subtract(img1, img2)
+   err = np.sum(diff**2)
+   mse = err/(float(h*w))
+   return mse
+
+#imcap = cv2.VideoCapture(0) #1 or -1 once the camera is added I think
 #imcap.set(3, 640) # set width as 640
 #imcap.set(4, 480)
+img = LoadImage('img/pool_balls.jpeg')
+cv2.imshow('orig_img', img)
+Test(img)
+old_img = img
+
 while True:
-    success,img = imcap.read()
-    #img = LoadImage('img/test_2.jpeg')
+    #success,img = imcap.read()
+    img = LoadImage('img/pool_balls.jpeg')
+    
     cv2.imshow('orig_img', img)
-    Test(img)
+    if (mse(img,old_img) > 20):
+        print(mse(img,old_img))
+        Test(img)
+    old_img = img
     if cv2.waitKey(10) & 0xFF == ord('q'):
         break
 #imcap.release()
@@ -255,3 +287,12 @@ cv2.destroyWindow('pool_ball_detect')
 #Test(img)
 #img = LoadImage('img/pool_crop_2.png') 
 #Test(img)
+
+""""
+import cv2
+import numpy as np
+
+img = cv2.imread('img.png', cv2.IMREAD_GRAYSCALE)
+n_white_pix = np.sum(img == 255)
+print('Number of white pixels:', n_white_pix)
+"""

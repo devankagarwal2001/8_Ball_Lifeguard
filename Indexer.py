@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import numpy as np  
 """
 Created on Sun Jul 12 21:33:56 2015
 
@@ -11,7 +12,6 @@ def get_index_of_min(Data_List):
     
     SWDG May 2015
     """
-    import numpy as np
     
     #make sure data is in a standard list, not a numpy array
     if (type(Data_List).__module__ == np.__name__):
@@ -27,7 +27,6 @@ def get_index_of_max(Data_List):
     
     SWDG May 2015
     """
-    import numpy as np    
     
     #make sure data is in a standard list, not a numpy array
     if (type(Data_List).__module__ == np.__name__):
