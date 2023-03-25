@@ -89,8 +89,11 @@ balls_to_y_boundary = {1: [-1,-1],
                     13: [-1,-1],
                     14: [-1,-1],
                     15: [-1,-1]}
-# the chosen pocket for each ball
-pocket_for_each_ball = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+
+# the chosen pocket for each ball along with its hardness
+pocket_for_each_ball = [[-1,1],[-1,1],[-1,1],[-1,1],[-1,1],
+                        [-1,1],[-1,1],[-1,1],[-1,1],[-1,1],
+                        [-1,1],[-1,1],[-1,1],[-1,1],[-1,1]]
 
 
 #A list of pockets with each element being an x-y coordinate for the pocket
@@ -193,7 +196,7 @@ def print_dimensions():
         print("Second Intercepts = {intercepts}".format(intercepts = shot_params[SECOND_INTERCEPT]))
         print("Bounday X Values are = {bound}".format(bound = x_bound))
         print("Bounday Y Values are = {bound}".format(bound = y_bound))
-        print("Pocket Chosen for this ball = {pocket}".format(pocket = pocket_for_each_ball[i-1]))
+        print("Pocket Chosen for this ball and its hardness = {pocket}".format(pocket = pocket_for_each_ball[i-1]))
         print("-------------------------------------------------")
 
 
@@ -323,11 +326,16 @@ def drawImage():
         shot_params = ball_to_shots.get(target_ball)
         if(not math.isnan(shot_params[FIRST_SLOPE])):
             cv.line(img,(listX[CUE_BALL],listY[CUE_BALL]),(listX[target_ball],listY[target_ball]),(0,0,255 - (i*10)),2);
-        if((not math.isnan(pocket_for_each_ball[target_ball-1])) and pocket_for_each_ball[target_ball-1]>=0):
-            pocketX = pockets[pocket_for_each_ball[target_ball-1]][POCKETX]
-            pocketY = pockets[pocket_for_each_ball[target_ball-1]][POCKETY]
-            cv.line(img,(listX[target_ball],listY[target_ball]),(pocketX,pocketY),(0,0,255 - (i*20)),2);
-        
+        #if((not math.isnan(pocket_for_each_ball[target_ball-1][0])) and pocket_for_each_ball[target_ball-1][0]>=0):
+            #pocketX = pockets[pocket_for_each_ball[target_ball-1][0]][POCKETX]
+            #pocketY = pockets[pocket_for_each_ball[target_ball-1][0]][POCKETY]
+            #cv.line(img,(listX[target_ball],listY[target_ball]),(pocketX,pocketY),(0,0,255 - (i*20)),2);
+    
+    chosen_shot = chose_easiest_shot()
+    if (chosen_shot>0):
+        pocketX = pockets[pocket_for_each_ball[chosen_shot][0]][POCKETX]
+        pocketY = pockets[pocket_for_each_ball[chosen_shot][0]][POCKETY]
+        cv.line(img,(listX[chosen_shot+1],listY[chosen_shot+1]),(pocketX,pocketY),RED,2)
     cv.imwrite('img.jpeg',img)
 
 
@@ -524,9 +532,27 @@ def chose_pocket():
                         min_calc = hardness
                         chosen_idx = shot_idx
                     shot_idx+=1
-            pocket_for_each_ball[target_ball-1] = chosen_idx
-        else: pocket_for_each_ball[target_ball-1] = np.nan
+            pocket_for_each_ball[target_ball-1][0] = chosen_idx
+            pocket_for_each_ball[target_ball-1][1] = min_calc
 
+        else: 
+            pocket_for_each_ball[target_ball-1][0] = np.nan
+            pocket_for_each_ball[target_ball-1][1] = np.inf
+            
+def chose_easiest_shot():
+    min_hardness = 100000
+    min_indx = -1
+    cur_indx = 0
+    for shot in pocket_for_each_ball:
+        if (math.isnan(shot[0])): 
+            cur_indx +=1 
+            continue
+        else:
+            if shot[1] < min_hardness:
+                min_hardness = shot[1]
+                min_indx = cur_indx
+            cur_indx +=1
+    return min_indx
 
 
 find_distance_to_all_pockets();

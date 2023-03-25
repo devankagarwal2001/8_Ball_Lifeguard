@@ -7,7 +7,7 @@ Second Slopes = [nan, nan, -0.2, nan, nan, nan]
 Second Intercepts = [nan, nan, 480.0, nan, nan, nan]
 Bounday X Values are = [844.5714285714286, 900]
 Bounday Y Values are = [300, 402.1052631578948]
-Pocket Chosen for this ball = 2
+Pocket Chosen for this ball and its hardness = [2, 2.6223528927048605]
 -------------------------------------------------
 For Ball 2
 Dimensions are 850,330
@@ -18,7 +18,7 @@ Second Slopes = [nan, nan, -0.6, nan, nan, nan]
 Second Intercepts = [nan, nan, 840.0, nan, nan, nan]
 Bounday X Values are = [835.4285714285714, 900]
 Bounday Y Values are = [300, 432.9411764705883]
-Pocket Chosen for this ball = 2
+Pocket Chosen for this ball and its hardness = [2, 0.9995917534020513]
 -------------------------------------------------
 For Ball 3
 Dimensions are 850,350
@@ -29,7 +29,7 @@ Second Slopes = [nan, nan, -1.0, nan, nan, nan]
 Second Intercepts = [nan, nan, 1200.0, nan, nan, nan]
 Bounday X Values are = [828.5714285714286, 900]
 Bounday Y Values are = [300, 466.6666666666665]
-Pocket Chosen for this ball = 2
+Pocket Chosen for this ball and its hardness = [2, 6.060915267313264]
 -------------------------------------------------
 For Ball 4
 Dimensions are 850,370
@@ -40,7 +40,7 @@ Second Slopes = [nan, nan, -1.4, nan, nan, nan]
 Second Intercepts = [nan, nan, 1560.0, nan, nan, nan]
 Bounday X Values are = [824.0, 900]
 Bounday Y Values are = [300, 504.61538461538476]
-Pocket Chosen for this ball = 2
+Pocket Chosen for this ball and its hardness = [2, 13.272158983437196]
 -------------------------------------------------
 For Ball 5
 Dimensions are 850,390
@@ -51,7 +51,7 @@ Second Slopes = [nan, nan, -1.8, nan, nan, nan]
 Second Intercepts = [nan, nan, 1920.0, nan, nan, nan]
 Bounday X Values are = [821.7142857142858, 900]
 Bounday Y Values are = [300, 549.090909090909]
-Pocket Chosen for this ball = 2
+Pocket Chosen for this ball and its hardness = [2, 22.94454717134246]
 -------------------------------------------------
 For Ball 6
 Dimensions are 850,410
@@ -62,7 +62,7 @@ Second Slopes = [nan, nan, -2.2, nan, nan, nan]
 Second Intercepts = [nan, nan, 2280.0, nan, nan, nan]
 Bounday X Values are = [821.7142857142858, 900]
 Bounday Y Values are = [300, 604.4444444444443]
-Pocket Chosen for this ball = 2
+Pocket Chosen for this ball and its hardness = [2, 35.213448265904184]
 -------------------------------------------------
 For Ball 7
 Dimensions are 850,430
@@ -73,7 +73,7 @@ Second Slopes = [nan, nan, -2.6, nan, nan, nan]
 Second Intercepts = [nan, nan, 2640.0, nan, nan, nan]
 Bounday X Values are = [824.0, 900]
 Bounday Y Values are = [300, 680.0]
-Pocket Chosen for this ball = 2
+Pocket Chosen for this ball and its hardness = [2, 50.142197797862835]
 -------------------------------------------------
 For Ball 8
 Dimensions are 850,450
@@ -84,7 +84,7 @@ Second Slopes = [nan, nan, -3.0, 5.0, nan, nan]
 Second Intercepts = [nan, nan, 3000.0, -3800.0, nan, nan]
 Bounday X Values are = [828.5714285714286, 885.7142857142857]
 Bounday Y Values are = [300, 700]
-Pocket Chosen for this ball = 2
+Pocket Chosen for this ball and its hardness = [2, 67.76309271789384]
 -------------------------------------------------
 For Ball 9
 Dimensions are 850,470
@@ -95,7 +95,7 @@ Second Slopes = [nan, nan, -3.4, 4.6, nan, nan]
 Second Intercepts = [nan, nan, 3360.0, -3440.0, nan, nan]
 Bounday X Values are = [835.4285714285714, 869.7142857142857]
 Bounday Y Values are = [300, 700]
-Pocket Chosen for this ball = 2
+Pocket Chosen for this ball and its hardness = [2, 88.09393872915619]
 -------------------------------------------------
 For Ball 10
 Dimensions are 850,490
@@ -106,7 +106,7 @@ Second Slopes = [nan, nan, -3.8, 4.2, nan, nan]
 Second Intercepts = [nan, nan, 3720.0, -3080.0, nan, nan]
 Bounday X Values are = [844.5714285714286, 856.0]
 Bounday Y Values are = [300, 700]
-Pocket Chosen for this ball = 2
+Pocket Chosen for this ball and its hardness = [2, 111.14522215625495]
 -------------------------------------------------
 For Ball 11
 Dimensions are 850,510
@@ -117,7 +117,7 @@ Second Slopes = [nan, nan, nan, 3.8, nan, nan]
 Second Intercepts = [nan, nan, nan, -2720.0, nan, nan]
 Bounday X Values are = [856.0, 844.5714285714286]
 Bounday Y Values are = [700, 300]
-Pocket Chosen for this ball = 3
+Pocket Chosen for this ball and its hardness = [3, 111.14522215625495]
 -------------------------------------------------
 For Ball 12
 Dimensions are 850,530
@@ -128,7 +128,7 @@ Second Slopes = [nan, nan, nan, 3.4, nan, nan]
 Second Intercepts = [nan, nan, nan, -2360.0, nan, nan]
 Bounday X Values are = [869.7142857142857, 835.4285714285714]
 Bounday Y Values are = [700, 300]
-Pocket Chosen for this ball = 3
+Pocket Chosen for this ball and its hardness = [3, 88.09393872915619]
 -------------------------------------------------
 For Ball 13
 Dimensions are 850,550
@@ -139,7 +139,7 @@ Second Slopes = [nan, nan, nan, 3.0, nan, nan]
 Second Intercepts = [nan, nan, nan, -2000.0, nan, nan]
 Bounday X Values are = [885.7142857142857, 828.5714285714286]
 Bounday Y Values are = [700, 300]
-Pocket Chosen for this ball = 3
+Pocket Chosen for this ball and its hardness = [3, 67.76309271789384]
 -------------------------------------------------
 For Ball 14
 Dimensions are 850,570
@@ -150,7 +150,7 @@ Second Slopes = [nan, nan, nan, 2.6, nan, nan]
 Second Intercepts = [nan, nan, nan, -1640.0, nan, nan]
 Bounday X Values are = [900, 824.0]
 Bounday Y Values are = [700, 320.0]
-Pocket Chosen for this ball = 3
+Pocket Chosen for this ball and its hardness = [3, 50.142197797862835]
 -------------------------------------------------
 For Ball 15
 Dimensions are 850,590
@@ -161,5 +161,5 @@ Second Slopes = [nan, nan, nan, 2.2, nan, nan]
 Second Intercepts = [nan, nan, nan, -1280.0000000000002, nan, nan]
 Bounday X Values are = [900, 821.7142857142858]
 Bounday Y Values are = [700, 395.55555555555566]
-Pocket Chosen for this ball = 3
+Pocket Chosen for this ball and its hardness = [3, 35.213448265904184]
 -------------------------------------------------
