@@ -1,4 +1,6 @@
+Pockets For Each Ball Are = [2, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 For Ball 1
+Dimensions are 700,350
 Distances to Each Pocket = [nan, nan, 206.15528128088303, nan, nan, nan]
 First Slope = -3.0
 First Intercept = 2450.0
@@ -6,8 +8,10 @@ Second Slopes = [nan, nan, -0.25, nan, nan, nan]
 Second Intercepts = [nan, nan, 525.0, nan, nan, nan]
 Bounday X Values are = [550.0, 900]
 Bounday Y Values are = [300, 416.6666666666667]
+Pocket Chosen for this ball = 2
 -------------------------------------------------
 For Ball 2
+Dimensions are 400,400
 Distances to Each Pocket = [316.22776601683796, nan, nan, nan, nan, nan]
 First Slope = 0.4
 First Intercept = 240.0
@@ -15,8 +19,10 @@ Second Slopes = [0.3333333333333333, nan, nan, nan, nan, nan]
 Second Intercepts = [266.6666666666667, nan, nan, nan, nan, nan]
 Bounday X Values are = [440.0, 280.0]
 Bounday Y Values are = [700, 300]
+Pocket Chosen for this ball = 0
 -------------------------------------------------
 For Ball 3
+Dimensions are 110,320
 Distances to Each Pocket = [22.360679774997898, nan, nan, nan, nan, nan]
 First Slope = 0.3333333333333333
 First Intercept = 283.3333333333333
@@ -24,8 +30,10 @@ Second Slopes = [2.0, nan, nan, nan, nan, nan]
 Second Intercepts = [100.0, nan, nan, nan, nan, nan]
 Bounday X Values are = [116.66666666666667, 100]
 Bounday Y Values are = [350.0, 300]
+Pocket Chosen for this ball = 0
 -------------------------------------------------
 For Ball 4
+Dimensions are -1,-1
 Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
 First Slope = nan
 First Intercept = nan
@@ -33,8 +41,10 @@ Second Slopes = [-1, -1, -1, -1, -1, -1]
 Second Intercepts = [-1, -1, -1, -1, -1, -1]
 Bounday X Values are = [-1, -1]
 Bounday Y Values are = [-1, -1]
+Pocket Chosen for this ball = -1
 -------------------------------------------------
 For Ball 5
+Dimensions are -1,-1
 Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
 First Slope = nan
 First Intercept = nan
@@ -42,8 +52,10 @@ Second Slopes = [-1, -1, -1, -1, -1, -1]
 Second Intercepts = [-1, -1, -1, -1, -1, -1]
 Bounday X Values are = [-1, -1]
 Bounday Y Values are = [-1, -1]
+Pocket Chosen for this ball = -1
 -------------------------------------------------
 For Ball 6
+Dimensions are -1,-1
 Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
 First Slope = nan
 First Intercept = nan
@@ -51,8 +63,10 @@ Second Slopes = [-1, -1, -1, -1, -1, -1]
 Second Intercepts = [-1, -1, -1, -1, -1, -1]
 Bounday X Values are = [-1, -1]
 Bounday Y Values are = [-1, -1]
+Pocket Chosen for this ball = -1
 -------------------------------------------------
 For Ball 7
+Dimensions are -1,-1
 Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
 First Slope = nan
 First Intercept = nan
@@ -60,8 +74,10 @@ Second Slopes = [-1, -1, -1, -1, -1, -1]
 Second Intercepts = [-1, -1, -1, -1, -1, -1]
 Bounday X Values are = [-1, -1]
 Bounday Y Values are = [-1, -1]
+Pocket Chosen for this ball = -1
 -------------------------------------------------
 For Ball 8
+Dimensions are -1,-1
 Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
 First Slope = nan
 First Intercept = nan
@@ -69,8 +85,10 @@ Second Slopes = [-1, -1, -1, -1, -1, -1]
 Second Intercepts = [-1, -1, -1, -1, -1, -1]
 Bounday X Values are = [-1, -1]
 Bounday Y Values are = [-1, -1]
+Pocket Chosen for this ball = -1
 -------------------------------------------------
 For Ball 9
+Dimensions are -1,-1
 Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
 First Slope = nan
 First Intercept = nan
@@ -78,8 +96,10 @@ Second Slopes = [-1, -1, -1, -1, -1, -1]
 Second Intercepts = [-1, -1, -1, -1, -1, -1]
 Bounday X Values are = [-1, -1]
 Bounday Y Values are = [-1, -1]
+Pocket Chosen for this ball = -1
 -------------------------------------------------
 For Ball 10
+Dimensions are -1,-1
 Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
 First Slope = nan
 First Intercept = nan
@@ -87,8 +107,10 @@ Second Slopes = [-1, -1, -1, -1, -1, -1]
 Second Intercepts = [-1, -1, -1, -1, -1, -1]
 Bounday X Values are = [-1, -1]
 Bounday Y Values are = [-1, -1]
+Pocket Chosen for this ball = -1
 -------------------------------------------------
 For Ball 11
+Dimensions are -1,-1
 Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
 First Slope = nan
 First Intercept = nan
@@ -96,8 +118,10 @@ Second Slopes = [-1, -1, -1, -1, -1, -1]
 Second Intercepts = [-1, -1, -1, -1, -1, -1]
 Bounday X Values are = [-1, -1]
 Bounday Y Values are = [-1, -1]
+Pocket Chosen for this ball = -1
 -------------------------------------------------
 For Ball 12
+Dimensions are -1,-1
 Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
 First Slope = nan
 First Intercept = nan
@@ -105,8 +129,10 @@ Second Slopes = [-1, -1, -1, -1, -1, -1]
 Second Intercepts = [-1, -1, -1, -1, -1, -1]
 Bounday X Values are = [-1, -1]
 Bounday Y Values are = [-1, -1]
+Pocket Chosen for this ball = -1
 -------------------------------------------------
 For Ball 13
+Dimensions are -1,-1
 Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
 First Slope = nan
 First Intercept = nan
@@ -114,8 +140,10 @@ Second Slopes = [-1, -1, -1, -1, -1, -1]
 Second Intercepts = [-1, -1, -1, -1, -1, -1]
 Bounday X Values are = [-1, -1]
 Bounday Y Values are = [-1, -1]
+Pocket Chosen for this ball = -1
 -------------------------------------------------
 For Ball 14
+Dimensions are -1,-1
 Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
 First Slope = nan
 First Intercept = nan
@@ -123,8 +151,10 @@ Second Slopes = [-1, -1, -1, -1, -1, -1]
 Second Intercepts = [-1, -1, -1, -1, -1, -1]
 Bounday X Values are = [-1, -1]
 Bounday Y Values are = [-1, -1]
+Pocket Chosen for this ball = -1
 -------------------------------------------------
 For Ball 15
+Dimensions are -1,-1
 Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
 First Slope = nan
 First Intercept = nan
@@ -132,5 +162,5 @@ Second Slopes = [-1, -1, -1, -1, -1, -1]
 Second Intercepts = [-1, -1, -1, -1, -1, -1]
 Bounday X Values are = [-1, -1]
 Bounday Y Values are = [-1, -1]
+Pocket Chosen for this ball = -1
 -------------------------------------------------
-Pockets For Each Ball Are = [2, nan, nan, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]

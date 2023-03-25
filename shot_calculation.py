@@ -185,6 +185,7 @@ def print_dimensions():
         x_bound = balls_to_x_boundary.get(i)
         y_bound = balls_to_y_boundary.get(i)
         print("For Ball {index}".format(index = i))
+        print("Dimensions are {x},{y}".format(x = listX[i], y = listY[i]))
         print("Distances to Each Pocket = {distance}".format(distance = shot_params[DISTANCES]))
         print("First Slope = {slope}".format(slope = shot_params[FIRST_SLOPE]))
         print("First Intercept = {intercept}".format(intercept = shot_params[FIRST_INTERCEPT]))
@@ -192,7 +193,9 @@ def print_dimensions():
         print("Second Intercepts = {intercepts}".format(intercepts = shot_params[SECOND_INTERCEPT]))
         print("Bounday X Values are = {bound}".format(bound = x_bound))
         print("Bounday Y Values are = {bound}".format(bound = y_bound))
+        print("Pocket Chosen for this ball = {pocket}".format(pocket = pocket_for_each_ball[i-1]))
         print("-------------------------------------------------")
+
 
 
 
@@ -320,7 +323,7 @@ def drawImage():
         shot_params = ball_to_shots.get(target_ball)
         if(not math.isnan(shot_params[FIRST_SLOPE])):
             cv.line(img,(listX[CUE_BALL],listY[CUE_BALL]),(listX[target_ball],listY[target_ball]),(0,0,255 - (i*10)),2);
-        if((not math.isnan(pocket_for_each_ball[target_ball-1])) and pocket_for_each_ball[target_ball-1]>0):
+        if((not math.isnan(pocket_for_each_ball[target_ball-1])) and pocket_for_each_ball[target_ball-1]>=0):
             pocketX = pockets[pocket_for_each_ball[target_ball-1]][POCKETX]
             pocketY = pockets[pocket_for_each_ball[target_ball-1]][POCKETY]
             cv.line(img,(listX[target_ball],listY[target_ball]),(pocketX,pocketY),(0,0,255 - (i*20)),2);
@@ -485,19 +488,36 @@ def chose_pocket():
         if(listX[target_ball]<0 or listY[target_ball]<0): continue
         shot_params=ball_to_shots.get(target_ball)
         if(math.isnan(shot_params[FIRST_SLOPE])): continue
-        pocket_idx=0
-        min_dist = 10000000000
-        min_ind = -1
-        for dist in shot_params[DISTANCES]:
-            if (math.isnan(dist)): 
-                pocket_idx+=1
-                continue
-            if(dist<min_dist):
-                min_ind = pocket_idx
-                min_dist = dist
-            pocket_idx +=1
-
-        if(min_ind>0): pocket_for_each_ball[target_ball-1] = min_ind
+        second_slopes = shot_params[SECOND_SLOPES]
+        first_slope = shot_params[FIRST_SLOPE]
+        distances = shot_params[DISTANCES]
+        hardness_all_shots = [np.nan,np.nan,np.nan,np.nan,np.nan,np.nan]
+        viable = False
+        for idx in range(NO_POCKETS):
+            if(math.isnan(second_slopes[idx])): continue
+            if(math.isnan(distances[idx])): continue
+            viable = True
+            calc_dist = distances[idx] * 0.5
+            calc_slope_delta = abs(second_slopes[idx] - first_slope) * 0.3
+            total_hardness = calc_dist * calc_slope_delta
+            hardness_all_shots[idx] = total_hardness
+        #shot can be made chose best
+        #print("For Ball {no}, shot is viable = {s}".format(no = target_ball,s = viable))
+        #print("Hardness for each shot is = {hard}".format(hard = hardness_all_shots))
+        if (viable):
+            shot_idx = 0
+            chosen_idx = -1
+            min_calc = 100000000
+            for hardness in hardness_all_shots:
+                if (math.isnan(hardness)): 
+                    shot_idx+=1
+                    continue
+                else:
+                    if (min_calc>hardness):
+                        min_calc = hardness
+                        chosen_idx = shot_idx
+                    shot_idx+=1
+            pocket_for_each_ball[target_ball-1] = chosen_idx
         else: pocket_for_each_ball[target_ball-1] = np.nan
     print('Pockets For Each Ball Are = {list}'.format(list = pocket_for_each_ball))
 
@@ -508,6 +528,6 @@ create_first_lines();
 create_second_lines();
 find_edges();
 remove_impossible_pockets();
-print_dimensions();
 chose_pocket();
+print_dimensions();
 drawImage();
