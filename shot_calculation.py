@@ -98,8 +98,8 @@ pockets = [[100,300],[500,300],[900,300],[900,700],[500,700],[100,700]]
 
 
 #A list of X and Y coordinates for each ball
-listX = [650,700,400,110,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-listY = [500,350,400,320,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listX = [500,850,850,850,850,850,850,850,850,850,850,850,850,850,850,850]
+listY = [500,310,330,350,370,390,410,430,450,470,490,510,530,550,570,590]
 
 
 
@@ -498,12 +498,19 @@ def chose_pocket():
             if(math.isnan(distances[idx])): continue
             viable = True
             calc_dist = distances[idx] * 0.5
-            calc_slope_delta = abs(second_slopes[idx] - first_slope) * 0.3
+            if(math.isinf(first_slope)):
+                if(math.isinf(second_slopes[idx])):
+                    calc_slope_delta = 0
+                else:
+                    calc_slope_delta = abs(second_slopes[idx]) * 0.3
+            else:
+                if(math.isinf(second_slopes[idx])):
+                    calc_slope_delta = abs(first_slope) * 0.3
+                else:
+                    calc_slope_delta = abs(second_slopes[idx] - first_slope) * 0.3
             total_hardness = calc_dist * calc_slope_delta
             hardness_all_shots[idx] = total_hardness
         #shot can be made chose best
-        #print("For Ball {no}, shot is viable = {s}".format(no = target_ball,s = viable))
-        #print("Hardness for each shot is = {hard}".format(hard = hardness_all_shots))
         if (viable):
             shot_idx = 0
             chosen_idx = -1
@@ -519,7 +526,6 @@ def chose_pocket():
                     shot_idx+=1
             pocket_for_each_ball[target_ball-1] = chosen_idx
         else: pocket_for_each_ball[target_ball-1] = np.nan
-    print('Pockets For Each Ball Are = {list}'.format(list = pocket_for_each_ball))
 
 
 

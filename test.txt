@@ -1,166 +1,165 @@
-Pockets For Each Ball Are = [2, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 For Ball 1
-Dimensions are 700,350
-Distances to Each Pocket = [nan, nan, 206.15528128088303, nan, nan, nan]
-First Slope = -3.0
-First Intercept = 2450.0
-Second Slopes = [nan, nan, -0.25, nan, nan, nan]
-Second Intercepts = [nan, nan, 525.0, nan, nan, nan]
-Bounday X Values are = [550.0, 900]
-Bounday Y Values are = [300, 416.6666666666667]
+Dimensions are 850,310
+Distances to Each Pocket = [nan, nan, 50.99019513592785, nan, nan, nan]
+First Slope = -0.5428571428571428
+First Intercept = 771.4285714285713
+Second Slopes = [nan, nan, -0.2, nan, nan, nan]
+Second Intercepts = [nan, nan, 480.0, nan, nan, nan]
+Bounday X Values are = [844.5714285714286, 900]
+Bounday Y Values are = [300, 402.1052631578948]
 Pocket Chosen for this ball = 2
 -------------------------------------------------
 For Ball 2
-Dimensions are 400,400
-Distances to Each Pocket = [316.22776601683796, nan, nan, nan, nan, nan]
-First Slope = 0.4
-First Intercept = 240.0
-Second Slopes = [0.3333333333333333, nan, nan, nan, nan, nan]
-Second Intercepts = [266.6666666666667, nan, nan, nan, nan, nan]
-Bounday X Values are = [440.0, 280.0]
-Bounday Y Values are = [700, 300]
-Pocket Chosen for this ball = 0
+Dimensions are 850,330
+Distances to Each Pocket = [nan, nan, 58.309518948453004, nan, nan, nan]
+First Slope = -0.4857142857142857
+First Intercept = 742.8571428571429
+Second Slopes = [nan, nan, -0.6, nan, nan, nan]
+Second Intercepts = [nan, nan, 840.0, nan, nan, nan]
+Bounday X Values are = [835.4285714285714, 900]
+Bounday Y Values are = [300, 432.9411764705883]
+Pocket Chosen for this ball = 2
 -------------------------------------------------
 For Ball 3
-Dimensions are 110,320
-Distances to Each Pocket = [22.360679774997898, nan, nan, nan, nan, nan]
-First Slope = 0.3333333333333333
-First Intercept = 283.3333333333333
-Second Slopes = [2.0, nan, nan, nan, nan, nan]
-Second Intercepts = [100.0, nan, nan, nan, nan, nan]
-Bounday X Values are = [116.66666666666667, 100]
-Bounday Y Values are = [350.0, 300]
-Pocket Chosen for this ball = 0
+Dimensions are 850,350
+Distances to Each Pocket = [nan, nan, 70.71067811865476, nan, nan, nan]
+First Slope = -0.42857142857142855
+First Intercept = 714.2857142857142
+Second Slopes = [nan, nan, -1.0, nan, nan, nan]
+Second Intercepts = [nan, nan, 1200.0, nan, nan, nan]
+Bounday X Values are = [828.5714285714286, 900]
+Bounday Y Values are = [300, 466.6666666666665]
+Pocket Chosen for this ball = 2
 -------------------------------------------------
 For Ball 4
-Dimensions are -1,-1
-Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
-First Slope = nan
-First Intercept = nan
-Second Slopes = [-1, -1, -1, -1, -1, -1]
-Second Intercepts = [-1, -1, -1, -1, -1, -1]
-Bounday X Values are = [-1, -1]
-Bounday Y Values are = [-1, -1]
-Pocket Chosen for this ball = -1
+Dimensions are 850,370
+Distances to Each Pocket = [nan, nan, 86.02325267042627, nan, nan, nan]
+First Slope = -0.37142857142857144
+First Intercept = 685.7142857142858
+Second Slopes = [nan, nan, -1.4, nan, nan, nan]
+Second Intercepts = [nan, nan, 1560.0, nan, nan, nan]
+Bounday X Values are = [824.0, 900]
+Bounday Y Values are = [300, 504.61538461538476]
+Pocket Chosen for this ball = 2
 -------------------------------------------------
 For Ball 5
-Dimensions are -1,-1
-Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
-First Slope = nan
-First Intercept = nan
-Second Slopes = [-1, -1, -1, -1, -1, -1]
-Second Intercepts = [-1, -1, -1, -1, -1, -1]
-Bounday X Values are = [-1, -1]
-Bounday Y Values are = [-1, -1]
-Pocket Chosen for this ball = -1
+Dimensions are 850,390
+Distances to Each Pocket = [nan, nan, 102.95630140987001, nan, nan, nan]
+First Slope = -0.3142857142857143
+First Intercept = 657.1428571428571
+Second Slopes = [nan, nan, -1.8, nan, nan, nan]
+Second Intercepts = [nan, nan, 1920.0, nan, nan, nan]
+Bounday X Values are = [821.7142857142858, 900]
+Bounday Y Values are = [300, 549.090909090909]
+Pocket Chosen for this ball = 2
 -------------------------------------------------
 For Ball 6
-Dimensions are -1,-1
-Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
-First Slope = nan
-First Intercept = nan
-Second Slopes = [-1, -1, -1, -1, -1, -1]
-Second Intercepts = [-1, -1, -1, -1, -1, -1]
-Bounday X Values are = [-1, -1]
-Bounday Y Values are = [-1, -1]
-Pocket Chosen for this ball = -1
+Dimensions are 850,410
+Distances to Each Pocket = [nan, nan, 120.83045973594572, nan, nan, nan]
+First Slope = -0.2571428571428571
+First Intercept = 628.5714285714286
+Second Slopes = [nan, nan, -2.2, nan, nan, nan]
+Second Intercepts = [nan, nan, 2280.0, nan, nan, nan]
+Bounday X Values are = [821.7142857142858, 900]
+Bounday Y Values are = [300, 604.4444444444443]
+Pocket Chosen for this ball = 2
 -------------------------------------------------
 For Ball 7
-Dimensions are -1,-1
-Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
-First Slope = nan
-First Intercept = nan
-Second Slopes = [-1, -1, -1, -1, -1, -1]
-Second Intercepts = [-1, -1, -1, -1, -1, -1]
-Bounday X Values are = [-1, -1]
-Bounday Y Values are = [-1, -1]
-Pocket Chosen for this ball = -1
+Dimensions are 850,430
+Distances to Each Pocket = [nan, nan, 139.2838827718412, nan, nan, nan]
+First Slope = -0.2
+First Intercept = 600.0
+Second Slopes = [nan, nan, -2.6, nan, nan, nan]
+Second Intercepts = [nan, nan, 2640.0, nan, nan, nan]
+Bounday X Values are = [824.0, 900]
+Bounday Y Values are = [300, 680.0]
+Pocket Chosen for this ball = 2
 -------------------------------------------------
 For Ball 8
-Dimensions are -1,-1
-Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
-First Slope = nan
-First Intercept = nan
-Second Slopes = [-1, -1, -1, -1, -1, -1]
-Second Intercepts = [-1, -1, -1, -1, -1, -1]
-Bounday X Values are = [-1, -1]
-Bounday Y Values are = [-1, -1]
-Pocket Chosen for this ball = -1
+Dimensions are 850,450
+Distances to Each Pocket = [nan, nan, 158.11388300841898, 254.95097567963924, nan, nan]
+First Slope = -0.14285714285714285
+First Intercept = 571.4285714285714
+Second Slopes = [nan, nan, -3.0, 5.0, nan, nan]
+Second Intercepts = [nan, nan, 3000.0, -3800.0, nan, nan]
+Bounday X Values are = [828.5714285714286, 885.7142857142857]
+Bounday Y Values are = [300, 700]
+Pocket Chosen for this ball = 2
 -------------------------------------------------
 For Ball 9
-Dimensions are -1,-1
-Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
-First Slope = nan
-First Intercept = nan
-Second Slopes = [-1, -1, -1, -1, -1, -1]
-Second Intercepts = [-1, -1, -1, -1, -1, -1]
-Bounday X Values are = [-1, -1]
-Bounday Y Values are = [-1, -1]
-Pocket Chosen for this ball = -1
+Dimensions are 850,470
+Distances to Each Pocket = [nan, nan, 177.2004514666935, 235.3720459187964, nan, nan]
+First Slope = -0.08571428571428572
+First Intercept = 542.8571428571429
+Second Slopes = [nan, nan, -3.4, 4.6, nan, nan]
+Second Intercepts = [nan, nan, 3360.0, -3440.0, nan, nan]
+Bounday X Values are = [835.4285714285714, 869.7142857142857]
+Bounday Y Values are = [300, 700]
+Pocket Chosen for this ball = 2
 -------------------------------------------------
 For Ball 10
-Dimensions are -1,-1
-Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
-First Slope = nan
-First Intercept = nan
-Second Slopes = [-1, -1, -1, -1, -1, -1]
-Second Intercepts = [-1, -1, -1, -1, -1, -1]
-Bounday X Values are = [-1, -1]
-Bounday Y Values are = [-1, -1]
-Pocket Chosen for this ball = -1
+Dimensions are 850,490
+Distances to Each Pocket = [nan, nan, 196.468827043885, 215.87033144922904, nan, nan]
+First Slope = -0.02857142857142857
+First Intercept = 514.2857142857143
+Second Slopes = [nan, nan, -3.8, 4.2, nan, nan]
+Second Intercepts = [nan, nan, 3720.0, -3080.0, nan, nan]
+Bounday X Values are = [844.5714285714286, 856.0]
+Bounday Y Values are = [300, 700]
+Pocket Chosen for this ball = 2
 -------------------------------------------------
 For Ball 11
-Dimensions are -1,-1
-Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
-First Slope = nan
-First Intercept = nan
-Second Slopes = [-1, -1, -1, -1, -1, -1]
-Second Intercepts = [-1, -1, -1, -1, -1, -1]
-Bounday X Values are = [-1, -1]
-Bounday Y Values are = [-1, -1]
-Pocket Chosen for this ball = -1
+Dimensions are 850,510
+Distances to Each Pocket = [nan, nan, nan, 196.468827043885, nan, nan]
+First Slope = 0.02857142857142857
+First Intercept = 485.7142857142857
+Second Slopes = [nan, nan, nan, 3.8, nan, nan]
+Second Intercepts = [nan, nan, nan, -2720.0, nan, nan]
+Bounday X Values are = [856.0, 844.5714285714286]
+Bounday Y Values are = [700, 300]
+Pocket Chosen for this ball = 3
 -------------------------------------------------
 For Ball 12
-Dimensions are -1,-1
-Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
-First Slope = nan
-First Intercept = nan
-Second Slopes = [-1, -1, -1, -1, -1, -1]
-Second Intercepts = [-1, -1, -1, -1, -1, -1]
-Bounday X Values are = [-1, -1]
-Bounday Y Values are = [-1, -1]
-Pocket Chosen for this ball = -1
+Dimensions are 850,530
+Distances to Each Pocket = [nan, nan, nan, 177.2004514666935, nan, nan]
+First Slope = 0.08571428571428572
+First Intercept = 457.1428571428571
+Second Slopes = [nan, nan, nan, 3.4, nan, nan]
+Second Intercepts = [nan, nan, nan, -2360.0, nan, nan]
+Bounday X Values are = [869.7142857142857, 835.4285714285714]
+Bounday Y Values are = [700, 300]
+Pocket Chosen for this ball = 3
 -------------------------------------------------
 For Ball 13
-Dimensions are -1,-1
-Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
-First Slope = nan
-First Intercept = nan
-Second Slopes = [-1, -1, -1, -1, -1, -1]
-Second Intercepts = [-1, -1, -1, -1, -1, -1]
-Bounday X Values are = [-1, -1]
-Bounday Y Values are = [-1, -1]
-Pocket Chosen for this ball = -1
+Dimensions are 850,550
+Distances to Each Pocket = [nan, nan, nan, 158.11388300841898, nan, nan]
+First Slope = 0.14285714285714285
+First Intercept = 428.57142857142856
+Second Slopes = [nan, nan, nan, 3.0, nan, nan]
+Second Intercepts = [nan, nan, nan, -2000.0, nan, nan]
+Bounday X Values are = [885.7142857142857, 828.5714285714286]
+Bounday Y Values are = [700, 300]
+Pocket Chosen for this ball = 3
 -------------------------------------------------
 For Ball 14
-Dimensions are -1,-1
-Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
-First Slope = nan
-First Intercept = nan
-Second Slopes = [-1, -1, -1, -1, -1, -1]
-Second Intercepts = [-1, -1, -1, -1, -1, -1]
-Bounday X Values are = [-1, -1]
-Bounday Y Values are = [-1, -1]
-Pocket Chosen for this ball = -1
+Dimensions are 850,570
+Distances to Each Pocket = [nan, nan, nan, 139.2838827718412, nan, nan]
+First Slope = 0.2
+First Intercept = 400.0
+Second Slopes = [nan, nan, nan, 2.6, nan, nan]
+Second Intercepts = [nan, nan, nan, -1640.0, nan, nan]
+Bounday X Values are = [900, 824.0]
+Bounday Y Values are = [700, 320.0]
+Pocket Chosen for this ball = 3
 -------------------------------------------------
 For Ball 15
-Dimensions are -1,-1
-Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
-First Slope = nan
-First Intercept = nan
-Second Slopes = [-1, -1, -1, -1, -1, -1]
-Second Intercepts = [-1, -1, -1, -1, -1, -1]
-Bounday X Values are = [-1, -1]
-Bounday Y Values are = [-1, -1]
-Pocket Chosen for this ball = -1
+Dimensions are 850,590
+Distances to Each Pocket = [nan, nan, nan, 120.83045973594572, nan, nan]
+First Slope = 0.2571428571428571
+First Intercept = 371.42857142857144
+Second Slopes = [nan, nan, nan, 2.2, nan, nan]
+Second Intercepts = [nan, nan, nan, -1280.0000000000002, nan, nan]
+Bounday X Values are = [900, 821.7142857142858]
+Bounday Y Values are = [700, 395.55555555555566]
+Pocket Chosen for this ball = 3
 -------------------------------------------------
