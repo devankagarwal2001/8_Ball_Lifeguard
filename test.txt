@@ -1,31 +1,29 @@
-I NEED TO BE FIGURED OUT
-I NEED TO BE FIGURED OUT
 For Ball 1
-Distances to Each Pocket = [nan, nan, 206.15528128088303, 403.11288741492746, nan, nan]
+Distances to Each Pocket = [nan, nan, 206.15528128088303, nan, nan, nan]
 First Slope = -3.0
 First Intercept = 2450.0
-Second Slopes = [nan, nan, -0.25, 1.75, nan, nan]
-Second Intercepts = [nan, nan, 525.0, -875.0, nan, nan]
+Second Slopes = [nan, nan, -0.25, nan, nan, nan]
+Second Intercepts = [nan, nan, 525.0, nan, nan, nan]
 Bounday X Values are = [550.0, 900]
 Bounday Y Values are = [300, 416.6666666666667]
 -------------------------------------------------
 For Ball 2
-Distances to Each Pocket = [316.22776601683796, nan, nan, nan, nan, 424.26406871192853]
+Distances to Each Pocket = [316.22776601683796, nan, nan, nan, nan, nan]
 First Slope = 0.4
 First Intercept = 240.0
-Second Slopes = [0.3333333333333333, nan, nan, nan, nan, -1.0]
-Second Intercepts = [266.6666666666667, nan, nan, nan, nan, 800.0]
+Second Slopes = [0.3333333333333333, nan, nan, nan, nan, nan]
+Second Intercepts = [266.6666666666667, nan, nan, nan, nan, nan]
 Bounday X Values are = [440.0, 280.0]
 Bounday Y Values are = [700, 300]
 -------------------------------------------------
 For Ball 3
-Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
-First Slope = nan
-First Intercept = nan
-Second Slopes = [-1, -1, -1, -1, -1, -1]
-Second Intercepts = [-1, -1, -1, -1, -1, -1]
-Bounday X Values are = [-1, -1]
-Bounday Y Values are = [-1, -1]
+Distances to Each Pocket = [22.360679774997898, nan, nan, nan, nan, nan]
+First Slope = 0.3333333333333333
+First Intercept = 283.3333333333333
+Second Slopes = [2.0, nan, nan, nan, nan, nan]
+Second Intercepts = [100.0, nan, nan, nan, nan, nan]
+Bounday X Values are = [116.66666666666667, 100]
+Bounday Y Values are = [350.0, 300]
 -------------------------------------------------
 For Ball 4
 Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
@@ -135,4 +133,4 @@ Second Intercepts = [-1, -1, -1, -1, -1, -1]
 Bounday X Values are = [-1, -1]
 Bounday Y Values are = [-1, -1]
 -------------------------------------------------
-Pockets For Each Ball Are = [2, nan, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
+Pockets For Each Ball Are = [2, nan, nan, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]

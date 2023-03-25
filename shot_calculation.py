@@ -98,8 +98,8 @@ pockets = [[100,300],[500,300],[900,300],[900,700],[500,700],[100,700]]
 
 
 #A list of X and Y coordinates for each ball
-listX = [650,700,400,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-listY = [500,350,400,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listX = [650,700,400,110,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listY = [500,350,400,320,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 
 
 
@@ -448,9 +448,34 @@ def remove_impossible_pockets():
                     shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan
                 pocket_idx+=1
         elif (listY[CUE_BALL] > listY[target_ball]):
-            print("I NEED TO BE FIGURED OUT")
+            pocket_idx = 0
+            for pocket in pockets:
+                if (pocket_idx<3):
+                    if(pocket[POCKETY]>y_bounds[0]):
+                        shot_params[DISTANCES][pocket_idx] = np.nan
+                        shot_params[SECOND_SLOPES][pocket_idx] = np.nan
+                        shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan
+                else:
+                    if(pocket[POCKETY]>y_bounds[1]):
+                        shot_params[DISTANCES][pocket_idx] = np.nan
+                        shot_params[SECOND_SLOPES][pocket_idx] = np.nan
+                        shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan
+                pocket_idx+=1
         elif (listY[CUE_BALL] < listY[target_ball]):
-            print("I NEED TO BE FIGURED OUT")
+            pocket_idx = 0
+            for pocket in pockets:
+                if (pocket_idx<3):
+                    if(pocket[POCKETY]<y_bounds[0]):
+                        shot_params[DISTANCES][pocket_idx] = np.nan
+                        shot_params[SECOND_SLOPES][pocket_idx] = np.nan
+                        shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan
+                else:
+                    if(pocket[POCKETY]<y_bounds[1]):
+                        shot_params[DISTANCES][pocket_idx] = np.nan
+                        shot_params[SECOND_SLOPES][pocket_idx] = np.nan
+                        shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan
+                pocket_idx+=1
+           
             
         
 
