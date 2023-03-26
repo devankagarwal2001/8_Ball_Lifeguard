@@ -28,72 +28,74 @@ GREEN = (0,255,0)       #BGR Color Representation of the Color Green
 RED = (0,0,255)         #BGR Color Representation of the Color Red
 WHITE = (255,255,255)   #BGR Color Representation of the Color White
 YELLOW = (0,255,255)    #BGR Color Representation of the Color Yellow
-TABLE_X_HI = 900
-TABLE_X_LO = 100
-TABLE_Y_HI = 700
-TABLE_Y_LO = 300
+TABLE_X_HI = 900        #Table bottom right corner x coordinate
+TABLE_X_LO = 100        #Table top left corner x coordinate
+TABLE_Y_HI = 700        #Table bottom right corner y coordinate
+TABLE_Y_LO = 300        #Table top left corner y coordinate
+NAN = np.nan            #Not a number, used for default and non-reachable values
+INF = np.inf            #Infinity, Used for the x coordinates of the balls is the same
 
+#brief: A list of the various parametrs for the ball
 #int (ball number) -> list
 #list = index 0 -> DISTACNE
 #       index 1 -> Slope of first set of lines (cue ball to ball)
 #       index 2 -> intercepts of first set of lines (cue ball to ball)
 #       index 3 -> Slopes of second set of lines (ball to pockets)
 #       index 4 -> intercept of second set of lines (ball to pockets)
-
-ball_to_shots = {1: [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                2:  [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                3:  [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                4:  [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                5:  [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                6:  [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                7:  [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                8:  [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                9:  [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                10: [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                11: [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                12: [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                13: [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                14: [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]],
-                15: [[-1,-1,-1,-1,-1,-1],-1,-1,[-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1]]}
+ball_to_shots = {1: [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN]],
+                2:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN]],
+                3:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN]],
+                4:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN]],
+                5:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN]],
+                6:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN]],
+                7:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN]],
+                8:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN]],
+                9:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN]],
+                10: [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN]],
+                11: [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN]],
+                12: [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN]],
+                13: [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN]],
+                14: [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN]],
+                15: [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN]]}
 
 #the maximum and minimum x the ball will be able to take after a shot
-balls_to_x_boundary = {1: [-1,-1],
-                    2: [-1,-1],
-                    3: [-1,-1],
-                    4: [-1,-1],
-                    5: [-1,-1],
-                    6: [-1,-1],
-                    7: [-1,-1],
-                    8: [-1,-1],
-                    9: [-1,-1],
-                    10: [-1,-1],
-                    11: [-1,-1],
-                    12: [-1,-1],
-                    13: [-1,-1],
-                    14: [-1,-1],
-                    15: [-1,-1]}
+balls_to_x_boundary = {1:   [NAN,NAN],
+                    2:      [NAN,NAN],
+                    3:      [NAN,NAN],
+                    4:      [NAN,NAN],
+                    5:      [NAN,NAN],
+                    6:      [NAN,NAN],
+                    7:      [NAN,NAN],
+                    8:      [NAN,NAN],
+                    9:      [NAN,NAN],
+                    10:     [NAN,NAN],
+                    11:     [NAN,NAN],
+                    12:     [NAN,NAN],
+                    13:     [NAN,NAN],
+                    14:     [NAN,NAN],
+                    15:     [NAN,NAN]}
 
 #themaximum and minimum y the ball will be able to take after a shot
-balls_to_y_boundary = {1: [-1,-1],
-                    2: [-1,-1],
-                    3: [-1,-1],
-                    4: [-1,-1],
-                    5: [-1,-1],
-                    6: [-1,-1],
-                    7: [-1,-1],
-                    8: [-1,-1],
-                    9: [-1,-1],
-                    10: [-1,-1],
-                    11: [-1,-1],
-                    12: [-1,-1],
-                    13: [-1,-1],
-                    14: [-1,-1],
-                    15: [-1,-1]}
+balls_to_y_boundary = {1:   [NAN,NAN],
+                    2:      [NAN,NAN],
+                    3:      [NAN,NAN],
+                    4:      [NAN,NAN],
+                    5:      [NAN,NAN],
+                    6:      [NAN,NAN],
+                    7:      [NAN,NAN],
+                    8:      [NAN,NAN],
+                    9:      [NAN,NAN],
+                    10:     [NAN,NAN],
+                    11:     [NAN,NAN],
+                    12:     [NAN,NAN],
+                    13:     [NAN,NAN],
+                    14:     [NAN,NAN],
+                    15:     [NAN,NAN]}
 
 # the chosen pocket for each ball along with its hardness
-pocket_for_each_ball = [[-1,1],[-1,1],[-1,1],[-1,1],[-1,1],
-                        [-1,1],[-1,1],[-1,1],[-1,1],[-1,1],
-                        [-1,1],[-1,1],[-1,1],[-1,1],[-1,1]]
+pocket_for_each_ball = [[NAN,INF],[NAN,INF],[NAN,INF],[NAN,INF],[NAN,INF],
+                        [NAN,INF],[NAN,INF],[NAN,INF],[NAN,INF],[NAN,INF],
+                        [NAN,INF],[NAN,INF],[NAN,INF],[NAN,INF],[NAN,INF]]
 
 
 #A list of pockets with each element being an x-y coordinate for the pocket
@@ -101,8 +103,8 @@ pockets = [[100,300],[500,300],[900,300],[900,700],[500,700],[100,700]]
 
 
 #A list of X and Y coordinates for each ball
-listX = [500,-1,-1,-1,-1,-1,850,850,850,850,850,850,850,850,850,850]
-listY = [500,-1,-1,-1,-1,-1,410,430,450,470,490,510,530,550,570,590]
+listX = [500,-1,-1,-1,-1,-1,850,850,850,850,850,850,850,850,850,500]
+listY = [500,-1,-1,-1,-1,-1,410,430,450,470,490,510,530,550,570,320]
 
 
 
@@ -223,15 +225,15 @@ def create_first_lines():
     if(listX[CUE_BALL]<0 or listY[CUE_BALL]<0):
         for i in range(FIRST_BALL,NUMBER_OF_BALLS):
             shot_params = ball_to_shots.get(i)
-            shot_params[FIRST_SLOPE] = np.nan
-            shot_params[FIRST_INTERCEPT] = np.nan
+            shot_params[FIRST_SLOPE] = NAN
+            shot_params[FIRST_INTERCEPT] = NAN
         return
     for target_ball in range(FIRST_BALL,NUMBER_OF_BALLS):
         #check if ball has been potted
         if(listX[target_ball]<0 or listY[target_ball]<0): 
             shot_params = ball_to_shots.get(target_ball)
-            shot_params[FIRST_SLOPE] = np.nan
-            shot_params[FIRST_INTERCEPT] = np.nan
+            shot_params[FIRST_SLOPE] = NAN
+            shot_params[FIRST_INTERCEPT] = NAN
             continue
         #check if there exists a collision between the cue ball and this ball for everyball 
         # but itself 
@@ -248,14 +250,14 @@ def create_first_lines():
                 break
         #no collision shot is possible
         if(not collision):
-            if (listX[target_ball]==listX[CUE_BALL]): slope = np.inf
+            if (listX[target_ball]==listX[CUE_BALL]): slope = INF
             else: slope = (listY[target_ball]-listY[CUE_BALL])/(listX[target_ball]-listX[CUE_BALL])
-            if (slope == np.inf): intercept = np.inf
+            if (slope == INF): intercept = INF
             else: intercept = listY[target_ball] - (slope * listX[target_ball])
         #shot is not possible cause collision 
         else:
-            slope = np.nan
-            intercept = np.nan
+            slope = NAN
+            intercept = NAN
         shot_params = ball_to_shots.get(target_ball)
         shot_params[FIRST_SLOPE] = slope
         shot_params[FIRST_INTERCEPT] = intercept
@@ -272,13 +274,13 @@ def create_second_lines():
         shot_params = ball_to_shots.get(target_ball)
         if(math.isnan(shot_params[FIRST_SLOPE])): 
             for pocket in range(NO_POCKETS):
-                shot_params[SECOND_SLOPES][pocket] = np.nan
-                shot_params[SECOND_INTERCEPT][pocket] = np.nan
+                shot_params[SECOND_SLOPES][pocket] = NAN
+                shot_params[SECOND_INTERCEPT][pocket] = NAN
             continue
         if(math.isnan(shot_params[FIRST_INTERCEPT])):
             for pocket in range(NO_POCKETS):
-                shot_params[SECOND_SLOPES][pocket] = np.nan
-                shot_params[SECOND_INTERCEPT][pocket] = np.nan
+                shot_params[SECOND_SLOPES][pocket] = NAN
+                shot_params[SECOND_INTERCEPT][pocket] = NAN
             continue
         #create a line for each pocket
         pocket_index = 0;
@@ -296,16 +298,16 @@ def create_second_lines():
                     break
             # a successful shot can be made to that pocket
             if(not collision):
-                if (listX[target_ball] == pocket[POCKETX]): slope = np.inf
+                if (listX[target_ball] == pocket[POCKETX]): slope = INF
                 else: slope = (pocket[POCKETY] - listY[target_ball])/(pocket[POCKETX] - listX[target_ball])
-                if (slope == np.inf): intercept = np.inf
+                if (slope == INF): intercept = INF
                 else: intercept = pocket[POCKETY] - (slope * pocket[POCKETX])
                 shot_params[SECOND_SLOPES][pocket_index] = slope
                 shot_params[SECOND_INTERCEPT][pocket_index] = intercept
             # a successful shot canot be made to that pocket
             else:
-                shot_params[SECOND_SLOPES][pocket_index] = np.nan
-                shot_params[SECOND_INTERCEPT][pocket_index] = np.nan
+                shot_params[SECOND_SLOPES][pocket_index] = NAN
+                shot_params[SECOND_INTERCEPT][pocket_index] = NAN
             pocket_index+=1
 
 #brief: Draws the image that is going to be projected onto the pool table
@@ -345,10 +347,10 @@ def find_edges():
         if(listX[target_ball]<0 or listY[target_ball]<0): continue
         shot_params=ball_to_shots.get(target_ball)
         if(math.isnan(shot_params[FIRST_SLOPE])):
-            shot_max[POCKETX] = np.nan
-            shot_max[POCKETY] = np.nan
-            shot_min[POCKETX] = np.nan
-            shot_min[POCKETY] = np.nan
+            shot_max[POCKETX] = NAN
+            shot_max[POCKETY] = NAN
+            shot_min[POCKETX] = NAN
+            shot_min[POCKETY] = NAN
             continue
         elif(math.isinf(shot_params[FIRST_SLOPE])): 
             tangent_slope = 0
@@ -409,82 +411,82 @@ def remove_impossible_pockets():
             pocket_idx = 0
             for pocket in pockets: 
                 if(pocket[POCKETY]<listY[target_ball] and listY[CUE_BALL]<listY[target_ball]):
-                    shot_params[DISTANCES][pocket_idx] = np.nan
-                    shot_params[SECOND_SLOPES][pocket_idx] = np.nan
-                    shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan
+                    shot_params[DISTANCES][pocket_idx] = NAN
+                    shot_params[SECOND_SLOPES][pocket_idx] = NAN
+                    shot_params[SECOND_INTERCEPT][pocket_idx] = NAN
                 elif(pocket[POCKETY]>listY[target_ball] and listY[CUE_BALL]>listY[target_ball]):
-                    shot_params[DISTANCES][pocket_idx] = np.nan
-                    shot_params[SECOND_SLOPES][pocket_idx] = np.nan
-                    shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan
+                    shot_params[DISTANCES][pocket_idx] = NAN
+                    shot_params[SECOND_SLOPES][pocket_idx] = NAN
+                    shot_params[SECOND_INTERCEPT][pocket_idx] = NAN
                 pocket_idx+=1
         elif(listX[CUE_BALL]<listX[target_ball]):
             pocket_idx = 0
             for pocket in pockets: 
                 if (pocket_idx<3):
                     if(pocket[POCKETX]<x_bounds[0]):
-                        shot_params[DISTANCES][pocket_idx] = np.nan
-                        shot_params[SECOND_SLOPES][pocket_idx] = np.nan
-                        shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan
+                        shot_params[DISTANCES][pocket_idx] = NAN
+                        shot_params[SECOND_SLOPES][pocket_idx] = NAN
+                        shot_params[SECOND_INTERCEPT][pocket_idx] = NAN
                 else:
                     if(pocket[POCKETX]<x_bounds[1]):
-                        shot_params[DISTANCES][pocket_idx] = np.nan
-                        shot_params[SECOND_SLOPES][pocket_idx] = np.nan
-                        shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan
+                        shot_params[DISTANCES][pocket_idx] = NAN
+                        shot_params[SECOND_SLOPES][pocket_idx] = NAN
+                        shot_params[SECOND_INTERCEPT][pocket_idx] = NAN
                 pocket_idx+=1
         elif(listX[CUE_BALL]>listX[target_ball]):
             pocket_idx = 0
             for pocket in pockets:
                 if (pocket_idx<3):
                     if(pocket[POCKETX]>x_bounds[0]):
-                        shot_params[DISTANCES][pocket_idx] = np.nan
-                        shot_params[SECOND_SLOPES][pocket_idx] = np.nan
-                        shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan
+                        shot_params[DISTANCES][pocket_idx] = NAN
+                        shot_params[SECOND_SLOPES][pocket_idx] = NAN
+                        shot_params[SECOND_INTERCEPT][pocket_idx] = NAN
                 else:
                     if(pocket[POCKETX]>x_bounds[1]):
-                        shot_params[DISTANCES][pocket_idx] = np.nan
-                        shot_params[SECOND_SLOPES][pocket_idx] = np.nan
-                        shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan
+                        shot_params[DISTANCES][pocket_idx] = NAN
+                        shot_params[SECOND_SLOPES][pocket_idx] = NAN
+                        shot_params[SECOND_INTERCEPT][pocket_idx] = NAN
                 pocket_idx+=1
             
         if(listY[CUE_BALL]==listY[target_ball]):
             pocket_idx = 0
             for pocket in pockets: 
                 if(pocket[POCKETX]<listX[target_ball] and listX[CUE_BALL]<listX[target_ball]):
-                    shot_params[DISTANCES][pocket_idx] = np.nan
-                    shot_params[SECOND_SLOPES][pocket_idx] = np.nan
-                    shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan
+                    shot_params[DISTANCES][pocket_idx] = NAN
+                    shot_params[SECOND_SLOPES][pocket_idx] = NAN
+                    shot_params[SECOND_INTERCEPT][pocket_idx] = NAN
                 elif(pocket[POCKETX]>listX[target_ball] and listX[CUE_BALL]>listX[target_ball]):
-                    shot_params[DISTANCES][pocket_idx] = np.nan
-                    shot_params[SECOND_SLOPES][pocket_idx] = np.nan
-                    shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan
+                    shot_params[DISTANCES][pocket_idx] = NAN
+                    shot_params[SECOND_SLOPES][pocket_idx] = NAN
+                    shot_params[SECOND_INTERCEPT][pocket_idx] = NAN
                 pocket_idx+=1
         elif (listY[CUE_BALL] > listY[target_ball]):
             pocket_idx = 0
             for pocket in pockets:
                 if (pocket_idx<3):
                     if(pocket[POCKETY]>y_bounds[0]):
-                        shot_params[DISTANCES][pocket_idx] = np.nan
-                        shot_params[SECOND_SLOPES][pocket_idx] = np.nan
-                        shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan
+                        shot_params[DISTANCES][pocket_idx] = NAN
+                        shot_params[SECOND_SLOPES][pocket_idx] = NAN
+                        shot_params[SECOND_INTERCEPT][pocket_idx] = NAN
                 else:
                     if(pocket[POCKETY]>y_bounds[1]):
-                        shot_params[DISTANCES][pocket_idx] = np.nan
-                        shot_params[SECOND_SLOPES][pocket_idx] = np.nan
-                        shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan
+                        shot_params[DISTANCES][pocket_idx] = NAN
+                        shot_params[SECOND_SLOPES][pocket_idx] = NAN
+                        shot_params[SECOND_INTERCEPT][pocket_idx] = NAN
                 pocket_idx+=1
         elif (listY[CUE_BALL] < listY[target_ball]):
             pocket_idx = 0
             for pocket in pockets:
                 if (pocket_idx<3):
                     if(pocket[POCKETY]<y_bounds[0]):
-                        shot_params[DISTANCES][pocket_idx] = np.nan
-                        shot_params[SECOND_SLOPES][pocket_idx] = np.nan
-                        shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan
+                        shot_params[DISTANCES][pocket_idx] = NAN
+                        shot_params[SECOND_SLOPES][pocket_idx] = NAN
+                        shot_params[SECOND_INTERCEPT][pocket_idx] = NAN
                 else:
                     if(pocket[POCKETY]<y_bounds[1]):
-                        shot_params[DISTANCES][pocket_idx] = np.nan
-                        shot_params[SECOND_SLOPES][pocket_idx] = np.nan
-                        shot_params[SECOND_INTERCEPT][pocket_idx] = np.nan
+                        shot_params[DISTANCES][pocket_idx] = NAN
+                        shot_params[SECOND_SLOPES][pocket_idx] = NAN
+                        shot_params[SECOND_INTERCEPT][pocket_idx] = NAN
                 pocket_idx+=1
            
             
@@ -494,18 +496,18 @@ def chose_pocket():
     if(listX[CUE_BALL]<0 or listY[CUE_BALL]<0): return
     for target_ball in range(FIRST_BALL, NUMBER_OF_BALLS):
         if(listX[target_ball]<0 or listY[target_ball]<0): 
-            pocket_for_each_ball[target_ball-1][0] = np.nan
-            pocket_for_each_ball[target_ball-1][1] = np.inf
+            pocket_for_each_ball[target_ball-1][0] = NAN
+            pocket_for_each_ball[target_ball-1][1] = INF
             continue
         shot_params=ball_to_shots.get(target_ball)
         if(math.isnan(shot_params[FIRST_SLOPE])): 
-            pocket_for_each_ball[target_ball-1][0] = np.nan
-            pocket_for_each_ball[target_ball-1][1] = np.inf
+            pocket_for_each_ball[target_ball-1][0] = NAN
+            pocket_for_each_ball[target_ball-1][1] = INF
             continue
         second_slopes = shot_params[SECOND_SLOPES]
         first_slope = shot_params[FIRST_SLOPE]
         distances = shot_params[DISTANCES]
-        hardness_all_shots = [np.nan,np.nan,np.nan,np.nan,np.nan,np.nan]
+        hardness_all_shots = [NAN,NAN,NAN,NAN,NAN,NAN]
         viable = False
         for idx in range(NO_POCKETS):
             if(math.isnan(second_slopes[idx])): continue
@@ -542,8 +544,8 @@ def chose_pocket():
             pocket_for_each_ball[target_ball-1][1] = min_calc
 
         else: 
-            pocket_for_each_ball[target_ball-1][0] = np.nan
-            pocket_for_each_ball[target_ball-1][1] = np.inf
+            pocket_for_each_ball[target_ball-1][0] = NAN
+            pocket_for_each_ball[target_ball-1][1] = INF
             
 def chose_easiest_shot():
     min_hardness = 100000
