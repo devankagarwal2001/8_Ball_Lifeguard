@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import Indexer
 
-def Test(img):
+def DetectPoolBalls(img):
     
     #Now the table is cropped and warped, lets find the balls
     hsv = ToHSV(img)
@@ -270,28 +270,14 @@ def show_img_compar(img_1, img_2 ):
     f.tight_layout()
     plt.show()
 
-#(390,80) (1560,700)
-imcap = cv2.VideoCapture(0) #1 or -1 once the camera is added I think
-#imcap.set(3, 640) # set width as 640
-#imcap.set(4, 480)
-#img = LoadImage('img/test_2 copy.jpg')
-#img = img[30:225,20:400]
-#show_img_compar(img,cropped_img)
+
+imcap = cv2.VideoCapture(0) 
 
 success,img = imcap.read()
 img = img[80:680,390:1590]
-plt.axis("off")
-plt.imshow(img)
 
-plt.show()
-
-print(img.shape)
-
-Test(img)
+DetectPoolBalls(img)
 old_img = img
-"""while True:
-    if cv2.waitKey(10) & 0xFF == ord('q'):
-        break"""
     
 
 while True:
@@ -302,24 +288,10 @@ while True:
     cv2.imshow('orig_img', img)
     #if (mse(img,old_img) > 20):
     print(mse(img,old_img))
-    Test(img)
+    DetectPoolBalls(img)
     old_img = img
+    #call Devank's function with my code
     if cv2.waitKey(10) & 0xFF == ord('q'):
         break
 #imcap.release()
 cv2.destroyWindow('pool_ball_detect')
-#img = LoadImage('img/pool_balls.jpeg')
-#Test(img)
-#img = LoadImage('img/pool_crop.png')
-#Test(img)
-#img = LoadImage('img/pool_crop_2.png') 
-#Test(img)
-
-""""
-import cv2
-import numpy as np
-
-img = cv2.imread('img.png', cv2.IMREAD_GRAYSCALE)
-n_white_pix = np.sum(img == 255)
-print('Number of white pixels:', n_white_pix)
-"""
