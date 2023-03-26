@@ -530,7 +530,7 @@ def chose_pocket():
         if (viable):
             shot_idx = 0
             chosen_idx = -1
-            min_calc = 100000000
+            min_calc = INF
             for hardness in hardness_all_shots:
                 if (math.isnan(hardness)): 
                     shot_idx+=1
@@ -548,7 +548,7 @@ def chose_pocket():
             pocket_for_each_ball[target_ball-1][1] = INF
             
 def chose_easiest_shot():
-    min_hardness = 100000
+    min_hardness = INF
     min_indx = -1
     cur_indx = 0
     for shot in pocket_for_each_ball:
@@ -562,12 +562,51 @@ def chose_easiest_shot():
             cur_indx +=1
     return min_indx
 
+#starts the api for the shot calculation
+def start_calc():
+    find_distance_to_all_pockets();
+    create_first_lines();
+    create_second_lines();
+    find_edges();
+    remove_impossible_pockets();
+    chose_pocket();
+    print_dimensions();
+    drawImage();
 
-find_distance_to_all_pockets();
-create_first_lines();
-create_second_lines();
-find_edges();
-remove_impossible_pockets();
-chose_pocket();
-print_dimensions();
-drawImage();
+
+#API to be called by the CV system 
+#big list is going to be a 2D array where the format is as follows:
+#[LISTX,LISTY]
+#LIST_ = [CUE,SOLIDx7,CUE,STRIPEX7]
+
+
+def update_lists(big_list):
+    x = big_list[POCKETX]
+    y = big_list[POCKETY]
+    x_diff = check_diff(x,listX)
+    y_diff = check_diff(y,listY)
+    if(x_diff or y_diff):
+        #wait for the shot to stablize
+        while(x_diff or y_diff):
+            x_diff = check_diff(x,listX)
+            y_diff = check_diff(y,listY)
+            continue
+        #update lists
+        for i in range(len(x)):
+            listX[i] = x[i]
+            listY[i] = y[i]
+        #do shot_calculation
+        start_calc()
+    else:
+        return
+
+#returns True if list a != list b
+def check_diff(list_a,list_b):
+    idx = 0
+    for elem in list_a:
+        if elem == list_b[idx]:
+            idx +=1 
+        else:
+            return True
+    if (idx +1 != len(list_b)): return True
+    return False
