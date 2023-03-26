@@ -101,8 +101,8 @@ pockets = [[100,300],[500,300],[900,300],[900,700],[500,700],[100,700]]
 
 
 #A list of X and Y coordinates for each ball
-listX = [500,850,850,850,850,850,850,850,850,850,850,850,850,850,850,850]
-listY = [500,310,330,350,370,390,410,430,450,470,490,510,530,550,570,590]
+listX = [500,-1,-1,-1,-1,-1,850,850,850,850,850,850,850,850,850,850]
+listY = [500,-1,-1,-1,-1,-1,410,430,450,470,490,510,530,550,570,590]
 
 
 
@@ -493,9 +493,15 @@ def remove_impossible_pockets():
 def chose_pocket():
     if(listX[CUE_BALL]<0 or listY[CUE_BALL]<0): return
     for target_ball in range(FIRST_BALL, NUMBER_OF_BALLS):
-        if(listX[target_ball]<0 or listY[target_ball]<0): continue
+        if(listX[target_ball]<0 or listY[target_ball]<0): 
+            pocket_for_each_ball[target_ball-1][0] = np.nan
+            pocket_for_each_ball[target_ball-1][1] = np.inf
+            continue
         shot_params=ball_to_shots.get(target_ball)
-        if(math.isnan(shot_params[FIRST_SLOPE])): continue
+        if(math.isnan(shot_params[FIRST_SLOPE])): 
+            pocket_for_each_ball[target_ball-1][0] = np.nan
+            pocket_for_each_ball[target_ball-1][1] = np.inf
+            continue
         second_slopes = shot_params[SECOND_SLOPES]
         first_slope = shot_params[FIRST_SLOPE]
         distances = shot_params[DISTANCES]

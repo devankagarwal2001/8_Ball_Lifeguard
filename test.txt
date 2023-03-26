@@ -1,57 +1,57 @@
 For Ball 1
-Dimensions are 850,310
-Distances to Each Pocket = [nan, nan, 50.99019513592785, nan, nan, nan]
-First Slope = -0.5428571428571428
-First Intercept = 771.4285714285713
-Second Slopes = [nan, nan, -0.2, nan, nan, nan]
-Second Intercepts = [nan, nan, 480.0, nan, nan, nan]
-Bounday X Values are = [844.5714285714286, 900]
-Bounday Y Values are = [300, 402.1052631578948]
-Pocket Chosen for this ball and its hardness = [2, 2.6223528927048605]
+Dimensions are -1,-1
+Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [-1, -1, -1, -1, -1, -1]
+Second Intercepts = [-1, -1, -1, -1, -1, -1]
+Bounday X Values are = [-1, -1]
+Bounday Y Values are = [-1, -1]
+Pocket Chosen for this ball and its hardness = [nan, inf]
 -------------------------------------------------
 For Ball 2
-Dimensions are 850,330
-Distances to Each Pocket = [nan, nan, 58.309518948453004, nan, nan, nan]
-First Slope = -0.4857142857142857
-First Intercept = 742.8571428571429
-Second Slopes = [nan, nan, -0.6, nan, nan, nan]
-Second Intercepts = [nan, nan, 840.0, nan, nan, nan]
-Bounday X Values are = [835.4285714285714, 900]
-Bounday Y Values are = [300, 432.9411764705883]
-Pocket Chosen for this ball and its hardness = [2, 0.9995917534020513]
+Dimensions are -1,-1
+Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [-1, -1, -1, -1, -1, -1]
+Second Intercepts = [-1, -1, -1, -1, -1, -1]
+Bounday X Values are = [-1, -1]
+Bounday Y Values are = [-1, -1]
+Pocket Chosen for this ball and its hardness = [nan, inf]
 -------------------------------------------------
 For Ball 3
-Dimensions are 850,350
-Distances to Each Pocket = [nan, nan, 70.71067811865476, nan, nan, nan]
-First Slope = -0.42857142857142855
-First Intercept = 714.2857142857142
-Second Slopes = [nan, nan, -1.0, nan, nan, nan]
-Second Intercepts = [nan, nan, 1200.0, nan, nan, nan]
-Bounday X Values are = [828.5714285714286, 900]
-Bounday Y Values are = [300, 466.6666666666665]
-Pocket Chosen for this ball and its hardness = [2, 6.060915267313264]
+Dimensions are -1,-1
+Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [-1, -1, -1, -1, -1, -1]
+Second Intercepts = [-1, -1, -1, -1, -1, -1]
+Bounday X Values are = [-1, -1]
+Bounday Y Values are = [-1, -1]
+Pocket Chosen for this ball and its hardness = [nan, inf]
 -------------------------------------------------
 For Ball 4
-Dimensions are 850,370
-Distances to Each Pocket = [nan, nan, 86.02325267042627, nan, nan, nan]
-First Slope = -0.37142857142857144
-First Intercept = 685.7142857142858
-Second Slopes = [nan, nan, -1.4, nan, nan, nan]
-Second Intercepts = [nan, nan, 1560.0, nan, nan, nan]
-Bounday X Values are = [824.0, 900]
-Bounday Y Values are = [300, 504.61538461538476]
-Pocket Chosen for this ball and its hardness = [2, 13.272158983437196]
+Dimensions are -1,-1
+Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [-1, -1, -1, -1, -1, -1]
+Second Intercepts = [-1, -1, -1, -1, -1, -1]
+Bounday X Values are = [-1, -1]
+Bounday Y Values are = [-1, -1]
+Pocket Chosen for this ball and its hardness = [nan, inf]
 -------------------------------------------------
 For Ball 5
-Dimensions are 850,390
-Distances to Each Pocket = [nan, nan, 102.95630140987001, nan, nan, nan]
-First Slope = -0.3142857142857143
-First Intercept = 657.1428571428571
-Second Slopes = [nan, nan, -1.8, nan, nan, nan]
-Second Intercepts = [nan, nan, 1920.0, nan, nan, nan]
-Bounday X Values are = [821.7142857142858, 900]
-Bounday Y Values are = [300, 549.090909090909]
-Pocket Chosen for this ball and its hardness = [2, 22.94454717134246]
+Dimensions are -1,-1
+Distances to Each Pocket = [-1, -1, -1, -1, -1, -1]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [-1, -1, -1, -1, -1, -1]
+Second Intercepts = [-1, -1, -1, -1, -1, -1]
+Bounday X Values are = [-1, -1]
+Bounday Y Values are = [-1, -1]
+Pocket Chosen for this ball and its hardness = [nan, inf]
 -------------------------------------------------
 For Ball 6
 Dimensions are 850,410
