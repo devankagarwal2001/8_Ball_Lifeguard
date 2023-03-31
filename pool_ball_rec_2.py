@@ -16,11 +16,13 @@ def DetectPoolBalls(img):
     
     lower_color, upper_color = GetClothColor(hsv)    
     
-    contours = GetContours(hsv, lower_color, upper_color,19)
+    contours = GetContours(hsv, lower_color, upper_color,15)
         
     centers = FindTheBalls(img, contours)
     print(len(centers))
-    FindTheColors(img,centers)
+    cue, solids, eight_ball, stripes = FindTheColors(img,centers)
+    final_list = BuildTheList(cue, solids, eight_ball, stripes)
+    return final_list
 
 def LoadImage(filename):
     """
@@ -186,7 +188,7 @@ def GetContours(hsv, lower_color, upper_color,filter_radius):
     contours, _ = cv2.findContours(median,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
     return contours
 
-def FindTheBalls(img, contours, similarity_threshold=20):
+def FindTheBalls(img, contours, similarity_threshold=15):
     """
     Find and circle all of the balls on the table.
     
@@ -217,7 +219,6 @@ def FindTheBalls(img, contours, similarity_threshold=20):
     
             cv2.circle(tmp_img,(int(x),int(y)),int(radius),(0,0,255),2)
             centers.append((int(y),int(x), int(radius)))
-            print(int(y),int(x), int(radius))
 
     cv2.imshow('pool_ball_detect', tmp_img)
     #print(len(centers))
@@ -229,10 +230,10 @@ def FindTheColors(img, centers):
     cue = []
     eight_ball = []
     for (centerX,centerY,radius) in centers:
-        print(centerX,centerY,radius)
         numOfWhitePixels = 0
         numOfBlackPixels = 0
         maxX, maxY, ___ = img.shape
+        print(centerX,centerY,radius)
         for x in range(centerX - radius, centerX + radius):
             for y in range(centerY - radius, centerY + radius):
                 if (0 < x < maxX and 0 < y < maxY and img[x,y][0] > 200 and img[x,y][1] > 200 and img[x,y][2] > 200):
@@ -241,18 +242,43 @@ def FindTheColors(img, centers):
                     numOfBlackPixels +=1
         print(numOfWhitePixels, numOfBlackPixels)
         if numOfBlackPixels > 10:
-            eight_ball.append((centerX,centerY,radius))
+            eight_ball.append((centerY,centerX,radius))
             cv2.circle(img,(int(centerY),int(centerX)),int(radius),(0,0,0),2)
-        elif numOfWhitePixels > 600:
-            cue.append((centerX,centerY,radius))
+        elif numOfWhitePixels > 50:
+            cue.append((centerY,centerX,radius))
             cv2.circle(img,(int(centerY),int(centerX)),int(radius),(255,255,255),2)
-        elif numOfWhitePixels > 200:
-            stripes.append((centerX,centerY,radius))
+        elif numOfWhitePixels > 5:
+            stripes.append((centerY,centerX,radius))
             cv2.circle(img,(int(centerY),int(centerX)),int(radius),(0,0,255),2)
         else:
-            solids.append((centerX,centerY,radius))
+            solids.append((centerY,centerX,radius))
             cv2.circle(img,(int(centerY),int(centerX)),int(radius),(0,255,0),2)
     cv2.imshow('colors_detected', img)
+    return cue, solids, eight_ball, stripes
+
+def BuildTheList(cue, solids, eight_ball, stripes):
+    cue_size = len(cue)
+    solids_size = len(solids)
+    eight_ball_size = len(eight_ball)
+    stripes_size = len(stripes)
+    final_list = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+                  [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]]
+    for ball in range(cue_size):
+        final_list[0][ball] = cue[ball][0]
+        final_list[1][ball] = cue[ball][1]
+    for ball in range(solids_size):
+        final_list[0][ball+1] = solids[ball][0]
+        final_list[1][ball+1] = solids[ball][1]
+    for ball in range(eight_ball_size):
+        final_list[0][ball+8] = eight_ball[ball][0]
+        final_list[1][ball+8] = eight_ball[ball][1]
+    for ball in range(stripes_size):
+        final_list[0][ball+9] = stripes[ball][0]
+        final_list[1][ball+9] = stripes[ball][1]
+    return final_list
+        
+        
+
 
 def mse(img1, img2):
    (h, w, x)= img1.shape
@@ -261,34 +287,25 @@ def mse(img1, img2):
    mse = err/(float(h*w))
    return mse
 
-def show_img_compar(img_1, img_2 ):
-    f, ax = plt.subplots(1, 2, figsize=(10,10))
-    ax[0].imshow(img_1)
-    ax[1].imshow(img_2)
-    ax[0].axis('off') #hide the axis
-    ax[1].axis('off')
-    f.tight_layout()
-    plt.show()
+#imcap = cv2.VideoCapture(0) 
 
+#success,img = imcap.read()
 
-imcap = cv2.VideoCapture(0) 
-
-success,img = imcap.read()
-img = img[80:680,390:1590]
-
+#370, 200 1530, 800
+#img = img[180:780,370:1530]
+img = LoadImage('img/pool_balls.jpeg')
 DetectPoolBalls(img)
 old_img = img
-    
+
 
 while True:
-    success,img = imcap.read()
-    #img = LoadImage('img/test_2 copy.jpg')
-    img = img[80:680,390:1590]
+    #success,img = imcap.read()
+    img = LoadImage('img/pool_balls.jpeg')
+    #img = img[180:780,370:1530]
     
-    cv2.imshow('orig_img', img)
     #if (mse(img,old_img) > 20):
-    print(mse(img,old_img))
-    DetectPoolBalls(img)
+    final_list = DetectPoolBalls(img)
+    print(final_list)
     old_img = img
     #call Devank's function with my code
     if cv2.waitKey(10) & 0xFF == ord('q'):
