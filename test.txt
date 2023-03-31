@@ -1,0 +1,334 @@
+For Ball 1
+Dimensions are 580,110
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+For Ball 2
+Dimensions are 920,479
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+For Ball 3
+Dimensions are -1,-1
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+For Ball 4
+Dimensions are -1,-1
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+For Ball 5
+Dimensions are -1,-1
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+For Ball 6
+Dimensions are -1,-1
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+For Ball 7
+Dimensions are -1,-1
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+For Ball 8
+Dimensions are -1,-1
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+For Ball 9
+Dimensions are 976,300
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+For Ball 10
+Dimensions are 855,383
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+For Ball 11
+Dimensions are 858,316
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+For Ball 12
+Dimensions are 1085,366
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+For Ball 13
+Dimensions are -1,-1
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+For Ball 14
+Dimensions are -1,-1
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+For Ball 15
+Dimensions are -1,-1
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+Old List X = [768, 580, 920, -1, -1, -1, -1, -1, -1, 976, 855, 858, 1085, -1, -1, -1]
+Old List Y = [522, 110, 479, -1, -1, -1, -1, -1, -1, 300, 383, 316, 366, -1, -1, -1]
+New List X = [461, 463, 119, 434, 485, 498, -1, -1, 95, 120, -1, -1, -1, -1, -1, -1]
+New List X = [83, 151, 180, 137, 51, 125, -1, -1, 196, 126, -1, -1, -1, -1, -1, -1]
+For Ball 1
+Dimensions are 463,151
+Distances to Each Pocket = [nan, nan, nan, 829.1019237705337, 463.99353443771173, nan]
+First Slope = 34.0
+First Intercept = -15591.0
+Second Slopes = [nan, nan, nan, 0.6441893830703013, 3.8376068376068377, nan]
+Second Intercepts = [nan, nan, nan, -147.2596843615495, -1625.8119658119658, nan]
+Bounday X Values are = [100, 100]
+Bounday Y Values are = [300, 300]
+Pocket Chosen for this ball and its hardness = [4, 2099.273311577801]
+-------------------------------------------------
+For Ball 2
+Dimensions are 119,180
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = -0.28362573099415206
+First Intercept = 213.7514619883041
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [153.03508771929825, 266.48538011695905]
+Bounday Y Values are = [300, 700]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+For Ball 3
+Dimensions are 434,137
+Distances to Each Pocket = [nan, nan, nan, nan, 485.4739951840881, 634.606177089382]
+First Slope = -2.0
+First Intercept = 1005.0
+Second Slopes = [nan, nan, nan, nan, 3.171232876712329, -1.066820276497696]
+Second Intercepts = [nan, nan, nan, nan, -1239.3150684931506, 600.0]
+Bounday X Values are = [760.0, 900]
+Bounday Y Values are = [300, 370.0]
+Pocket Chosen for this ball and its hardness = [5, 88.83024253036855]
+-------------------------------------------------
+For Ball 4
+Dimensions are 485,51
+Distances to Each Pocket = [nan, nan, 676.9239248246438, nan, nan, nan]
+First Slope = -1.3333333333333333
+First Intercept = 697.6666666666666
+Second Slopes = [nan, nan, -0.07555555555555556, nan, nan, nan]
+Second Intercepts = [nan, nan, 87.64444444444445, nan, nan, nan]
+Bounday X Values are = [817.0, 900]
+Bounday Y Values are = [300, 362.25]
+Pocket Chosen for this ball and its hardness = [2, 127.71298048358278]
+-------------------------------------------------
+For Ball 5
+Dimensions are 498,125
+Distances to Each Pocket = [nan, nan, nan, 814.7815658199441, 482.02593291232785, nan]
+First Slope = 1.135135135135135
+First Intercept = -440.2972972972973
+Second Slopes = [nan, nan, nan, 0.7175226586102719, 5.7926829268292686, nan]
+Second Intercepts = [nan, nan, nan, -232.32628398791542, -2759.756097560976, nan]
+Bounday X Values are = [299.3513513513514, 100]
+Bounday Y Values are = [475.6190476190477, 300]
+Pocket Chosen for this ball and its hardness = [3, 51.0394421293309]
+-------------------------------------------------
+For Ball 6
+Dimensions are -1,-1
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+For Ball 7
+Dimensions are -1,-1
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+For Ball 8
+Dimensions are 95,196
+Distances to Each Pocket = [217.8095498365487, 523.107063611265, 1082.8854971787184, 1139.0526765694376, 631.2218310546618, 415.0192766607354]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+For Ball 9
+Dimensions are 120,126
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = -0.12609970674486803
+First Intercept = 141.13196480938416
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [141.94134897360706, 192.38123167155427]
+Bounday Y Values are = [300, 700]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+For Ball 10
+Dimensions are -1,-1
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+For Ball 11
+Dimensions are -1,-1
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+For Ball 12
+Dimensions are -1,-1
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+For Ball 13
+Dimensions are -1,-1
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+For Ball 14
+Dimensions are -1,-1
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------
+For Ball 15
+Dimensions are -1,-1
+Distances to Each Pocket = [nan, nan, nan, nan, nan, nan]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+-------------------------------------------------

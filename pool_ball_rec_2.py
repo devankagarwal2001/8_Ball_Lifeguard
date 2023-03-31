@@ -8,9 +8,17 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import Indexer
+import time
+import shot_calculation
 
-def DetectPoolBalls(img):
-    
+big_list = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+            [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]]
+
+def DetectPoolBalls():
+    #success,img = imcap.read()
+    img = LoadImage('img/pool_balls.jpeg')
+    #img = img[180:780,370:1530]
+    img = LoadImage('img/pool_balls.jpeg')
     #Now the table is cropped and warped, lets find the balls
     hsv = ToHSV(img)
     
@@ -19,7 +27,7 @@ def DetectPoolBalls(img):
     contours = GetContours(hsv, lower_color, upper_color,15)
         
     centers = FindTheBalls(img, contours)
-    print(len(centers))
+    #print(len(centers))
     cue, solids, eight_ball, stripes = FindTheColors(img,centers)
     final_list = BuildTheList(cue, solids, eight_ball, stripes)
     return final_list
@@ -233,14 +241,14 @@ def FindTheColors(img, centers):
         numOfWhitePixels = 0
         numOfBlackPixels = 0
         maxX, maxY, ___ = img.shape
-        print(centerX,centerY,radius)
+        #print(centerX,centerY,radius)
         for x in range(centerX - radius, centerX + radius):
             for y in range(centerY - radius, centerY + radius):
                 if (0 < x < maxX and 0 < y < maxY and img[x,y][0] > 200 and img[x,y][1] > 200 and img[x,y][2] > 200):
                     numOfWhitePixels +=1
                 elif (0 < x < maxX and 0 < y < maxY and img[x,y][0] < 60 and img[x,y][1] < 60 and img[x,y][2] < 60):
                     numOfBlackPixels +=1
-        print(numOfWhitePixels, numOfBlackPixels)
+        #(numOfWhitePixels, numOfBlackPixels)
         if numOfBlackPixels > 10:
             eight_ball.append((centerY,centerX,radius))
             cv2.circle(img,(int(centerY),int(centerX)),int(radius),(0,0,0),2)
@@ -293,20 +301,32 @@ def mse(img1, img2):
 
 #370, 200 1530, 800
 #img = img[180:780,370:1530]
-img = LoadImage('img/pool_balls.jpeg')
-DetectPoolBalls(img)
-old_img = img
+
+
+
+#to call from Devanks Code
+#call after
+def detect_changes(tempList):
+
+    global big_list
+    if (tempList == big_list):
+        return
+    else:
+        stablize = False
+        while(not stablize):
+            time.sleep(1)
+            newList = DetectPoolBalls()
+            if(newList == big_list):
+                stablize = True
+            else:
+                big_list = newList
+        shot_calculation.start_calc(big_list[0],big_list[1])
 
 
 while True:
-    #success,img = imcap.read()
-    img = LoadImage('img/pool_balls.jpeg')
-    #img = img[180:780,370:1530]
-    
-    #if (mse(img,old_img) > 20):
-    final_list = DetectPoolBalls(img)
-    print(final_list)
-    old_img = img
+    final_list = DetectPoolBalls()
+    #print(final_list)
+    detect_changes(final_list)
     #call Devank's function with my code
     if cv2.waitKey(10) & 0xFF == ord('q'):
         break

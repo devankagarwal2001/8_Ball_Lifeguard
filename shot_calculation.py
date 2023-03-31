@@ -19,8 +19,8 @@ SECOND_INTERCEPT = 4    #The Index which gets the intercept of the line of each 
 POCKETX = 0             #The Index which gets the x corrdinate of the pocket
 POCKETY = 1             #The Index which gets the y corrdinate of the pocket
 NUMBER_OF_PARAMS = 5    #The Number of parameters in the dictionary 
-RADIUS_BALL = 1         #The Radius of each ball
-RADIUS_POCKET = 2       #The Radius of  each pocket
+RADIUS_BALL = 7         #The Radius of each ball
+RADIUS_POCKET = 15       #The Radius of  each pocket
 CUE_BALL = 0            #The Cue ball Index
 NO_POCKETS = 6          #The Number of Pockets on a standard pool table
 BLUE = (255,0,0)        #BGR Color Representation of the Color Blue
@@ -99,12 +99,12 @@ pocket_for_each_ball = [[NAN,INF],[NAN,INF],[NAN,INF],[NAN,INF],[NAN,INF],
 
 
 #A list of pockets with each element being an x-y coordinate for the pocket
-pockets = [[100,300],[500,300],[900,300],[900,700],[500,700],[100,700]]
+pockets = [[0,0],[580,0],[1160,0],[1160,600],[580,600],[0,600]]
 
 
 #A list of X and Y coordinates for each ball
-listX = [500,-1,-1,-1,-1,-1,850,850,850,850,850,850,850,850,850,500]
-listY = [500,-1,-1,-1,-1,-1,410,430,450,470,490,510,530,550,570,320]
+listX = [768,580,920,-1,-1,-1,-1,-1,-1,976,855,858,1085,-1,-1,-1]
+listY = [522,110,479,-1,-1,-1,-1,-1,-1,300,383,316,366,-1,-1,-1]
 
 
 
@@ -312,16 +312,16 @@ def create_second_lines():
 
 #brief: Draws the image that is going to be projected onto the pool table
 def drawImage():
-    img = np.zeros((1000,1000,3), np.uint8)
-    cv.rectangle (img,(100,300),(900,700),GREEN,1)
+    img = np.zeros((600,1160,3), np.uint8)
+    cv.rectangle (img,pockets[0],pockets[3],GREEN,1)
     for target_ball in range(NUMBER_OF_BALLS):
         if listX[target_ball]>0:
             if (target_ball==CUE_BALL):
-                cv.circle(img,(listX[target_ball],listY[target_ball]),RADIUS_BALL*2,WHITE,3)
+                cv.circle(img,(listX[target_ball],listY[target_ball]),RADIUS_BALL*2,WHITE,-1)
             else:
-                cv.circle(img,(listX[target_ball],listY[target_ball]),RADIUS_BALL*2,YELLOW,3)
+                cv.circle(img,(listX[target_ball],listY[target_ball]),RADIUS_BALL*2,YELLOW,-1)
     for pocket in pockets:
-        cv.circle(img,(pocket[0],pocket[1]),RADIUS_POCKET*2,BLUE,6)   
+        cv.circle(img,(pocket[0],pocket[1]),RADIUS_POCKET*2,BLUE,-1)   
     
     i = 0
     for target_ball in range(FIRST_BALL,NUMBER_OF_BALLS):
@@ -338,7 +338,7 @@ def drawImage():
         pocketX = pockets[pocket_for_each_ball[chosen_shot][0]][POCKETX]
         pocketY = pockets[pocket_for_each_ball[chosen_shot][0]][POCKETY]
         cv.line(img,(listX[chosen_shot+1],listY[chosen_shot+1]),(pocketX,pocketY),RED,2)
-    cv.imwrite('img.jpeg',img)
+    cv.imwrite('test.jpeg',img)
 
 
 def find_edges():
@@ -347,10 +347,10 @@ def find_edges():
         if(listX[target_ball]<0 or listY[target_ball]<0): continue
         shot_params=ball_to_shots.get(target_ball)
         if(math.isnan(shot_params[FIRST_SLOPE])):
-            shot_max[POCKETX] = NAN
-            shot_max[POCKETY] = NAN
-            shot_min[POCKETX] = NAN
-            shot_min[POCKETY] = NAN
+            y_bound = balls_to_y_boundary.get(target_ball)
+            x_bound = balls_to_x_boundary.get(target_ball)
+            x_bound = [NAN,NAN]
+            y_bound = [NAN,NAN]
             continue
         elif(math.isinf(shot_params[FIRST_SLOPE])): 
             tangent_slope = 0
@@ -563,50 +563,20 @@ def chose_easiest_shot():
     return min_indx
 
 #starts the api for the shot calculation
-def start_calc():
-    find_distance_to_all_pockets();
-    create_first_lines();
-    create_second_lines();
-    find_edges();
-    remove_impossible_pockets();
-    chose_pocket();
-    print_dimensions();
-    drawImage();
-
-
-#API to be called by the CV system 
-#big list is going to be a 2D array where the format is as follows:
-#[LISTX,LISTY]
-#LIST_ = [CUE,SOLIDx7,CUE,STRIPEX7]
-
-
-def update_lists(big_list):
-    x = big_list[POCKETX]
-    y = big_list[POCKETY]
-    x_diff = check_diff(x,listX)
-    y_diff = check_diff(y,listY)
-    if(x_diff or y_diff):
-        #wait for the shot to stablize
-        while(x_diff or y_diff):
-            x_diff = check_diff(x,listX)
-            y_diff = check_diff(y,listY)
-            continue
-        #update lists
-        for i in range(len(x)):
-            listX[i] = x[i]
-            listY[i] = y[i]
-        #do shot_calculation
-        start_calc()
-    else:
-        return
-
-#returns True if list a != list b
-def check_diff(list_a,list_b):
-    idx = 0
-    for elem in list_a:
-        if elem == list_b[idx]:
-            idx +=1 
-        else:
-            return True
-    if (idx +1 != len(list_b)): return True
-    return False
+def start_calc(lX,lY):
+    print_dimensions()
+    print("Old List X = {lx}".format(lx = listX))
+    print("Old List Y = {lx}".format(lx = listY))
+    for target_ball in range(CUE_BALL,NUMBER_OF_BALLS):
+        listX[target_ball] = lX[target_ball]
+        listY[target_ball] = lY[target_ball]
+    print("New List X = {lx}".format(lx = listX))
+    print("New List X = {lx}".format(lx = listY))
+    find_distance_to_all_pockets()
+    create_first_lines()
+    create_second_lines()
+    find_edges()
+    remove_impossible_pockets()
+    chose_pocket()
+    print_dimensions()
+    drawImage()
