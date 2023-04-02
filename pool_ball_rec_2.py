@@ -10,15 +10,18 @@ import matplotlib.pyplot as plt
 import Indexer
 import time
 import shot_calculation
+import math
 
 big_list = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
             [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]]
+BLUE = (255,0,0)        #BGR Color Representation of the Color Blue
+GREEN = (0,255,0)       #BGR Color Representation of the Color Green
+RED = (0,0,255) 
 
 def DetectPoolBalls():
-    #success,img = imcap.read()
-    img = LoadImage('img/pool_balls.jpeg')
-    #img = img[180:780,370:1530]
-    img = LoadImage('img/pool_balls.jpeg')
+    success,img = imcap.read()
+    #img = LoadImage('img/pool_balls.jpeg')
+    img = img[180:780,370:1530]
     #Now the table is cropped and warped, lets find the balls
     hsv = ToHSV(img)
     
@@ -26,10 +29,15 @@ def DetectPoolBalls():
     
     contours = GetContours(hsv, lower_color, upper_color,15)
         
-    centers = FindTheBalls(img, contours)
+    centers = FindTheBalls(img, contours, similarity_threshold=18)
     #print(len(centers))
     cue, solids, eight_ball, stripes = FindTheColors(img,centers)
+    print(cue)
+    print(solids)
+    print(eight_ball) 
+    print(stripes)
     final_list = BuildTheList(cue, solids, eight_ball, stripes)
+    print(final_list)
     return final_list
 
 def LoadImage(filename):
@@ -65,119 +73,6 @@ def GetClothColor(hsv,search_width=45):
     lower_color = np.array([h_max-search_width,s_max-search_width,v_max-search_width])
     upper_color = np.array([h_max+search_width,s_max+search_width,v_max+search_width])
     return lower_color, upper_color
-
-
-def MaskTableBed(contours):
-    """
-    Mask out the table bed, assuming that it will be the biggest contour.
-    """
-            
-    #The largest area should be the table bed    
-    areas = []    
-    for c in contours:
-        areas.append(cv2.contourArea(c))
-    
-    #return the contour that delineates the table bed
-    largest_contour = Indexer.get_index_of_max(areas)
-    return contours[largest_contour[0]]
-
-def distbetween(x1,y1,x2,y2):
-    """
-    Compute the distance between points (x1,y1) and (x2,y2)
-    """
-
-    return np.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1))
-
-def Get_UL_Coord(contour,pad=10):
-    """
-    Get the upper left coordinate of the contour.
-    """
-    dists = []
-    for c in contour:
-        dists.append(distbetween(c[0][0],c[0][1],0,0))
-
-    return (contour[Indexer.get_index_of_min(dists)[0]][0][0]-pad,contour[Indexer.get_index_of_min(dists)[0]][0][1]-pad)
-    
-def Get_UR_Coord(contour,imgXmax, pad=10):
-    """
-    Get the upper right coordinate of the contour.
-    """
-    dists = []
-    for c in contour:
-        dists.append(distbetween(c[0][0],c[0][1],imgXmax,0))
-
-    return (contour[Indexer.get_index_of_min(dists)[0]][0][0]+pad,contour[Indexer.get_index_of_min(dists)[0]][0][1]-pad)
-
-def Get_LL_Coord(contour,imgYmax, pad=10):
-    """
-    Get the lower left coordinate of the contour.
-    """
-    dists = []
-    for c in contour:
-        dists.append(distbetween(c[0][0],c[0][1],0,imgYmax))
-
-    return (contour[Indexer.get_index_of_min(dists)[0]][0][0]-pad,contour[Indexer.get_index_of_min(dists)[0]][0][1]+pad)
-    
-def Get_LR_Coord(contour,imgXmax,imgYmax, pad=10):    
-    """
-    Get the lower right coordinate of the contour.
-    """
-    dists = []
-    for c in contour:
-        dists.append(distbetween(c[0][0],c[0][1],imgXmax,imgYmax))
-
-    return (contour[Indexer.get_index_of_min(dists)[0]][0][0]+pad,contour[Indexer.get_index_of_min(dists)[0]][0][1]+pad)
-
-def TransformToOverhead(img,contour):
-    """
-    Get the corner coordinates of the table bed by finding the minumum
-    distance to the corners of the image for each point in the contour.
-    
-    Transform code is built upon code from: http://www.pyimagesearch.com/2014/05/05/building-pokedex-python-opencv-perspective-warping-step-5-6/ 
-    """
-
-    #get dimensions of image
-    height, width, channels = img.shape 
-
-    #find the 4 corners of the table bed
-    UL = Get_UL_Coord(contour)
-    UR = Get_UR_Coord(contour,width)  
-    LL = Get_LL_Coord(contour,height)  
-    LR = Get_LR_Coord(contour,width,height)  
-    
-    #store the coordinates in a numpy array    
-    rect = np.zeros((4, 2), dtype = "float32")
-    rect[0]= [UL[0],UL[1]]
-    rect[1]= [UR[0],UR[1]]
-    rect[2]= [LR[0],LR[1]]
-    rect[3]= [LL[0],LL[1]]
-    
-    #get the width at the bottom and top of the image
-    widthA = distbetween(LL[0],LL[1],LR[0],LR[1])
-    widthB = distbetween(UL[0],UL[1],UR[0],UR[1])
-    
-    #choose the maximum width 
-    maxWidth = max(int(widthA), int(widthB))
-    maxHeight  = (maxWidth//2) #pool tables are twice as long as they are wide
-    
-    # construct our destination points which will be used to
-    # map the image to a top-down, "birds eye" view
-    dst = np.array([
-    	[0, 0],
-    	[maxWidth - 1, 0],
-    	[maxWidth - 1, maxHeight - 1],
-    	[0, maxHeight - 1]], dtype = "float32")
-     
-    # calculate the perspective transform matrix and warp
-    # the perspective to grab the screen
-    M = cv2.getPerspectiveTransform(rect, dst)
-    warp = cv2.warpPerspective(img, M, (maxWidth, maxHeight))    
-
-
-    plt.show()
-    
-    plt.show()
-    return warp    
 
 def GetContours(hsv, lower_color, upper_color,filter_radius):
     """
@@ -224,9 +119,9 @@ def FindTheBalls(img, contours, similarity_threshold=15):
         #if the contour is a similar shape to the circle it is likely to be a ball.
         if (d < diffs[0] * similarity_threshold):
             (x,y),radius = cv2.minEnclosingCircle(contours[i])
-    
-            cv2.circle(tmp_img,(int(x),int(y)),int(radius),(0,0,255),2)
-            centers.append((int(y),int(x), int(radius)))
+            if radius > 12:
+                cv2.circle(tmp_img,(int(x),int(y)),int(radius),(0,0,255),2)
+                centers.append((int(y),int(x), int(radius)))
 
     cv2.imshow('pool_ball_detect', tmp_img)
     #print(len(centers))
@@ -237,31 +132,60 @@ def FindTheColors(img, centers):
     solids = []
     cue = []
     eight_ball = []
+    new_tmp_centers = []
+    maxWhitePixels = -1
     for (centerX,centerY,radius) in centers:
         numOfWhitePixels = 0
         numOfBlackPixels = 0
+        numOfOtherPixels = 0
         maxX, maxY, ___ = img.shape
-        #print(centerX,centerY,radius)
+        print(centerX,centerY,radius)
+        #if centerY >900 and centerY < 1000:
+        #    print("startOfPixels")
+            #tmp_img = img[centerX - radius:centerX + radius,centerY - radius:centerY + radius]
+            
         for x in range(centerX - radius, centerX + radius):
             for y in range(centerY - radius, centerY + radius):
-                if (0 < x < maxX and 0 < y < maxY and img[x,y][0] > 200 and img[x,y][1] > 200 and img[x,y][2] > 200):
+                #if centerY >900 and centerY < 1000:
+                #    print(img[x,y][0], img[x,y][1], img[x,y][2])
+                if lengthOfLine(centerX,centerY,x,y) >radius:
+                    continue
+                if (0 < x < maxX and 0 < y < maxY and img[x,y][0] > 180 and img[x,y][1] > 180 and img[x,y][2] > 180):
                     numOfWhitePixels +=1
                 elif (0 < x < maxX and 0 < y < maxY and img[x,y][0] < 60 and img[x,y][1] < 60 and img[x,y][2] < 60):
                     numOfBlackPixels +=1
-        #(numOfWhitePixels, numOfBlackPixels)
-        if numOfBlackPixels > 10:
+                else:
+                    numOfOtherPixels +=1
+        #if centerY >900 and centerY < 1000:
+        #    print("endOfPixels")
+        print(numOfWhitePixels, numOfBlackPixels, numOfOtherPixels)
+        
+        if numOfBlackPixels > 100:
             eight_ball.append((centerY,centerX,radius))
             cv2.circle(img,(int(centerY),int(centerX)),int(radius),(0,0,0),2)
-        elif numOfWhitePixels > 50:
+        elif numOfWhitePixels > 500 and numOfWhitePixels > maxWhitePixels:
             cue.append((centerY,centerX,radius))
             cv2.circle(img,(int(centerY),int(centerX)),int(radius),(255,255,255),2)
-        elif numOfWhitePixels > 5:
+            if maxWhitePixels == -1:
+                maxWhitePixels = numOfWhitePixels
+            else:
+                tmp_x,tmp_y,tmp_rad = cue.pop()
+                cue.append((centerY,centerX,radius))
+                cv2.circle(img,(int(centerY),int(centerX)),int(radius),(255,255,255),2)
+                cv2.circle(img,(int(tmp_y),int(tmp_x)),int(tmp_rad),RED,2)
+                stripes.append((tmp_y,tmp_x,tmp_rad))
+                maxWhitePixels = numOfWhitePixels
+        elif numOfWhitePixels > 150:
             stripes.append((centerY,centerX,radius))
-            cv2.circle(img,(int(centerY),int(centerX)),int(radius),(0,0,255),2)
+            cv2.circle(img,(int(centerY),int(centerX)),int(radius),RED,2)
         else:
             solids.append((centerY,centerX,radius))
-            cv2.circle(img,(int(centerY),int(centerX)),int(radius),(0,255,0),2)
+            cv2.circle(img,(int(centerY),int(centerX)),int(radius),GREEN,2)
     cv2.imshow('colors_detected', img)
+    cue.sort(key = compare)
+    solids.sort(key = compare)
+    """eight_ball = eight_ball.sort()"""
+    stripes.sort(key = compare)
     return cue, solids, eight_ball, stripes
 
 def BuildTheList(cue, solids, eight_ball, stripes):
@@ -285,23 +209,18 @@ def BuildTheList(cue, solids, eight_ball, stripes):
         final_list[1][ball+9] = stripes[ball][1]
     return final_list
         
-        
+def lengthOfLine(x1,y1,x2,y2):
+    return math.sqrt((x2-x1)**2 +(y2-y1)**2)       
 
+def checkEquality(tempList, big_list):
+    for i in range(2):
+        for j in range(16):
+            if abs(tempList[i][j] - big_list[i][j])>3:
+                return False
+    return True
 
-def mse(img1, img2):
-   (h, w, x)= img1.shape
-   diff = cv2.subtract(img1, img2)
-   err = np.sum(diff**2)
-   mse = err/(float(h*w))
-   return mse
-
-#imcap = cv2.VideoCapture(0) 
-
-#success,img = imcap.read()
-
-#370, 200 1530, 800
-#img = img[180:780,370:1530]
-
+def compare(ball):
+  return ball[0]
 
 
 #to call from Devanks Code
@@ -309,26 +228,35 @@ def mse(img1, img2):
 def detect_changes(tempList):
 
     global big_list
-    if (tempList == big_list):
+    if (checkEquality(tempList,big_list)):
         return
     else:
         stablize = False
         while(not stablize):
             time.sleep(1)
+            print("stabilizing")
             newList = DetectPoolBalls()
-            if(newList == big_list):
+            if(checkEquality(tempList,big_list)):
                 stablize = True
             else:
                 big_list = newList
         shot_calculation.start_calc(big_list[0],big_list[1])
 
-
+imcap = cv2.VideoCapture(0) 
+final_list = DetectPoolBalls()
+final_list = DetectPoolBalls()
+final_list = DetectPoolBalls()
+final_list = DetectPoolBalls()
+final_list = DetectPoolBalls()
 while True:
     final_list = DetectPoolBalls()
     #print(final_list)
     detect_changes(final_list)
+    img = LoadImage('test.jpeg')
+    cv2.imshow('best_shot', img)
     #call Devank's function with my code
     if cv2.waitKey(10) & 0xFF == ord('q'):
         break
+    #break
 #imcap.release()
 cv2.destroyWindow('pool_ball_detect')
