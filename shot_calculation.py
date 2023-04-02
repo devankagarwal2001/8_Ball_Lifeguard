@@ -513,6 +513,7 @@ def chose_pocket():
             #check for location of ghost ball, if not possible without collisoin continue
             deltaX = 0
             deltaY = 0
+            #this is wrong, account for slopes
             if (pockets[idx][POCKETX] > listX[target_ball]):
                 deltaX = RADIUS_BALL*-1
             elif(pockets[idx][POCKETX] < listX[target_ball]):
