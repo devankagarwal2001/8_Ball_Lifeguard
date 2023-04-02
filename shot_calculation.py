@@ -16,7 +16,7 @@ FIRST_SLOPE = 1         #The Index which gets the slope of each ball to cue ball
 FIRST_INTERCEPT = 2     #The Index which gets the intercept of each ball to cue ball
 SECOND_SLOPES = 3       #The Index which gets the slope of each ball to each pocket
 SECOND_INTERCEPT = 4    #The Index which gets the intercept of the line of each ball to each pocket
-GHOST_BALL = 5          #The x,y coordinates where the cue ball will hit the target ball
+GHOST_BALL = 5          #The point at which the cue ball will make contact with the target ball
 POCKETX = 0             #The Index which gets the x corrdinate of the pocket
 POCKETY = 1             #The Index which gets the y corrdinate of the pocket
 NUMBER_OF_PARAMS = 5    #The Number of parameters in the dictionary 
@@ -43,7 +43,6 @@ INF = np.inf            #Infinity, Used for the x coordinates of the balls is th
 #       index 2 -> intercepts of first set of lines (cue ball to ball)
 #       index 3 -> Slopes of second set of lines (ball to pockets)
 #       index 4 -> intercept of second set of lines (ball to pockets)
-#       index 5 -> ghost ball location 
 ball_to_shots = {1: [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN]],
                 2:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN]],
                 3:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN]],
@@ -201,7 +200,7 @@ def print_dimensions():
         print("Bounday X Values are = {bound}".format(bound = x_bound))
         print("Bounday Y Values are = {bound}".format(bound = y_bound))
         print("Pocket Chosen for this ball and its hardness = {pocket}".format(pocket = pocket_for_each_ball[i-1]))
-        print("Ghost Coordinates for this ball are = {ghost}".format(ghost = shot_params[GHOST_BALL]))
+        print("Ghost Coordinates for this ball are = {coords}".format(coords = shot_params[GHOST_BALL]))
         print("-------------------------------------------------")
 
 
@@ -326,11 +325,19 @@ def drawImage():
     for pocket in pockets:
         cv.circle(img,(pocket[0],pocket[1]),RADIUS_POCKET*2,BLUE,-1)   
     
+    i = 0
+        #if(not math.isnan(shot_params[FIRST_SLOPE])):
+            #cv.line(img,(listX[CUE_BALL],listY[CUE_BALL]),(listX[target_ball],listY[target_ball]),(0,0,255 - (i*10)),2);
+        #if((not math.isnan(pocket_for_each_ball[target_ball-1][0])) and pocket_for_each_ball[target_ball-1][0]>=0):
+            #pocketX = pockets[pocket_for_each_ball[target_ball-1][0]][POCKETX]
+            #pocketY = pockets[pocket_for_each_ball[target_ball-1][0]][POCKETY]
+            #cv.line(img,(listX[target_ball],listY[target_ball]),(pocketX,pocketY),(0,0,255 - (i*20)),2);
+    
     chosen_shot = chose_easiest_shot()
+    print("Chosen Shot is {fort}".format(fort = chosen_shot))
     if (chosen_shot>0):
         shot_params = ball_to_shots.get(chosen_shot+1)
-        ghost_cords = shot_params[GHOST_BALL]
-        cv.line(img,(listX[CUE_BALL],listY[CUE_BALL]),(ghost_cords[POCKETX],ghost_cords[POCKETY]),RED,2)
+        cv.line(img,(listX[CUE_BALL],listY[CUE_BALL]),(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]),RED,2)
         pocketX = pockets[pocket_for_each_ball[chosen_shot][0]][POCKETX]
         pocketY = pockets[pocket_for_each_ball[chosen_shot][0]][POCKETY]
         cv.line(img,(listX[chosen_shot+1],listY[chosen_shot+1]),(pocketX,pocketY),RED,2)
@@ -484,8 +491,6 @@ def remove_impossible_pockets():
                         shot_params[SECOND_SLOPES][pocket_idx] = NAN
                         shot_params[SECOND_INTERCEPT][pocket_idx] = NAN
                 pocket_idx+=1
-    
-        
            
             
         
@@ -510,35 +515,31 @@ def chose_pocket():
         for idx in range(NO_POCKETS):
             if(math.isnan(second_slopes[idx])): continue
             if(math.isnan(distances[idx])): continue
-            #check for location of ghost ball, if not possible without collisoin continue
-            deltaX = 0
-            deltaY = 0
-            #this is wrong, account for slopes
-            if (pockets[idx][POCKETX] > listX[target_ball]):
-                deltaX = RADIUS_BALL*-1
-            elif(pockets[idx][POCKETX] < listX[target_ball]):
-                deltaX = RADIUS_BALL
+            m = second_slopes[idx]
+            dist = 2 * RADIUS_BALL
+            theta = math.atan(m)
+            xdelta = dist * math.cos(theta)
+            ydelta = dist * math.sin(theta)
+            dist1 = distance(pockets[idx][POCKETX],pockets[idx][POCKETY],listX[target_ball]+xdelta,listY[target_ball]+ydelta)
+            dist2 = distance(pockets[idx][POCKETX],pockets[idx][POCKETY],listX[target_ball]-xdelta,listY[target_ball]-ydelta)
+            if(dist1<dist2):
+                xGhost = listX[target_ball] - xdelta
+                yGhost = listY[target_ball] - ydelta
             else:
-                deltaX = 0
-            if (pockets[idx][POCKETY] > listY[target_ball]):
-                deltaY = RADIUS_BALL*-1
-            elif(pockets[idx][POCKETY] < listY[target_ball]):
-                deltaY = RADIUS_BALL
-            else:
-                deltaY = 0
-            ghostX = listX[target_ball] + deltaX
-            ghostY = listY[target_ball] + deltaY
-            #loop through all balls again
-            possible = True
+                xGhost = listX[target_ball] + xdelta
+                yGhost = listY[target_ball] + ydelta
+            collision = False
+            #now that we have ghost coordinates check for collisions
             for collision_ball in range(FIRST_BALL,NUMBER_OF_BALLS):
-                if target_ball == collision_ball: continue
-                upperCheck = checkCollision(listX[CUE_BALL],listY[CUE_BALL]+RADIUS_BALL,ghostX,ghostY+RADIUS_BALL,listX[collision_ball],listY[collision_ball],RADIUS_BALL)
-                lowerCheck = checkCollision(listX[CUE_BALL],listY[CUE_BALL]-RADIUS_BALL,ghostX,ghostY-RADIUS_BALL,listX[collision_ball],listY[collision_ball],RADIUS_BALL)
-                if(upperCheck or lowerCheck): 
-                    possible = False
+                if (listX[collision_ball]<0): continue
+                if (listY[collision_ball]<0): continue
+                upperCheck = checkCollision(listX[CUE_BALL],listY[CUE_BALL]+RADIUS_BALL,xGhost,yGhost+RADIUS_BALL,listX[collision_ball],listY[collision_ball],RADIUS_BALL)
+                lowerCheck = checkCollision(listX[CUE_BALL],listY[CUE_BALL]-RADIUS_BALL,xGhost,yGhost-RADIUS_BALL,listX[collision_ball],listY[collision_ball],RADIUS_BALL)
+                #shot is not possible
+                if (upperCheck or lowerCheck):
+                    collision = True
                     break
-            if (not possible): continue
-
+            if(collision): continue
             viable = True
             calc_dist = distances[idx] * 0.5
             if(math.isinf(first_slope)):
@@ -569,25 +570,24 @@ def chose_pocket():
                     shot_idx+=1
             pocket_for_each_ball[target_ball-1][0] = chosen_idx
             pocket_for_each_ball[target_ball-1][1] = min_calc
-            deltaX = 0
-            deltaY = 0
-            if (pockets[chosen_idx][POCKETX] > listX[target_ball]):
-                deltaX = RADIUS_BALL*-1
-            elif(pockets[chosen_idx][POCKETX] < listX[target_ball]):
-                deltaX = RADIUS_BALL
+            m = second_slopes[chosen_idx]
+            dist = 2 * RADIUS_BALL
+            theta = math.atan(m)
+            xdelta = dist * math.cos(theta)
+            ydelta = dist * math.sin(theta)
+            dist1 = distance(pockets[chosen_idx][POCKETX],pockets[chosen_idx][POCKETY],listX[target_ball]+xdelta,listY[target_ball]+ydelta)
+            dist2 = distance(pockets[chosen_idx][POCKETX],pockets[chosen_idx][POCKETY],listX[target_ball]-xdelta,listY[target_ball]-ydelta)
+            if(dist1<dist2):
+                xGhost = listX[target_ball] - xdelta
+                yGhost = listY[target_ball] - ydelta
             else:
-                deltaX = 0
-            if (pockets[chosen_idx][POCKETY] > listY[target_ball]):
-                deltaY = RADIUS_BALL*-1
-            elif(pockets[chosen_idx][POCKETY] < listY[target_ball]):
-                deltaY = RADIUS_BALL
-            else:
-                deltaY = 0
-            ghostX = listX[target_ball] + deltaX
-            ghostY = listY[target_ball] + deltaY
-            shot_params[GHOST_BALL][POCKETX] = ghostX
-            shot_params[GHOST_BALL][POCKETY] = ghostY
+                xGhost = listX[target_ball] + xdelta
+                yGhost = listY[target_ball] + ydelta
+            shot_params[GHOST_BALL][0] = int(xGhost)
+            shot_params[GHOST_BALL][1] = int(yGhost)
         else: 
+            shot_params[GHOST_BALL][0] = NAN
+            shot_params[GHOST_BALL][1] = NAN
             pocket_for_each_ball[target_ball-1][0] = NAN
             pocket_for_each_ball[target_ball-1][1] = INF
             
@@ -606,13 +606,22 @@ def chose_easiest_shot():
             cur_indx +=1
     return min_indx
 
+def distance(x0,y0,x1,y1):
+    distX = x0-x1
+    distY = y0-y1
+    distance = math.sqrt((distX*distX)+(distY*distY))
+    return distance
 
 #starts the api for the shot calculation
 def start_calc(lX,lY):
     print_dimensions()
+    print("Old List X = {lx}".format(lx = listX))
+    print("Old List Y = {lx}".format(lx = listY))
     for target_ball in range(CUE_BALL,NUMBER_OF_BALLS):
         listX[target_ball] = lX[target_ball]
         listY[target_ball] = lY[target_ball]
+    print("New List X = {lx}".format(lx = listX))
+    print("New List X = {lx}".format(lx = listY))
     find_distance_to_all_pockets()
     create_first_lines()
     create_second_lines()

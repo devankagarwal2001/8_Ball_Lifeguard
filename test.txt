@@ -178,6 +178,10 @@ Bounday Y Values are = [nan, nan]
 Pocket Chosen for this ball and its hardness = [nan, inf]
 Ghost Coordinates for this ball are = [nan, nan]
 -------------------------------------------------
+Old List X = [768, 580, 920, -1, -1, -1, -1, -1, -1, 976, 855, 858, 1085, -1, -1, -1]
+Old List Y = [522, 110, 479, -1, -1, -1, -1, -1, -1, 300, 383, 316, 366, -1, -1, -1]
+New List X = [461, 463, 119, 434, 485, 498, -1, -1, 95, 120, -1, -1, -1, -1, -1, -1]
+New List X = [83, 151, 180, 137, 51, 125, -1, -1, 196, 126, -1, -1, -1, -1, -1, -1]
 For Ball 1
 Dimensions are 463,151
 Distances to Each Pocket = [nan, nan, nan, 829.1019237705337, 463.99353443771173, nan]
@@ -188,7 +192,7 @@ Second Intercepts = [nan, nan, nan, -147.2596843615495, -1625.8119658119658, nan
 Bounday X Values are = [100, 100]
 Bounday Y Values are = [300, 300]
 Pocket Chosen for this ball and its hardness = [4, 2099.273311577801]
-Ghost Coordinates for this ball are = [456, 144]
+Ghost Coordinates for this ball are = [459, 137]
 -------------------------------------------------
 For Ball 2
 Dimensions are 119,180
@@ -212,7 +216,7 @@ Second Intercepts = [nan, nan, nan, nan, -1239.3150684931506, 600.0]
 Bounday X Values are = [760.0, 900]
 Bounday Y Values are = [300, 370.0]
 Pocket Chosen for this ball and its hardness = [5, 88.83024253036855]
-Ghost Coordinates for this ball are = [441, 130]
+Ghost Coordinates for this ball are = [443, 126]
 -------------------------------------------------
 For Ball 4
 Dimensions are 485,51
@@ -224,7 +228,7 @@ Second Intercepts = [nan, nan, 87.64444444444445, nan, nan, nan]
 Bounday X Values are = [817.0, 900]
 Bounday Y Values are = [300, 362.25]
 Pocket Chosen for this ball and its hardness = [2, 127.71298048358278]
-Ghost Coordinates for this ball are = [478, 58]
+Ghost Coordinates for this ball are = [471, 52]
 -------------------------------------------------
 For Ball 5
 Dimensions are 498,125
@@ -236,7 +240,7 @@ Second Intercepts = [nan, nan, nan, -232.32628398791542, -2759.756097560976, nan
 Bounday X Values are = [299.3513513513514, 100]
 Bounday Y Values are = [475.6190476190477, 300]
 Pocket Chosen for this ball and its hardness = [3, 51.0394421293309]
-Ghost Coordinates for this ball are = [491, 118]
+Ghost Coordinates for this ball are = [486, 116]
 -------------------------------------------------
 For Ball 6
 Dimensions are -1,-1
@@ -358,3 +362,4 @@ Bounday Y Values are = [nan, nan]
 Pocket Chosen for this ball and its hardness = [nan, inf]
 Ghost Coordinates for this ball are = [nan, nan]
 -------------------------------------------------
+Chosen Shot is 4
