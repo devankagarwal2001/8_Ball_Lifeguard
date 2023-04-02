@@ -614,19 +614,20 @@ def distance(x0,y0,x1,y1):
 
 #starts the api for the shot calculation
 def start_calc(lX,lY):
-    print_dimensions()
-    print("Old List X = {lx}".format(lx = listX))
-    print("Old List Y = {lx}".format(lx = listY))
+    print("calculating")
+    #print_dimensions()
+    #print("Old List X = {lx}".format(lx = listX))
+    #print("Old List Y = {lx}".format(lx = listY))
     for target_ball in range(CUE_BALL,NUMBER_OF_BALLS):
         listX[target_ball] = lX[target_ball]
         listY[target_ball] = lY[target_ball]
-    print("New List X = {lx}".format(lx = listX))
-    print("New List X = {lx}".format(lx = listY))
+    #print("New List X = {lx}".format(lx = listX))
+    #print("New List X = {lx}".format(lx = listY))
     find_distance_to_all_pockets()
     create_first_lines()
     create_second_lines()
     find_edges()
     remove_impossible_pockets()
     chose_pocket()
-    print_dimensions()
+    #print_dimensions()
     drawImage()

@@ -32,10 +32,6 @@ def DetectPoolBalls():
     centers = FindTheBalls(img, contours, similarity_threshold=18)
     #print(len(centers))
     cue, solids, eight_ball, stripes = FindTheColors(img,centers)
-    print(cue)
-    print(solids)
-    print(eight_ball) 
-    print(stripes)
     final_list = BuildTheList(cue, solids, eight_ball, stripes)
     print(final_list)
     return final_list
@@ -78,10 +74,8 @@ def GetContours(hsv, lower_color, upper_color,filter_radius):
     """
     Returns the contours generated from the given color range
     """
-    cv2.imshow('hsv', hsv)
     # Threshold the HSV image to get only cloth colors
     mask = cv2.inRange(hsv, lower_color, upper_color)
-    cv2.imshow('mask', mask)
     #use a median filter to get rid of speckle noise
     median = cv2.medianBlur(mask,filter_radius)
     cv2.imshow('median_detect', median)
@@ -119,12 +113,10 @@ def FindTheBalls(img, contours, similarity_threshold=15):
         #if the contour is a similar shape to the circle it is likely to be a ball.
         if (d < diffs[0] * similarity_threshold):
             (x,y),radius = cv2.minEnclosingCircle(contours[i])
-            if radius > 12:
+            if radius > 15 and y <1130 and x <1130:
                 cv2.circle(tmp_img,(int(x),int(y)),int(radius),(0,0,255),2)
                 centers.append((int(y),int(x), int(radius)))
 
-    cv2.imshow('pool_ball_detect', tmp_img)
-    #print(len(centers))
     return centers
 
 def FindTheColors(img, centers):
@@ -139,15 +131,9 @@ def FindTheColors(img, centers):
         numOfBlackPixels = 0
         numOfOtherPixels = 0
         maxX, maxY, ___ = img.shape
-        print(centerX,centerY,radius)
-        #if centerY >900 and centerY < 1000:
-        #    print("startOfPixels")
-            #tmp_img = img[centerX - radius:centerX + radius,centerY - radius:centerY + radius]
             
         for x in range(centerX - radius, centerX + radius):
             for y in range(centerY - radius, centerY + radius):
-                #if centerY >900 and centerY < 1000:
-                #    print(img[x,y][0], img[x,y][1], img[x,y][2])
                 if lengthOfLine(centerX,centerY,x,y) >radius:
                     continue
                 if (0 < x < maxX and 0 < y < maxY and img[x,y][0] > 180 and img[x,y][1] > 180 and img[x,y][2] > 180):
@@ -156,9 +142,6 @@ def FindTheColors(img, centers):
                     numOfBlackPixels +=1
                 else:
                     numOfOtherPixels +=1
-        #if centerY >900 and centerY < 1000:
-        #    print("endOfPixels")
-        print(numOfWhitePixels, numOfBlackPixels, numOfOtherPixels)
         
         if numOfBlackPixels > 100:
             eight_ball.append((centerY,centerX,radius))
@@ -216,6 +199,8 @@ def checkEquality(tempList, big_list):
     for i in range(2):
         for j in range(16):
             if abs(tempList[i][j] - big_list[i][j])>3:
+                print("DIFFERENT ball")
+                print(tempList[i][j])
                 return False
     return True
 
@@ -233,10 +218,10 @@ def detect_changes(tempList):
     else:
         stablize = False
         while(not stablize):
-            time.sleep(1)
+            time.sleep(.5)
             print("stabilizing")
             newList = DetectPoolBalls()
-            if(checkEquality(tempList,big_list)):
+            if(checkEquality(newList,big_list)):
                 stablize = True
             else:
                 big_list = newList
@@ -252,8 +237,6 @@ while True:
     final_list = DetectPoolBalls()
     #print(final_list)
     detect_changes(final_list)
-    img = LoadImage('test.jpeg')
-    cv2.imshow('best_shot', img)
     #call Devank's function with my code
     if cv2.waitKey(10) & 0xFF == ord('q'):
         break
