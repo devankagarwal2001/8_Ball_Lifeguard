@@ -1,3 +1,5 @@
+#Author: Devank Agarwal, devanka@andrew.cmu.edu
+
 ''' The Following File Contains Code for a working implementation of a pool table real time 
     optimal shot calculator'''
 
@@ -631,22 +633,17 @@ def distance(x0,y0,x1,y1):
     distY = y0-y1
     distance = math.sqrt((distX*distX)+(distY*distY))
     return distance
+
 #starts the api for the shot calculation
-def start_calc(lX,lY):
-    print("calculating")
-    #print_dimensions()
-    #print("Old List X = {lx}".format(lx = listX))
-    #print("Old List Y = {lx}".format(lx = listY))
-    for target_ball in range(CUE_BALL,NUMBER_OF_BALLS):
-        listX[target_ball] = lX[target_ball]
-        listY[target_ball] = lY[target_ball]
-    #print("New List X = {lx}".format(lx = listX))
-    #print("New List X = {lx}".format(lx = listY))
+def start_calc():
     find_distance_to_all_pockets()
     create_first_lines()
     create_second_lines()
     find_edges()
     remove_impossible_pockets()
     chose_pocket()
-    #print_dimensions()
+    print_dimensions()
     drawImage()
+
+
+start_calc()
