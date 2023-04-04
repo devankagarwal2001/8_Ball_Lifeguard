@@ -36,7 +36,7 @@ TABLE_Y_HI = 700        #Table bottom right corner y coordinate
 TABLE_Y_LO = 300        #Table top left corner y coordinate
 NAN = np.nan            #Not a number, used for default and non-reachable values
 INF = np.inf            #Infinity, Used for the x coordinates of the balls is the same
-ROOT2 = math.sqrt(2)    #The square root of 2
+ROOT2 = math.sqrt(2)
 
 #brief: A list of the various parametrs for the ball
 #int (ball number) -> list
@@ -101,39 +101,35 @@ pocket_for_each_ball = [[NAN,INF],[NAN,INF],[NAN,INF],[NAN,INF],[NAN,INF],
                         [NAN,INF],[NAN,INF],[NAN,INF],[NAN,INF],[NAN,INF]]
 
 
-#A list of pockets with each element being an x-y coordinate for the pocket centers
+#A list of pockets with each element being an x-y coordinate for the pocket
 pockets = [[0,0],[600,0],[1200,0],[1200,600],[600,600],[0,600]]
-
-#A list of x,y coordinates dor where on the pocket edge you should aim
-pocket_aim = [[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN]]
-
-
+center_edges = [[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN]]
 
 #A list of X and Y coordinates for each ball
-listX = [30,550,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-listY = [30,30,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listX = [60,60,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listY = [550,60,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 
 
-
-#taken from: https://www.jeffreythompson.org/collision-detection/line-circle.php
-
-#Finds where on the pocket to hit each ball into (Cant aim for the center of the pocket as that would hit edge)
-def find_pocket_centers():
-    pocket_aim[0][0] = pockets[0][0] + (RADIUS_POCKET/ROOT2)
-    pocket_aim[0][1] = pockets[0][1] + (RADIUS_POCKET/ROOT2)
-    pocket_aim[1][0] = pockets[1][0]
-    pocket_aim[1][1] = pockets[1][1] + (RADIUS_POCKET/ROOT2)
-    pocket_aim[2][0] = pockets[2][0] - (RADIUS_POCKET/ROOT2)
-    pocket_aim[2][1] = pockets[2][1] + (RADIUS_POCKET/ROOT2)
-    pocket_aim[3][0] = pockets[3][0] - (RADIUS_POCKET/ROOT2)
-    pocket_aim[3][1] = pockets[3][1] - (RADIUS_POCKET/ROOT2)
-    pocket_aim[4][0] = pockets[4][0]
-    pocket_aim[4][1] = pockets[4][1] - (RADIUS_POCKET/ROOT2)
-    pocket_aim[5][0] = pockets[5][0] + (RADIUS_POCKET/ROOT2)
-    pocket_aim[5][1] = pockets[5][1] - (RADIUS_POCKET/ROOT2)
-
-     
-
+def calc_center_edges():
+    global center_edges
+    p0 = center_edges[0]
+    p1 = center_edges[1]
+    p2 = center_edges[2]
+    p3 = center_edges[3]
+    p4 = center_edges[4]
+    p5 = center_edges[5]
+    p0[0] = pockets[0][0] + (RADIUS_POCKET/ROOT2)
+    p0[1] = pockets[0][1] + (RADIUS_POCKET/ROOT2)
+    p1[0] = pockets[1][0] 
+    p1[1] = pockets[1][0] + (RADIUS_POCKET/ROOT2)
+    p2[0] = pockets[2][0] - (RADIUS_POCKET/ROOT2)
+    p2[1] = pockets[2][1] + (RADIUS_POCKET/ROOT2)
+    p3[0] = pockets[3][0] - (RADIUS_POCKET/ROOT2)
+    p3[1] = pockets[3][1] - (RADIUS_POCKET/ROOT2)
+    p4[0] = pockets[4][0] 
+    p4[1] = pockets[4][1] - (RADIUS_POCKET/ROOT2)
+    p5[0] = pockets[5][0] + (RADIUS_POCKET/ROOT2)
+    p5[1] = pockets[5][1] - (RADIUS_POCKET/ROOT2)
 #taken from: https://www.jeffreythompson.org/collision-detection/line-circle.php
 
 # Definition: Checks if the line given bt (x0,y0) and (x1,y1) lies on the circle given by (cx,cy) and radius
@@ -212,6 +208,7 @@ def linePoint(x1,y1,x2,y2,px,py):
 #breif: Print helper Function for clarity of Code
 def print_dimensions():
     for i in range(FIRST_BALL,NUMBER_OF_BALLS):
+        if(listX[i]<0): continue
         shot_params = ball_to_shots.get(i)
         x_bound = balls_to_x_boundary.get(i)
         y_bound = balls_to_y_boundary.get(i)
@@ -238,7 +235,7 @@ def find_distance_to_all_pockets():
         if(listX[i]<0): continue
         shot_params = ball_to_shots.get(i)
         pocket_idx = 0
-        for pocket in pocket_aim:
+        for pocket in center_edges:
             distanceX = (listX[i] - pocket[POCKETX]) * (listX[i] - pocket[POCKETX])
             distanceY = (listY[i] - pocket[POCKETY]) * (listY[i] - pocket[POCKETY])
             dist = math.sqrt(distanceX + distanceY)
@@ -311,7 +308,7 @@ def create_second_lines():
             continue
         #create a line for each pocket
         pocket_index = 0;
-        for pocket in pocket_aim:
+        for pocket in center_edges:
             collision = False
             #check collision for that pocket with every ball
             for collision_ball in range(CUE_BALL, NUMBER_OF_BALLS):
@@ -359,14 +356,14 @@ def drawImage():
             #cv.line(img,(listX[target_ball],listY[target_ball]),(pocketX,pocketY),(0,0,255 - (i*20)),2);
     
     chosen_shot = chose_easiest_shot()
-    print("Chosen Shot is {fort}".format(fort = chosen_shot))
+    print("Chosen Shot is {fort}".format(fort = chosen_shot+1))
     if (chosen_shot>=0):
         shot_params = ball_to_shots.get(chosen_shot+1)
         cv.line(img,(listX[CUE_BALL],listY[CUE_BALL]),(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]),RED,2)
         cv.circle(img,(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]),RADIUS_BALL,WHITE,1)
-        pocketX = pocket_aim[pocket_for_each_ball[chosen_shot][0]][POCKETX]
-        pocketY = pocket_aim[pocket_for_each_ball[chosen_shot][0]][POCKETY]
-        cv.line(img,(listX[chosen_shot+1],listY[chosen_shot+1]),(int(pocketX),int(pocketY)),RED,2)
+        pocketX = int(center_edges[pocket_for_each_ball[chosen_shot][0]][POCKETX])
+        pocketY = int(center_edges[pocket_for_each_ball[chosen_shot][0]][POCKETY])
+        cv.line(img,(listX[chosen_shot+1],listY[chosen_shot+1]),(pocketX,pocketY),RED,2)
     cv.imwrite('ghost.jpeg',img)
 
 
@@ -426,7 +423,9 @@ def find_edges():
             elif(new_y<TABLE_Y_LO) : new_y = TABLE_Y_LO
             y_bound[1] = new_y
 
+#@TODO: Now FIGURE OUT HOW TO CHOOSE A POCKET
 
+#not fully correct
 def remove_impossible_pockets():
     if(listX[CUE_BALL]<0 or listY[CUE_BALL]<0): return
     for target_ball in range(FIRST_BALL, NUMBER_OF_BALLS):
@@ -436,7 +435,7 @@ def remove_impossible_pockets():
         y_bounds = balls_to_y_boundary.get(target_ball)
         if(listX[CUE_BALL] == listX[target_ball]):
             pocket_idx = 0
-            for pocket in pocket_aim: 
+            for pocket in center_edges: 
                 if(pocket[POCKETY]<listY[target_ball] and listY[CUE_BALL]<listY[target_ball]):
                     shot_params[DISTANCES][pocket_idx] = NAN
                     shot_params[SECOND_SLOPES][pocket_idx] = NAN
@@ -448,7 +447,7 @@ def remove_impossible_pockets():
                 pocket_idx+=1
         elif(listX[CUE_BALL]<listX[target_ball]):
             pocket_idx = 0
-            for pocket in pocket_aim: 
+            for pocket in center_edges: 
                 if (pocket_idx<3):
                     if(pocket[POCKETX]<x_bounds[0]):
                         shot_params[DISTANCES][pocket_idx] = NAN
@@ -462,7 +461,7 @@ def remove_impossible_pockets():
                 pocket_idx+=1
         elif(listX[CUE_BALL]>listX[target_ball]):
             pocket_idx = 0
-            for pocket in pocket_aim:
+            for pocket in center_edges:
                 if (pocket_idx<3):
                     if(pocket[POCKETX]>x_bounds[0]):
                         shot_params[DISTANCES][pocket_idx] = NAN
@@ -477,7 +476,7 @@ def remove_impossible_pockets():
             
         if(listY[CUE_BALL]==listY[target_ball]):
             pocket_idx = 0
-            for pocket in pocket_aim: 
+            for pocket in center_edges: 
                 if(pocket[POCKETX]<listX[target_ball] and listX[CUE_BALL]<listX[target_ball]):
                     shot_params[DISTANCES][pocket_idx] = NAN
                     shot_params[SECOND_SLOPES][pocket_idx] = NAN
@@ -489,7 +488,7 @@ def remove_impossible_pockets():
                 pocket_idx+=1
         elif (listY[CUE_BALL] > listY[target_ball]):
             pocket_idx = 0
-            for pocket in pocket_aim:
+            for pocket in center_edges:
                 if (pocket_idx<3):
                     if(pocket[POCKETY]>y_bounds[0]):
                         shot_params[DISTANCES][pocket_idx] = NAN
@@ -503,7 +502,7 @@ def remove_impossible_pockets():
                 pocket_idx+=1
         elif (listY[CUE_BALL] < listY[target_ball]):
             pocket_idx = 0
-            for pocket in pocket_aim:
+            for pocket in center_edges:
                 if (pocket_idx<3):
                     if(pocket[POCKETY]<y_bounds[0]):
                         shot_params[DISTANCES][pocket_idx] = NAN
@@ -516,8 +515,9 @@ def remove_impossible_pockets():
                         shot_params[SECOND_INTERCEPT][pocket_idx] = NAN
                 pocket_idx+=1
            
-               
-#Choses which pocket to hit the ball into and defines its hardness levels
+            
+        
+
 def chose_pocket():
     if(listX[CUE_BALL]<0 or listY[CUE_BALL]<0): return
     for target_ball in range(FIRST_BALL, NUMBER_OF_BALLS):
@@ -544,8 +544,8 @@ def chose_pocket():
                 theta = math.atan(m)
                 xdelta = dist * math.cos(theta)
                 ydelta = dist * math.sin(theta)
-                dist1 = distance(pocket_aim[idx][POCKETX],pocket_aim[idx][POCKETY],listX[target_ball]+xdelta,listY[target_ball]+ydelta)
-                dist2 = distance(pocket_aim[idx][POCKETX],pocket_aim[idx][POCKETY],listX[target_ball]-xdelta,listY[target_ball]-ydelta)
+                dist1 = distance(center_edges[idx][POCKETX],center_edges[idx][POCKETY],listX[target_ball]+xdelta,listY[target_ball]+ydelta)
+                dist2 = distance(center_edges[idx][POCKETX],center_edges[idx][POCKETY],listX[target_ball]-xdelta,listY[target_ball]-ydelta)
                 if(dist1<dist2):
                     xGhost = listX[target_ball] - xdelta
                     yGhost = listY[target_ball] - ydelta
@@ -556,7 +556,7 @@ def chose_pocket():
                 xdelta = 0
                 ydelta = dist
                 xGhost = listX[target_ball]
-                if (pocket_aim[idx][POCKETY]<listY[target_ball]):
+                if (center_edges[idx][POCKETY]<listY[target_ball]):
                     yGhost = listY[target_ball] + ydelta
                 else:
                      yGhost = listY[target_ball] - ydelta
@@ -564,7 +564,7 @@ def chose_pocket():
                 ydelta = 0
                 xdelta = dist
                 yGhost = listY[target_ball]
-                if (pocket_aim[idx][POCKETX]<listX[target_ball]):
+                if (center_edges[idx][POCKETX]<listX[target_ball]):
                     xGhost = listY[target_ball] + xdelta
                 else:
                     xGhost = listY[target_ball] - xdelta
@@ -584,24 +584,24 @@ def chose_pocket():
             if(collision): 
                 continue
             viable = True
-            calc_dist = distances[idx] * 0.5
+            calc_dist = distances[idx] * 2
             if(math.isinf(first_slope)):
-                if(math.isinf(second_slopes[idx])):
+                if(math.isinf(second_slopes[idx]) or second_slopes[idx]==1):
                     calc_slope_delta = 0
                 else:
-                    calc_slope_delta = abs(second_slopes[idx]) * 0.3
+                    calc_slope_delta = abs(second_slopes[idx]) * 0.2
             else:
                 if(math.isinf(second_slopes[idx])):
-                    calc_slope_delta = abs(first_slope) * 0.3
+                    calc_slope_delta = abs(first_slope) * 0.2
                 else:
-                    calc_slope_delta = abs(second_slopes[idx] - first_slope) * 0.3
+                    calc_slope_delta = abs(second_slopes[idx] - first_slope) * 0.2
             total_hardness = calc_dist * calc_slope_delta
             hardness_all_shots[idx] = total_hardness
         #shot can be made chose best
         if (viable):
             shot_idx = 0
             chosen_idx = -1
-            min_calc = INF
+            min_calc = 100000000
             for hardness in hardness_all_shots:
                 if (math.isnan(hardness)): 
                     shot_idx+=1
@@ -618,8 +618,8 @@ def chose_pocket():
             theta = math.atan(m)
             xdelta = dist * math.cos(theta)
             ydelta = dist * math.sin(theta)
-            dist1 = distance(pocket_aim[chosen_idx][POCKETX],pocket_aim[chosen_idx][POCKETY],listX[target_ball]+xdelta,listY[target_ball]+ydelta)
-            dist2 = distance(pocket_aim[chosen_idx][POCKETX],pocket_aim[chosen_idx][POCKETY],listX[target_ball]-xdelta,listY[target_ball]-ydelta)
+            dist1 = distance(center_edges[chosen_idx][POCKETX],center_edges[chosen_idx][POCKETY],listX[target_ball]+xdelta,listY[target_ball]+ydelta)
+            dist2 = distance(center_edges[chosen_idx][POCKETX],center_edges[chosen_idx][POCKETY],listX[target_ball]-xdelta,listY[target_ball]-ydelta)
             if(dist1<dist2):
                 xGhost = listX[target_ball] - xdelta
                 yGhost = listY[target_ball] - ydelta
@@ -633,8 +633,7 @@ def chose_pocket():
             shot_params[GHOST_BALL][1] = NAN
             pocket_for_each_ball[target_ball-1][0] = NAN
             pocket_for_each_ball[target_ball-1][1] = INF
-
-#Choses the easiest shot from all possible shots        
+            
 def chose_easiest_shot():
     min_hardness = INF
     min_indx = -1
