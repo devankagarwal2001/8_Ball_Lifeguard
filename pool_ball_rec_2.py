@@ -17,17 +17,19 @@ big_list = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
 BLUE = (255,0,0)        #BGR Color Representation of the Color Blue
 GREEN = (0,255,0)       #BGR Color Representation of the Color Green
 RED = (0,0,255) 
+kernel = np.ones((3, 3), np.uint8)
+
 
 def DetectPoolBalls():
     success,img = imcap.read()
     #img = LoadImage('img/pool_balls.jpeg')
-    img = img[180:780,370:1530]
+    img = img[100:700,360:1520]
     #Now the table is cropped and warped, lets find the balls
     hsv = ToHSV(img)
     
     lower_color, upper_color = GetClothColor(hsv)    
     
-    contours = GetContours(hsv, lower_color, upper_color,15)
+    contours = GetContours(hsv, lower_color, upper_color,21)
         
     centers = FindTheBalls(img, contours, similarity_threshold=18)
     #print(len(centers))
@@ -79,6 +81,8 @@ def GetContours(hsv, lower_color, upper_color,filter_radius):
     #use a median filter to get rid of speckle noise
     median = cv2.medianBlur(mask,filter_radius)
     cv2.imshow('median_detect', median)
+    mask = cv2.erode(mask, kernel, iterations=6)
+    mask = cv2.dilate(mask, kernel, iterations=3)
     
     #get the contours of the filtered mask
     #this modifies median in place!
@@ -236,7 +240,7 @@ final_list = DetectPoolBalls()
 while True:
     final_list = DetectPoolBalls()
     #print(final_list)
-    detect_changes(final_list)
+    #detect_changes(final_list)
     #call Devank's function with my code
     if cv2.waitKey(10) & 0xFF == ord('q'):
         break
