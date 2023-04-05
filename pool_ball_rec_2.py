@@ -23,7 +23,7 @@ kernel = np.ones((3, 3), np.uint8)
 def DetectPoolBalls():
     success,img = imcap.read()
     #img = LoadImage('img/pool_balls.jpeg')
-    img = img[100:700,360:1520]
+    img = img[115:700,360:1520]
     #Now the table is cropped and warped, lets find the balls
     hsv = ToHSV(img)
     
@@ -31,12 +31,25 @@ def DetectPoolBalls():
     
     contours = GetContours(hsv, lower_color, upper_color,21)
         
-    centers = FindTheBalls(img, contours, similarity_threshold=18)
+    centers = FindTheBalls(img, contours, similarity_threshold=25)
     #print(len(centers))
+    #IncreaseSaturation(img)
     cue, solids, eight_ball, stripes = FindTheColors(img,centers)
     final_list = BuildTheList(cue, solids, eight_ball, stripes)
     print(final_list)
     return final_list
+
+def IncreaseSaturation(img):
+    cv2.imshow("before", img)
+    hsv = ToHSV(img)
+    maxX, maxY, ___ = hsv.shape
+    for x in range(maxX):
+        for y in range(maxY):
+            hsv[x,y][1] = 255
+    tmp_img = cv2.cvtColor(hsv.copy(), cv2.COLOR_HSV2BGR)
+    cv2.imshow("after", tmp_img)
+    return tmp_img
+    
 
 def LoadImage(filename):
     """
@@ -83,6 +96,7 @@ def GetContours(hsv, lower_color, upper_color,filter_radius):
     cv2.imshow('median_detect', median)
     mask = cv2.erode(mask, kernel, iterations=6)
     mask = cv2.dilate(mask, kernel, iterations=3)
+    cv2.imshow('eroision&dilate', median)
     
     #get the contours of the filtered mask
     #this modifies median in place!
@@ -135,9 +149,15 @@ def FindTheColors(img, centers):
         numOfBlackPixels = 0
         numOfOtherPixels = 0
         maxX, maxY, ___ = img.shape
-            
+        print(centerY, centerX)
+        if (centerY > 820 and centerY < 840):
+            tmp_img = img[centerX - radius:centerX + radius,centerY - radius:centerY + radius]
+            cv2.imshow("tmp_img", tmp_img)
         for x in range(centerX - radius, centerX + radius):
             for y in range(centerY - radius, centerY + radius):
+                """if (centerY > 655 and centerY < 675):
+                    print(x,y)
+                    print(img[x,y])"""
                 if lengthOfLine(centerX,centerY,x,y) >radius:
                     continue
                 if (0 < x < maxX and 0 < y < maxY and img[x,y][0] > 180 and img[x,y][1] > 180 and img[x,y][2] > 180):
@@ -146,7 +166,7 @@ def FindTheColors(img, centers):
                     numOfBlackPixels +=1
                 else:
                     numOfOtherPixels +=1
-        
+        print(numOfBlackPixels, numOfWhitePixels, numOfOtherPixels)
         if numOfBlackPixels > 100:
             eight_ball.append((centerY,centerX,radius))
             cv2.circle(img,(int(centerY),int(centerX)),int(radius),(0,0,0),2)
@@ -169,9 +189,7 @@ def FindTheColors(img, centers):
             solids.append((centerY,centerX,radius))
             cv2.circle(img,(int(centerY),int(centerX)),int(radius),GREEN,2)
     cv2.imshow('colors_detected', img)
-    cue.sort(key = compare)
     solids.sort(key = compare)
-    """eight_ball = eight_ball.sort()"""
     stripes.sort(key = compare)
     return cue, solids, eight_ball, stripes
 
@@ -240,8 +258,9 @@ final_list = DetectPoolBalls()
 while True:
     final_list = DetectPoolBalls()
     #print(final_list)
-    #detect_changes(final_list)
+    detect_changes(final_list)
     #call Devank's function with my code
+    cv2.waitKey()
     if cv2.waitKey(10) & 0xFF == ord('q'):
         break
     #break

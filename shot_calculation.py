@@ -102,7 +102,7 @@ pocket_for_each_ball = [[NAN,INF],[NAN,INF],[NAN,INF],[NAN,INF],[NAN,INF],
 
 
 #A list of pockets with each element being an x-y coordinate for the pocket
-pockets = [[0,0],[600,0],[1200,0],[1200,600],[600,600],[0,600]]
+pockets = [[0,0],[580,0],[1160,0],[1160,585],[580,585],[0,585]]
 center_edges = [[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN]]
 
 #A list of X and Y coordinates for each ball
@@ -666,7 +666,7 @@ def start_calc(lX,lY):
         listY[target_ball] = lY[target_ball]
     #print("New List X = {lx}".format(lx = listX))
     #print("New List X = {lx}".format(lx = listY))
-    find_pocket_centers()
+    calc_center_edges()
     find_distance_to_all_pockets()
     create_first_lines()
     create_second_lines()
