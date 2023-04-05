@@ -9,7 +9,6 @@ import cv2 as cv
 import numpy as np
 
 
-
 ################### GLOBAL PARAMETERS ###################
 NUMBER_OF_BALLS = 16    #The total number of balls on the table
 FIRST_BALL = 1          #Solid Ball 1
@@ -19,11 +18,12 @@ FIRST_INTERCEPT = 2     #The Index which gets the intercept of each ball to cue 
 SECOND_SLOPES = 3       #The Index which gets the slope of each ball to each pocket
 SECOND_INTERCEPT = 4    #The Index which gets the intercept of the line of each ball to each pocket
 GHOST_BALL = 5          #The point at which the cue ball will make contact with the target ball
+DISTANCE_CUE = 6        #The distance from the cue ball to the target ball 
 POCKETX = 0             #The Index which gets the x corrdinate of the pocket
 POCKETY = 1             #The Index which gets the y corrdinate of the pocket
 NUMBER_OF_PARAMS = 5    #The Number of parameters in the dictionary 
-RADIUS_BALL = 15         #The Radius of each ball
-RADIUS_POCKET = 30       #The Radius of  each pocket
+RADIUS_BALL = 15        #The Radius of each ball
+RADIUS_POCKET = 30      #The Radius of  each pocket
 CUE_BALL = 0            #The Cue ball Index
 NO_POCKETS = 6          #The Number of Pockets on a standard pool table
 BLUE = (255,0,0)        #BGR Color Representation of the Color Blue
@@ -47,21 +47,21 @@ ROOT2 = math.sqrt(2)    #The Square Root of 2
 #       index 2 -> intercepts of first set of lines (cue ball to ball)
 #       index 3 -> Slopes of second set of lines (ball to pockets)
 #       index 4 -> intercept of second set of lines (ball to pockets)
-ball_to_shots = {1: [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN]],
-                2:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN]],
-                3:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN]],
-                4:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN]],
-                5:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN]],
-                6:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN]],
-                7:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN]],
-                8:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN]],
-                9:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN]],
-                10: [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN]],
-                11: [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN]],
-                12: [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN]],
-                13: [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN]],
-                14: [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN]],
-                15: [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN]]}
+ball_to_shots = {1: [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN],NAN],
+                2:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN],NAN],
+                3:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN],NAN],
+                4:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN],NAN],
+                5:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN],NAN],
+                6:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN],NAN],
+                7:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN],NAN],
+                8:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN],NAN],
+                9:  [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN],NAN],
+                10: [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN],NAN],
+                11: [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN],NAN],
+                12: [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN],NAN],
+                13: [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN],NAN],
+                14: [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN],NAN],
+                15: [[NAN,NAN,NAN,NAN,NAN,NAN],NAN,NAN,[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN,NAN,NAN,NAN,NAN],[NAN,NAN],NAN]}
 
 #the maximum and minimum x the ball will be able to take after a shot
 balls_to_x_boundary = {1:   [NAN,NAN],
@@ -108,8 +108,8 @@ pockets = [[0,0],[580,0],[1160,0],[1160,585],[580,585],[0,585]]
 center_edges = [[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN]]
 
 #A list of X and Y coordinates for each ball
-listX = [60,360,500,500,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-listY = [60,360,400,500,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listX = [60,100,-1,500,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listY = [60,100,-1,500,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 
 
 def calc_center_edges():
@@ -229,10 +229,17 @@ def print_dimensions():
         print("Bounday Y Values are = {bound}".format(bound = y_bound))
         print("Pocket Chosen for this ball and its hardness = {pocket}".format(pocket = pocket_for_each_ball[i-1]))
         print("Ghost Coordinates for this ball are = {coords}".format(coords = shot_params[GHOST_BALL]))
+        print("Distance from Cue Ball to target Ball = {dist}".format(dist = shot_params[DISTANCE_CUE]))
         print("-------------------------------------------------")
 
-
-
+def find_distance_to_cue_ball():
+    for target_ball in range(FIRST_BALL,NUMBER_OF_BALLS):
+        shot_params = ball_to_shots.get(target_ball)
+        if (listX[target_ball]<0 or listY[target_ball]<0): 
+            shot_params[DISTANCE_CUE] = NAN
+            continue
+        dist = distance(listX[CUE_BALL],listY[CUE_BALL],listX[target_ball],listY[target_ball])
+        shot_params[DISTANCE_CUE] = dist
 
 
 #brief: Finds the distance of each ball to each pocket and stores it in the dictionary 
@@ -538,6 +545,7 @@ def chose_pocket():
         second_slopes = shot_params[SECOND_SLOPES]
         first_slope = shot_params[FIRST_SLOPE]
         distances = shot_params[DISTANCES]
+        dist_cue = shot_params[DISTANCE_CUE]
         hardness_all_shots = [NAN,NAN,NAN,NAN,NAN,NAN]
         viable = False
         for idx in range(NO_POCKETS):
@@ -590,16 +598,17 @@ def chose_pocket():
                 continue
             viable = True
             calc_dist = distances[idx] * 2
+            calc_dist_2 = dist_cue * 3
             if(math.isinf(first_slope)):
                 if(math.isinf(second_slopes[idx]) or second_slopes[idx]==1):
                     calc_slope_delta = 0
                 else:
-                    calc_slope_delta = abs(second_slopes[idx]) * 0.2
+                    calc_slope_delta = abs(second_slopes[idx]) * 2.5
             else:
                 if(math.isinf(second_slopes[idx])):
-                    calc_slope_delta = abs(first_slope) * 0.2
+                    calc_slope_delta = 0
                 else:
-                    calc_slope_delta = abs(second_slopes[idx] - first_slope) * 0.2
+                    calc_slope_delta = abs(second_slopes[idx] - first_slope) * 2.5
             total_hardness = calc_dist * calc_slope_delta
             hardness_all_shots[idx] = total_hardness
         #shot can be made chose best
@@ -664,6 +673,7 @@ def distance(x0,y0,x1,y1):
 def start_calc():
     calc_center_edges()
     find_distance_to_all_pockets()
+    find_distance_to_cue_ball()
     create_first_lines()
     create_second_lines()
     find_edges()
