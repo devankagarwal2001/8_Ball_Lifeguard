@@ -8,7 +8,9 @@ from array import *
 import cv2 as cv
 import numpy as np
 
-#MACROS FOR ME TO USE
+
+
+################### GLOBAL PARAMETERS ###################
 NUMBER_OF_BALLS = 16    #The total number of balls on the table
 FIRST_BALL = 1          #Solid Ball 1
 DISTANCES = 0           #The Index which gets the distances of each ball to each pocket
@@ -36,7 +38,7 @@ TABLE_Y_HI = 700        #Table bottom right corner y coordinate
 TABLE_Y_LO = 300        #Table top left corner y coordinate
 NAN = np.nan            #Not a number, used for default and non-reachable values
 INF = np.inf            #Infinity, Used for the x coordinates of the balls is the same
-ROOT2 = math.sqrt(2)
+ROOT2 = math.sqrt(2)    #The Square Root of 2
 
 #brief: A list of the various parametrs for the ball
 #int (ball number) -> list
@@ -102,12 +104,12 @@ pocket_for_each_ball = [[NAN,INF],[NAN,INF],[NAN,INF],[NAN,INF],[NAN,INF],
 
 
 #A list of pockets with each element being an x-y coordinate for the pocket
-pockets = [[0,0],[600,0],[1200,0],[1200,600],[600,600],[0,600]]
+pockets = [[0,0],[580,0],[1160,0],[1160,585],[580,585],[0,585]]
 center_edges = [[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN]]
 
 #A list of X and Y coordinates for each ball
-listX = [60,60,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-listY = [550,60,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listX = [60,360,500,500,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listY = [60,360,400,500,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 
 
 def calc_center_edges():
@@ -130,6 +132,10 @@ def calc_center_edges():
     p4[1] = pockets[4][1] - (RADIUS_POCKET/ROOT2)
     p5[0] = pockets[5][0] + (RADIUS_POCKET/ROOT2)
     p5[1] = pockets[5][1] - (RADIUS_POCKET/ROOT2)
+
+
+
+################### Collision Check  ###################
 #taken from: https://www.jeffreythompson.org/collision-detection/line-circle.php
 
 # Definition: Checks if the line given bt (x0,y0) and (x1,y1) lies on the circle given by (cx,cy) and radius
@@ -356,7 +362,6 @@ def drawImage():
             #cv.line(img,(listX[target_ball],listY[target_ball]),(pocketX,pocketY),(0,0,255 - (i*20)),2);
     
     chosen_shot = chose_easiest_shot()
-    print("Chosen Shot is {fort}".format(fort = chosen_shot+1))
     if (chosen_shot>=0):
         shot_params = ball_to_shots.get(chosen_shot+1)
         cv.line(img,(listX[CUE_BALL],listY[CUE_BALL]),(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]),RED,2)

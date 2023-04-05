@@ -1,14 +1,36 @@
-Chosen Hardness for Ball 1 is 0 with hardness 0.0
 For Ball 1
-Dimensions are 60,60
-Distances to Each Pocket = [54.8528137423857, nan, 1119.4589370560086, nan, nan, nan]
-First Slope = inf
-First Intercept = inf
-Second Slopes = [1.0, nan, -0.03466862201405215, nan, nan, nan]
-Second Intercepts = [0.0, nan, 62.080117320843115, nan, nan, nan]
-Bounday X Values are = [100, 900]
-Bounday Y Values are = [300, 60]
-Pocket Chosen for this ball and its hardness = [0, 0.0]
-Ghost Coordinates for this ball are = [81, 81]
+Dimensions are 360,360
+Distances to Each Pocket = [nan, nan, nan, 805.0080328524849, 299.8817407812314, nan]
+First Slope = 1.0
+First Intercept = 0.0
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [420.0, 100]
+Bounday Y Values are = [620.0, 300]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+Ghost Coordinates for this ball are = [nan, nan]
 -------------------------------------------------
-Chosen Shot is 1
+For Ball 2
+Dimensions are 500,400
+Distances to Each Pocket = [nan, nan, nan, 659.450290919522, 182.28031909350318, nan]
+First Slope = 0.7727272727272727
+First Intercept = 13.636363636363626
+Second Slopes = [nan, nan, nan, 0.2564029147836188, 2.047334957055045, nan]
+Second Intercepts = [nan, nan, nan, 271.7985426081906, -623.6674785275227, nan]
+Bounday X Values are = [577.2727272727273, 268.18181818181813]
+Bounday Y Values are = [700, 300]
+Pocket Chosen for this ball and its hardness = [4, 92.93435816731902]
+Ghost Coordinates for this ball are = [486, 373]
+-------------------------------------------------
+For Ball 3
+Dimensions are 500,500
+Distances to Each Pocket = [677.1067811865476, 129.01206358203646, 798.3015520650177, 641.963649189704, 102.31693611493952, 483.0171342513143]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+Ghost Coordinates for this ball are = [nan, nan]
+-------------------------------------------------
