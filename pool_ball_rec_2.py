@@ -18,12 +18,17 @@ BLUE = (255,0,0)        #BGR Color Representation of the Color Blue
 GREEN = (0,255,0)       #BGR Color Representation of the Color Green
 RED = (0,0,255) 
 kernel = np.ones((3, 3), np.uint8)
+X_MIN = 345
+X_MAX = 1545
+Y_MIN = 120
+Y_MAX = 735
 
 
 def DetectPoolBalls():
     success,img = imcap.read()
     #img = LoadImage('img/pool_balls.jpeg')
-    img = img[140:745,335:1535]
+    img = img[Y_MIN:Y_MAX,X_MIN:X_MAX]
+
     #Now the table is cropped and warped, lets find the balls
     hsv = ToHSV(img)
     
@@ -39,6 +44,7 @@ def DetectPoolBalls():
     cue, solids, eight_ball, stripes = FindTheColors(img,centers)
     final_list = BuildTheList(cue, solids, eight_ball, stripes)
     print(final_list)
+    final_list.append((X_MAX-X_MIN, Y_MAX-Y_MIN))
     return final_list
 
 def IncreaseSaturation(img):
