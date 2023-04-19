@@ -102,7 +102,7 @@ pocket_for_each_ball = [[NAN,INF],[NAN,INF],[NAN,INF],[NAN,INF],[NAN,INF],
 
 
 #A list of pockets with each element being an x-y coordinate for the pocket
-pockets = [[0,0],[580,0],[1160,0],[1160,585],[580,585],[0,585]]
+pockets = [[0,0],[600,0],[1200,0],[1200,600],[600,600],[0,600]]
 center_edges = [[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN]]
 
 #A list of X and Y coordinates for each ball
@@ -656,14 +656,16 @@ def distance(x0,y0,x1,y1):
     return distance
 
 #starts the api for the shot calculation
-def start_calc(lX,lY):
+def start_calc(lX,lY,bottomRight):
     print("calculating")
+    xScale = bottomRight[0]/1200
+    yScale = bottomRight[1]/600
     #print_dimensions()
     #print("Old List X = {lx}".format(lx = listX))
     #print("Old List Y = {lx}".format(lx = listY))
     for target_ball in range(CUE_BALL,NUMBER_OF_BALLS):
-        listX[target_ball] = lX[target_ball]
-        listY[target_ball] = lY[target_ball]
+        listX[target_ball] = lX[target_ball] / xScale
+        listY[target_ball] = lY[target_ball] / yScale
     #print("New List X = {lx}".format(lx = listX))
     #print("New List X = {lx}".format(lx = listY))
     calc_center_edges()
