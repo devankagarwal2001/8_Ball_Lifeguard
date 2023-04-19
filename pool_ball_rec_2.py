@@ -279,7 +279,7 @@ def detect_changes(tempList):
                 stablize = True
             else:
                 big_list = newList
-        shot_calculation.start_calc(big_list[0],big_list[1])
+        shot_calculation.start_calc(big_list[0],big_list[1],big_list[2])
 
 imcap = cv2.VideoCapture(0) 
 final_list = DetectPoolBalls()
