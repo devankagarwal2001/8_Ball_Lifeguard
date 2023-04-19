@@ -105,12 +105,12 @@ pocket_for_each_ball = [[NAN,INF],[NAN,INF],[NAN,INF],[NAN,INF],[NAN,INF],
 
 
 #A list of pockets with each element being an x-y coordinate for the pocket
-pockets = [[0,0],[580,0],[1160,0],[1160,585],[580,585],[0,585]]
+pockets = [[0,0],[600,0],[1200,0],[1200,600],[600,600],[0,600]]
 center_edges = [[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN]]
 
 #A list of X and Y coordinates for each ball
-listX = [60,1000,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-listY = [60,60,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listX = [600,600,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listY = [500,100,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 
 
 def calc_center_edges():
@@ -124,7 +124,7 @@ def calc_center_edges():
     p0[0] = pockets[0][0] + (RADIUS_POCKET/ROOT2)
     p0[1] = pockets[0][1] + (RADIUS_POCKET/ROOT2)
     p1[0] = pockets[1][0] 
-    p1[1] = pockets[1][0] + (RADIUS_POCKET/ROOT2)
+    p1[1] = pockets[1][1] + (RADIUS_POCKET/ROOT2)
     p2[0] = pockets[2][0] - (RADIUS_POCKET/ROOT2)
     p2[1] = pockets[2][1] + (RADIUS_POCKET/ROOT2)
     p3[0] = pockets[3][0] - (RADIUS_POCKET/ROOT2)
@@ -442,7 +442,8 @@ def find_edges():
 def remove_impossible_pockets():
     if(listX[CUE_BALL]<0 or listY[CUE_BALL]<0): return
     for target_ball in range(FIRST_BALL, NUMBER_OF_BALLS):
-        if(listX[target_ball]<0 or listY[target_ball]<0): continue
+        if(listX[target_ball]<0 or listY[target_ball]<0): 
+            continue
         shot_params=ball_to_shots.get(target_ball)
         x_bounds = balls_to_x_boundary.get(target_ball)
         y_bounds = balls_to_y_boundary.get(target_ball)
@@ -487,7 +488,7 @@ def remove_impossible_pockets():
                         shot_params[SECOND_INTERCEPT][pocket_idx] = NAN
                 pocket_idx+=1
             
-        if(listY[CUE_BALL]==listY[target_ball]):
+        elif(listY[CUE_BALL]==listY[target_ball]):
             pocket_idx = 0
             for pocket in center_edges: 
                 if(pocket[POCKETX]<listX[target_ball] and listX[CUE_BALL]<listX[target_ball]):
@@ -598,7 +599,7 @@ def chose_pocket():
             if(collision): 
                 continue
             viable = True
-            calc_dist = distances[idx] * 2
+            calc_dist = distances[idx] * 3
             calc_dist_2 = dist_cue * 3
             if(math.isinf(first_slope)):
                 if(math.isinf(second_slopes[idx]) or second_slopes[idx]==1):

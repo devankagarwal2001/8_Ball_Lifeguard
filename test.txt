@@ -1,13 +1,13 @@
 For Ball 1
-Dimensions are 1000,60
-Distances to Each Pocket = [nan, nan, 144.10478995625922, 522.5542185201771, nan, nan]
-First Slope = 0.0
-First Intercept = 60.0
-Second Slopes = [nan, nan, -0.2794703640731751, 3.6299331711329095, nan, nan]
-Second Intercepts = [nan, nan, 339.4703640731751, -3569.9331711329096, nan, nan]
-Bounday X Values are = [1000, 900]
-Bounday Y Values are = [300, 700]
-Pocket Chosen for this ball and its hardness = [2, 201.36509056882096]
-Ghost Coordinates for this ball are = [971, 68]
-Distance from Cue Ball to target Ball = 940.0
+Dimensions are 600,100
+Distances to Each Pocket = [584.1245716370482, 78.78679656440357, 584.1245716370482, nan, nan, nan]
+First Slope = inf
+First Intercept = inf
+Second Slopes = [0.1361240391661849, inf, -0.1361240391661849, nan, nan, nan]
+Second Intercepts = [18.325576500289046, inf, 181.67442349971094, nan, nan, nan]
+Bounday X Values are = [100, 900]
+Bounday Y Values are = [300, 100]
+Pocket Chosen for this ball and its hardness = [1, 0.0]
+Ghost Coordinates for this ball are = [600, 130]
+Distance from Cue Ball to target Ball = 400.0
 -------------------------------------------------
