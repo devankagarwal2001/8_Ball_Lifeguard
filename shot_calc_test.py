@@ -31,7 +31,7 @@ GREEN = (0,255,0)       #BGR Color Representation of the Color Green
 RED = (0,0,255)         #BGR Color Representation of the Color Red
 WHITE = (255,255,255)   #BGR Color Representation of the Color White
 YELLOW = (0,255,255)    #BGR Color Representation of the Color Yellow
-GREY = (200,200,200)    #BGR Color Representation of the Color Grey
+GREY = (150,150,150)    #BGR Color Representation of the Color Grey
 TABLE_X_HI = 900        #Table bottom right corner x coordinate
 TABLE_X_LO = 100        #Table top left corner x coordinate
 TABLE_Y_HI = 700        #Table bottom right corner y coordinate
@@ -39,6 +39,7 @@ TABLE_Y_LO = 300        #Table top left corner y coordinate
 NAN = np.nan            #Not a number, used for default and non-reachable values
 INF = np.inf            #Infinity, Used for the x coordinates of the balls is the same
 ROOT2 = math.sqrt(2)    #The Square Root of 2
+REFLECT_DIST = 100        #The Distance of the Reflection Line
 
 #brief: A list of the various parametrs for the ball
 #int (ball number) -> list
@@ -108,8 +109,8 @@ pockets = [[0,0],[580,0],[1160,0],[1160,585],[580,585],[0,585]]
 center_edges = [[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN]]
 
 #A list of X and Y coordinates for each ball
-listX = [60,100,-1,500,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-listY = [60,100,-1,500,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listX = [60,1000,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listY = [60,60,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 
 
 def calc_center_edges():
@@ -359,15 +360,6 @@ def drawImage():
                 cv.circle(img,(listX[target_ball],listY[target_ball]),RADIUS_BALL,YELLOW,-1)
     for pocket in pockets:
         cv.circle(img,(pocket[0],pocket[1]),RADIUS_POCKET,BLUE,-1)   
-    
-    i = 0
-        #if(not math.isnan(shot_params[FIRST_SLOPE])):
-            #cv.line(img,(listX[CUE_BALL],listY[CUE_BALL]),(listX[target_ball],listY[target_ball]),(0,0,255 - (i*10)),2);
-        #if((not math.isnan(pocket_for_each_ball[target_ball-1][0])) and pocket_for_each_ball[target_ball-1][0]>=0):
-            #pocketX = pockets[pocket_for_each_ball[target_ball-1][0]][POCKETX]
-            #pocketY = pockets[pocket_for_each_ball[target_ball-1][0]][POCKETY]
-            #cv.line(img,(listX[target_ball],listY[target_ball]),(pocketX,pocketY),(0,0,255 - (i*20)),2);
-    
     chosen_shot = chose_easiest_shot()
     if (chosen_shot>=0):
         shot_params = ball_to_shots.get(chosen_shot+1)
@@ -375,6 +367,15 @@ def drawImage():
         cv.circle(img,(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]),RADIUS_BALL,WHITE,1)
         pocketX = int(center_edges[pocket_for_each_ball[chosen_shot][0]][POCKETX])
         pocketY = int(center_edges[pocket_for_each_ball[chosen_shot][0]][POCKETY])
+        m = 0
+        if (listX[chosen_shot+1]==pocketX): m = INF
+        else: 
+            m = (listY[chosen_shot+1]-pocketY)/(listX[chosen_shot+1]-pocketX)
+        new_slope = -1/m
+        theta = math.atan(new_slope)
+        newX = shot_params[GHOST_BALL][0] + int(REFLECT_DIST * math.cos(theta))
+        newY = shot_params[GHOST_BALL][1] + int(REFLECT_DIST * math.sin(theta))
+        cv.line(img,(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]),(newX,newY),GREY,2)
         cv.line(img,(listX[chosen_shot+1],listY[chosen_shot+1]),(pocketX,pocketY),RED,2)
     cv.imwrite('ghost.jpeg',img)
 
