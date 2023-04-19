@@ -23,16 +23,18 @@ kernel = np.ones((3, 3), np.uint8)
 def DetectPoolBalls():
     success,img = imcap.read()
     #img = LoadImage('img/pool_balls.jpeg')
-    img = img[115:700,360:1520]
+    img = img[140:745,335:1535]
     #Now the table is cropped and warped, lets find the balls
     hsv = ToHSV(img)
     
     lower_color, upper_color = GetClothColor(hsv)    
     
-    contours = GetContours(hsv, lower_color, upper_color,21)
-        
-    centers = FindTheBalls(img, contours, similarity_threshold=25)
+    contours,contours2 = GetContours(hsv, lower_color, upper_color,21)
+    centers = FindTheBalls(img, contours, RED, similarity_threshold=30)
+    centers2 = FindTheBalls(img, contours2, GREEN, similarity_threshold=30)    
     #print(len(centers))
+    print(centers,centers2)
+    centers = CombineTheList(centers,centers2)
     #IncreaseSaturation(img)
     cue, solids, eight_ball, stripes = FindTheColors(img,centers)
     final_list = BuildTheList(cue, solids, eight_ball, stripes)
@@ -50,6 +52,24 @@ def IncreaseSaturation(img):
     cv2.imshow("after", tmp_img)
     return tmp_img
     
+def CombineTheList(centers, centers2):
+    if len(centers) == 0:
+        return centers2
+    elif len(centers2) == 0:
+        return centers
+    newCenters = []
+    for ball1 in centers:
+        for ball2 in centers2:
+            if CheckTwoEqualBalls(ball1, ball2):
+                centers2.remove(ball2)
+        newCenters.append(ball1)
+    
+    return newCenters + centers2
+    
+def CheckTwoEqualBalls(ball1, ball2):
+    if abs(ball1[0] - ball2[0])>3 or abs(ball1[1] - ball2[1])>3:
+        return False
+    return True
 
 def LoadImage(filename):
     """
@@ -94,16 +114,21 @@ def GetContours(hsv, lower_color, upper_color,filter_radius):
     #use a median filter to get rid of speckle noise
     median = cv2.medianBlur(mask,filter_radius)
     cv2.imshow('median_detect', median)
-    mask = cv2.erode(mask, kernel, iterations=6)
-    mask = cv2.dilate(mask, kernel, iterations=3)
-    cv2.imshow('eroision&dilate', median)
+    
+    mask = cv2.erode(mask, kernel, iterations=3)
+    mask = cv2.dilate(mask, kernel, iterations=11)
+    
+    mask = cv2.erode(mask, kernel, iterations=5)
+    #mask = cv2.dilate(mask, kernel, iterations=10)
+    cv2.imshow('eroision&dilate', mask)
     
     #get the contours of the filtered mask
     #this modifies median in place!
     contours, _ = cv2.findContours(median,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-    return contours
+    contours2, _ = cv2.findContours(mask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+    return contours,contours2
 
-def FindTheBalls(img, contours, similarity_threshold=15):
+def FindTheBalls(img, contours, color, similarity_threshold=15):
     """
     Find and circle all of the balls on the table.
     
@@ -116,6 +141,7 @@ def FindTheBalls(img, contours, similarity_threshold=15):
     for i,contour in enumerate(contours):
         contourArea = cv2.contourArea(contour)
         (x,y),radius = cv2.minEnclosingCircle(contour)
+        #if radius > 15:
         circleArea = 3.141 * (radius**2)
         diffs.append(abs(circleArea-contourArea))
         indexes.append(i)
@@ -131,10 +157,10 @@ def FindTheBalls(img, contours, similarity_threshold=15):
         #if the contour is a similar shape to the circle it is likely to be a ball.
         if (d < diffs[0] * similarity_threshold):
             (x,y),radius = cv2.minEnclosingCircle(contours[i])
-            if radius > 15 and y <1130 and x <1130:
-                cv2.circle(tmp_img,(int(x),int(y)),int(radius),(0,0,255),2)
+            if radius > 15: #and y <1130 and x <1130:
+                cv2.circle(tmp_img,(int(x),int(y)),int(radius),color,2)
                 centers.append((int(y),int(x), int(radius)))
-
+    cv2.imshow("test", tmp_img)
     return centers
 
 def FindTheColors(img, centers):
@@ -152,7 +178,7 @@ def FindTheColors(img, centers):
         print(centerY, centerX)
         if (centerY > 820 and centerY < 840):
             tmp_img = img[centerX - radius:centerX + radius,centerY - radius:centerY + radius]
-            cv2.imshow("tmp_img", tmp_img)
+            #cv2.imshow("tmp_img", tmp_img)
         for x in range(centerX - radius, centerX + radius):
             for y in range(centerY - radius, centerY + radius):
                 """if (centerY > 655 and centerY < 675):
@@ -167,7 +193,7 @@ def FindTheColors(img, centers):
                 else:
                     numOfOtherPixels +=1
         print(numOfBlackPixels, numOfWhitePixels, numOfOtherPixels)
-        if numOfBlackPixels > 100:
+        if numOfBlackPixels > 200:
             eight_ball.append((centerY,centerX,radius))
             cv2.circle(img,(int(centerY),int(centerX)),int(radius),(0,0,0),2)
         elif numOfWhitePixels > 500 and numOfWhitePixels > maxWhitePixels:
@@ -179,7 +205,7 @@ def FindTheColors(img, centers):
                 tmp_x,tmp_y,tmp_rad = cue.pop()
                 cue.append((centerY,centerX,radius))
                 cv2.circle(img,(int(centerY),int(centerX)),int(radius),(255,255,255),2)
-                cv2.circle(img,(int(tmp_y),int(tmp_x)),int(tmp_rad),RED,2)
+                cv2.circle(img,(int(tmp_x),int(tmp_y)),int(tmp_rad),RED,2)
                 stripes.append((tmp_y,tmp_x,tmp_rad))
                 maxWhitePixels = numOfWhitePixels
         elif numOfWhitePixels > 150:

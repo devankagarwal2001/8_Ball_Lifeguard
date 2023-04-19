@@ -20,7 +20,7 @@ GHOST_BALL = 5          #The point at which the cue ball will make contact with 
 POCKETX = 0             #The Index which gets the x corrdinate of the pocket
 POCKETY = 1             #The Index which gets the y corrdinate of the pocket
 NUMBER_OF_PARAMS = 5    #The Number of parameters in the dictionary 
-RADIUS_BALL = 15         #The Radius of each ball
+RADIUS_BALL = 18         #The Radius of each ball
 RADIUS_POCKET = 30       #The Radius of  each pocket
 CUE_BALL = 0            #The Cue ball Index
 NO_POCKETS = 6          #The Number of Pockets on a standard pool table
@@ -359,11 +359,11 @@ def drawImage():
     print("Chosen Shot is {fort}".format(fort = chosen_shot+1))
     if (chosen_shot>=0):
         shot_params = ball_to_shots.get(chosen_shot+1)
-        cv.line(img,(listX[CUE_BALL],listY[CUE_BALL]),(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]),RED,2)
+        cv.line(img,(listX[CUE_BALL],listY[CUE_BALL]),(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]),RED,4)
         cv.circle(img,(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]),RADIUS_BALL,WHITE,1)
         pocketX = int(center_edges[pocket_for_each_ball[chosen_shot][0]][POCKETX])
         pocketY = int(center_edges[pocket_for_each_ball[chosen_shot][0]][POCKETY])
-        cv.line(img,(listX[chosen_shot+1],listY[chosen_shot+1]),(pocketX,pocketY),RED,2)
+        cv.line(img,(listX[chosen_shot+1],listY[chosen_shot+1]),(pocketX,pocketY),RED,4)
     cv.imwrite('ghost.jpeg',img)
 
 
