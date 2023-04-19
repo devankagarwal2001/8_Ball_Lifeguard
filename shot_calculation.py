@@ -664,8 +664,8 @@ def start_calc(lX,lY,bottomRight):
     #print("Old List X = {lx}".format(lx = listX))
     #print("Old List Y = {lx}".format(lx = listY))
     for target_ball in range(CUE_BALL,NUMBER_OF_BALLS):
-        listX[target_ball] = lX[target_ball] / xScale
-        listY[target_ball] = lY[target_ball] / yScale
+        listX[target_ball] = int(lX[target_ball] / xScale)
+        listY[target_ball] = int(lY[target_ball] / yScale)
     #print("New List X = {lx}".format(lx = listX))
     #print("New List X = {lx}".format(lx = listY))
     calc_center_edges()
