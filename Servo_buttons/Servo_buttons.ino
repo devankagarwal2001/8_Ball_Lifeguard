@@ -12,6 +12,7 @@ int donePinState = 0;
 const int base = 0;    
 int pos = 0;
 const int angleChange = 130;
+int first = 0;
 
 void setup() {
   // initialize the LED pin as an output:
@@ -35,13 +36,16 @@ void loop() {
     pos = angleChange;
     myservo.write(pos); 
     delay(1500);
-    Serial.println("Solid");
-    while(donePinState == 0){
-      donePinState = digitalRead(donePin);
+    if(first == 1){
+      Serial.print("0");
+      while(donePinState == 0){
+        donePinState = digitalRead(donePin);
+      }
     }
     pos = base;
     myservo.write(pos); 
     delay(1500);
+    first = 1;
   }
   if (buttonState2 == HIGH) {
     // turn LED on:
@@ -49,12 +53,15 @@ void loop() {
     pos = angleChange;
     myservo.write(pos); 
     delay(1500);
-    Serial.println("Stripe");
-    while(donePinState == 0){
-      donePinState = digitalRead(donePin);
+    if(first == 1){
+      Serial.print("1");
+      while(donePinState == 0){
+        donePinState = digitalRead(donePin);
+      }
     }
     pos = base;
     myservo.write(pos); 
     delay(1500);
+    first = 1;
   }  
 }

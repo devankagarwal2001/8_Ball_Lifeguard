@@ -15,7 +15,7 @@ import pyfirmata
 import serial
 
 big_list = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
-            [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]]
+            [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1], [-1,-1],"Your Mom"]
 BLUE = (255,0,0)        #BGR Color Representation of the Color Blue
 GREEN = (0,255,0)       #BGR Color Representation of the Color Green
 RED = (0,0,255) 
@@ -235,17 +235,21 @@ def BuildTheList(cue, solids, eight_ball, stripes):
     final_list = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
                   [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]]
     for ball in range(cue_size):
-        final_list[0][ball] = cue[ball][0]
-        final_list[1][ball] = cue[ball][1]
+        if (ball < 16):
+            final_list[0][ball] = cue[ball][0]
+            final_list[1][ball] = cue[ball][1]
     for ball in range(solids_size):
-        final_list[0][ball+1] = solids[ball][0]
-        final_list[1][ball+1] = solids[ball][1]
+        if (ball + 1 < 16):
+            final_list[0][ball+1] = solids[ball][0]
+            final_list[1][ball+1] = solids[ball][1]
     for ball in range(eight_ball_size):
-        final_list[0][ball+8] = eight_ball[ball][0]
-        final_list[1][ball+8] = eight_ball[ball][1]
+        if (ball+8 < 16):
+            final_list[0][ball+8] = eight_ball[ball][0]
+            final_list[1][ball+8] = eight_ball[ball][1]
     for ball in range(stripes_size):
-        final_list[0][ball+9] = stripes[ball][0]
-        final_list[1][ball+9] = stripes[ball][1]
+        if (ball+9 < 16):
+            final_list[0][ball+9] = stripes[ball][0]
+            final_list[1][ball+9] = stripes[ball][1]
     return final_list
         
 def lengthOfLine(x1,y1,x2,y2):
@@ -283,7 +287,7 @@ def detect_changes(tempList):
                 big_list = newList
         shot_calculation.start_calc(big_list[0],big_list[1],big_list[2],big_list[3])
 
-arduino = serial.Serial(port = 'COM3', timeout=0)
+arduino = serial.Serial(port = '/dev/cu.usbmodem14301',baudrate=115200, timeout=0)
 imcap = cv2.VideoCapture(0) 
 final_list = DetectPoolBalls()
 final_list = DetectPoolBalls()
@@ -291,22 +295,26 @@ final_list = DetectPoolBalls()
 final_list = DetectPoolBalls()
 final_list = DetectPoolBalls()
 while True:
-    data = str(arduino.readline().strip)
-    print ("You Entered :", data)
-    if data == "Stripe":
-        final_list = DetectPoolBalls()
-        #print(final_list)
-        final_list.append("Stripe")
-        detect_changes(final_list)
-        #call Devank's function with my code
-    elif data == "Solid":
-        final_list = DetectPoolBalls()
-        #print(final_list)
-        final_list.append("Solid")
-        detect_changes(final_list)
-        #call Devank's function with my code
-    if cv2.waitKey(10) & 0xFF == ord('q'):
-        break
+    data = arduino.readline()
+    if data:
+        data = data.decode()
+        data = data.encode()
+        if data == b'1':
+            print ("Jimmy")
+            final_list = DetectPoolBalls()
+            #print(final_list)
+            final_list.append("Stripe")
+            detect_changes(final_list)
+            #call Devank's function with my code
+        elif data ==  b'0':
+            print ("Devank")
+            final_list = DetectPoolBalls()
+            #print(final_list)
+            final_list.append("Solid")
+            detect_changes(final_list)
+            #call Devank's function with my code
+        elif data != "b''":
+            print ("You Entered :", data)
     #break
 #imcap.release()
 cv2.destroyWindow('pool_ball_detect')

@@ -137,7 +137,7 @@ def calc_center_edges():
     p5[1] = pockets[5][1] - (RADIUS_POCKET/ROOT2)
 
 #board to connect the arduino to 
-board = pyfirmata.Arduino('/dev/cu.usbmodem101') 
+board = pyfirmata.Arduino('/dev/cu.usbmodem14301') 
 
 ################### Collision Check  ###################
 #taken from: https://www.jeffreythompson.org/collision-detection/line-circle.php
@@ -687,16 +687,15 @@ def start_calc(lX,lY,bottomRight,choice):
         listY[target_ball] = int(lY[target_ball] / yScale)
     #print("New List X = {lx}".format(lx = listX))
     #print("New List X = {lx}".format(lx = listY))
-    if (choice == "Solid"){
+    if (choice == "Solid"):
         for ball in range(FIRST_STRIPE,NUMBER_OF_BALLS):
             listX[ball] = -1
             listY[ball] = -1
-    }
-    else if(choice == "Stripe"){
+    
+    elif(choice == "Stripe"):
         for ball in range(FIRST_BALL,LAST_SOLID+1):
             listX[ball] = -1
             listY[ball] = -1
-    }
     calc_center_edges()
     find_distance_to_all_pockets()
     create_first_lines()
