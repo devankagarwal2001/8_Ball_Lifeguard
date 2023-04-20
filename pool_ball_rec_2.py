@@ -11,6 +11,8 @@ import Indexer
 import time
 import shot_calculation
 import math
+import pyfirmata
+import serial
 
 big_list = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
             [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]]
@@ -279,8 +281,9 @@ def detect_changes(tempList):
                 stablize = True
             else:
                 big_list = newList
-        shot_calculation.start_calc(big_list[0],big_list[1],big_list[2])
+        shot_calculation.start_calc(big_list[0],big_list[1],big_list[2],big_list[3])
 
+arduino = serial.Serial(port = 'COM3', timeout=0)
 imcap = cv2.VideoCapture(0) 
 final_list = DetectPoolBalls()
 final_list = DetectPoolBalls()
@@ -288,11 +291,20 @@ final_list = DetectPoolBalls()
 final_list = DetectPoolBalls()
 final_list = DetectPoolBalls()
 while True:
-    final_list = DetectPoolBalls()
-    #print(final_list)
-    detect_changes(final_list)
-    #call Devank's function with my code
-    cv2.waitKey()
+    data = str(arduino.readline().strip)
+    print ("You Entered :", data)
+    if data == "Stripe":
+        final_list = DetectPoolBalls()
+        #print(final_list)
+        final_list.append("Stripe")
+        detect_changes(final_list)
+        #call Devank's function with my code
+    elif data == "Solid":
+        final_list = DetectPoolBalls()
+        #print(final_list)
+        final_list.append("Solid")
+        detect_changes(final_list)
+        #call Devank's function with my code
     if cv2.waitKey(10) & 0xFF == ord('q'):
         break
     #break
