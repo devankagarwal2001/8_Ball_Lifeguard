@@ -1,13 +1,14 @@
 #include <Servo.h>
 
 const int buttonPin1 = 2;  // the number of the pushbutton pin
-const int buttonPin2 = 4;  // the number of the pushbutton pin
-const int ledPin = 13;    // the number of the LED pin
+const int buttonPin2 = 4;  // the number of the pushbutton pinz
+const int donePin = 7;
 Servo myservo;  // create servo object to control a servo
 
 // variables will change:
 int buttonState1 = 0;  // variable for reading the pushbutton status
 int buttonState2 = 0;  // variable for reading the pushbutton status
+int donePinState = 0;
 const int base = 0;    
 int pos = 0;
 const int angleChange = 130;
@@ -18,6 +19,7 @@ void setup() {
   // initialize the pushbutton pin as an input:
   pinMode(buttonPin1, INPUT);
   pinMode(buttonPin2, INPUT);
+  pinMode(donePin, INPUT);
   myservo.attach(9);
 }
 
@@ -33,6 +35,10 @@ void loop() {
     pos = angleChange;
     myservo.write(pos); 
     delay(1500);
+    Serial.println("Solid");
+    while(donePinState == 0){
+      donePinState = digitalRead(donePin);
+    }
     pos = base;
     myservo.write(pos); 
     delay(1500);
@@ -43,6 +49,10 @@ void loop() {
     pos = angleChange;
     myservo.write(pos); 
     delay(1500);
+    Serial.println("Stripe");
+    while(donePinState == 0){
+      donePinState = digitalRead(donePin);
+    }
     pos = base;
     myservo.write(pos); 
     delay(1500);

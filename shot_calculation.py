@@ -5,6 +5,8 @@ import math
 from array import *
 import cv2 as cv
 import numpy as np
+import pyfirmata
+import time
 
 
 ################### GLOBAL PARAMETERS ###################
@@ -37,7 +39,8 @@ TABLE_Y_LO = 300        #Table top left corner y coordinate
 NAN = np.nan            #Not a number, used for default and non-reachable values
 INF = np.inf            #Infinity, Used for the x coordinates of the balls is the same
 ROOT2 = math.sqrt(2)    #The Square Root of 2
-REFLECT_DIST = 100        #The Distance of the Reflection Line
+REFLECT_DIST = 100      #The Distance of the Reflection Line
+DONEPIN = 7             #The Pin used to talk back to the arduino with
 
 #brief: A list of the various parametrs for the ball
 #int (ball number) -> list
@@ -132,7 +135,8 @@ def calc_center_edges():
     p5[0] = pockets[5][0] + (RADIUS_POCKET/ROOT2)
     p5[1] = pockets[5][1] - (RADIUS_POCKET/ROOT2)
 
-
+#board to connect the arduino to 
+board = pyfirmata.Arduino('/dev/cu.usbmodem101') 
 
 ################### Collision Check  ###################
 #taken from: https://www.jeffreythompson.org/collision-detection/line-circle.php
@@ -691,3 +695,6 @@ def start_calc(lX,lY,bottomRight):
     chose_pocket()
     #print_dimensions()
     drawImage()
+    board.digital[DONEPIN].write(1)
+    time.sleep(1)
+    board.digital[DONEPIN].write(0)
