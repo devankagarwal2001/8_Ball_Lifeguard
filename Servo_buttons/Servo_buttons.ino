@@ -8,7 +8,9 @@ Servo myservo;  // create servo object to control a servo
 // variables will change:
 int buttonState1 = 0;  // variable for reading the pushbutton status
 int buttonState2 = 0;  // variable for reading the pushbutton status
-int pos = 0;    
+const int base = 0;    
+int pos = 0;
+const int angleChange = 130;
 
 void setup() {
   // initialize the LED pin as an output:
@@ -28,21 +30,21 @@ void loop() {
   if (buttonState1 == HIGH) {
     // turn LED on:
     //Serial.println("Green Button Pressed");
-    pos = 70;
+    pos = angleChange;
     myservo.write(pos); 
-    delay(1000);
-    pos = 0;
+    delay(1500);
+    pos = base;
     myservo.write(pos); 
-    delay(1000);
+    delay(1500);
   }
   if (buttonState2 == HIGH) {
     // turn LED on:
     //Serial.println("Red Button Pressed");
-    pos = 70;
+    pos = angleChange;
     myservo.write(pos); 
-    delay(1000);
-    pos = 0;
+    delay(1500);
+    pos = base;
     myservo.write(pos); 
-    delay(1000);
+    delay(1500);
   }  
 }
