@@ -41,7 +41,8 @@ INF = np.inf            #Infinity, Used for the x coordinates of the balls is th
 ROOT2 = math.sqrt(2)    #The Square Root of 2
 REFLECT_DIST = 100      #The Distance of the Reflection Line
 DONEPIN = 7             #The Pin used to talk back to the arduino with
-
+LAST_SOLID = 7
+FIRST_STRIPE = 9
 #brief: A list of the various parametrs for the ball
 #int (ball number) -> list
 #list = index 0 -> DISTACNE
@@ -674,7 +675,7 @@ def distance(x0,y0,x1,y1):
     return distance
 
 #starts the api for the shot calculation
-def start_calc(lX,lY,bottomRight):
+def start_calc(lX,lY,bottomRight,choice):
     print("calculating")
     xScale = bottomRight[0]/1200
     yScale = bottomRight[1]/600
@@ -686,6 +687,16 @@ def start_calc(lX,lY,bottomRight):
         listY[target_ball] = int(lY[target_ball] / yScale)
     #print("New List X = {lx}".format(lx = listX))
     #print("New List X = {lx}".format(lx = listY))
+    if (choice == "Solid"){
+        for ball in range(FIRST_STRIPE,NUMBER_OF_BALLS):
+            listX[ball] = -1
+            listY[ball] = -1
+    }
+    else if(choice == "Stripe"){
+        for ball in range(FIRST_BALL,LAST_SOLID+1):
+            listX[ball] = -1
+            listY[ball] = -1
+    }
     calc_center_edges()
     find_distance_to_all_pockets()
     create_first_lines()
