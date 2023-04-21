@@ -42,9 +42,8 @@ INF = np.inf            #Infinity, Used for the x coordinates of the balls is th
 ROOT2 = math.sqrt(2)    #The Square Root of 2
 REFLECT_DIST = 100      #The Distance of the Reflection Line
 DONEPIN = 8             #The Pin used to talk back to the arduino with
-LAST_SOLID = 7          #The Last Solid Index
-FIRST_STRIPE = 9        #The First Stripe Index
-
+LAST_SOLID = 7
+FIRST_STRIPE = 9
 #brief: A list of the various parametrs for the ball
 #int (ball number) -> list
 #list = index 0 -> DISTACNE
@@ -139,8 +138,8 @@ def calc_center_edges():
     p5[1] = pockets[5][1] - (RADIUS_POCKET/ROOT2)
 
 #board to connect the arduino to 
-board = pyfirmata.Arduino('/dev/cu.usbmodem14201') 
-arduino = serial.Serial(port = '/dev/cu.usbmodem14201',baudrate=115200, timeout=0)
+board = pyfirmata.Arduino('/dev/cu.usbmodem14401') 
+arduino = serial.Serial(port = '/dev/cu.usbmodem14401',baudrate=115200, timeout=0)
 
 
 ################### Collision Check  ###################
@@ -356,7 +355,7 @@ def create_second_lines():
             pocket_index+=1
 
 #brief: Draws the image that is going to be projected onto the pool table
-def drawImage(choice):
+def drawImage():
     img = np.zeros((600,1200,3), np.uint8)
     cv.rectangle (img,pockets[0],pockets[3],GREEN,1)
     for target_ball in range(NUMBER_OF_BALLS):
@@ -367,7 +366,7 @@ def drawImage(choice):
                 cv.circle(img,(listX[target_ball],listY[target_ball]),RADIUS_BALL,YELLOW,-1)
     for pocket in pockets:
         cv.circle(img,(pocket[0],pocket[1]),RADIUS_POCKET,BLUE,-1)   
-    chosen_shot = chose_easiest_shot(choice)
+    chosen_shot = chose_easiest_shot()
     if (chosen_shot>=0):
         shot_params = ball_to_shots.get(chosen_shot+1)
         cv.line(img,(listX[CUE_BALL],listY[CUE_BALL]),(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]),RED,2)
@@ -541,7 +540,7 @@ def remove_impossible_pockets():
 
 def chose_pocket():
     if(listX[CUE_BALL]<0 or listY[CUE_BALL]<0): return
-    for target_ball in range(CUE_BALL, NUMBER_OF_BALLS):
+    for target_ball in range(FIRST_BALL, NUMBER_OF_BALLS):
         if(listX[target_ball]<0 or listY[target_ball]<0): 
             pocket_for_each_ball[target_ball-1][0] = NAN
             pocket_for_each_ball[target_ball-1][1] = INF
@@ -581,7 +580,7 @@ def chose_pocket():
                 if (center_edges[idx][POCKETY]<listY[target_ball]):
                     yGhost = listY[target_ball] + ydelta
                 else:
-                    yGhost = listY[target_ball] - ydelta
+                     yGhost = listY[target_ball] - ydelta
             else:
                 ydelta = 0
                 xdelta = dist
@@ -657,34 +656,20 @@ def chose_pocket():
             pocket_for_each_ball[target_ball-1][0] = NAN
             pocket_for_each_ball[target_ball-1][1] = INF
             
-def chose_easiest_shot(choice):
+def chose_easiest_shot():
     min_hardness = INF
     min_indx = -1
     cur_indx = 0
-    if (choice == "Solid"):
-        for idx in range(CUE_BALL, LAST_SOLID + 1):
-            shot = pocket_for_each_ball[idx]
-            if (math.isnan(shot[0])): 
-                cur_indx +=1 
-                continue
-            else:
-                if shot[1] < min_hardness:
-                    min_hardness = shot[1]
-                    min_indx = cur_indx
-                cur_indx +=1
-        return min_indx
-    elif(choice == "Stripe"):
-        for idx in range(FIRST_STRIPE, NUMBER_OF_BALLS):
-            shot = pocket_for_each_ball[idx]
-            if (math.isnan(shot[0])): 
-                cur_indx +=1 
-                continue
-            else:
-                if shot[1] < min_hardness:
-                    min_hardness = shot[1]
-                    min_indx = cur_indx
-                cur_indx +=1
-        return min_indx
+    for shot in pocket_for_each_ball:
+        if (math.isnan(shot[0])): 
+            cur_indx +=1 
+            continue
+        else:
+            if shot[1] < min_hardness:
+                min_hardness = shot[1]
+                min_indx = cur_indx
+            cur_indx +=1
+    return min_indx
 
 def distance(x0,y0,x1,y1):
     distX = x0-x1
@@ -705,6 +690,15 @@ def start_calc(lX,lY,bottomRight,choice):
         listY[target_ball] = int(lY[target_ball] / yScale)
     #print("New List X = {lx}".format(lx = listX))
     #print("New List X = {lx}".format(lx = listY))
+    if (choice == "Solid"):
+        for ball in range(FIRST_STRIPE,NUMBER_OF_BALLS):
+            listX[ball] = -1
+            listY[ball] = -1
+    
+    elif(choice == "Stripe"):
+        for ball in range(FIRST_BALL,LAST_SOLID+1):
+            listX[ball] = -1
+            listY[ball] = -1
     calc_center_edges()
     find_distance_to_all_pockets()
     create_first_lines()
@@ -713,7 +707,7 @@ def start_calc(lX,lY,bottomRight,choice):
     remove_impossible_pockets()
     chose_pocket()
     #print_dimensions()
-    drawImage(choice)
+    drawImage()
     arduino.write(bytes("y", 'utf-8'))
     #board.digital[DONEPIN].write(1)
     #time.sleep(1)

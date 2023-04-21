@@ -261,7 +261,7 @@ while True:
     success,img = imcap.read()
     cv2.imshow("test", img)
     #img = LoadImage('img/pool_balls.jpeg')
-    img = img[120:735,335:1535]
+    img = img[120:735,305:1505]
     cv2.imshow("align", img)
     #print(final_list)
     #detect_changes(final_list)
