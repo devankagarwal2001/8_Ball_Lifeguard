@@ -135,6 +135,8 @@ def GetContours(hsv, lower_color, upper_color,filter_radius):
     
     #get the contours of the filtered mask
     #this modifies median in place!
+    cv2.imwrite('inrangeandblur.jpeg',median)
+    cv2.imwrite('erodeanddilate.jpeg',mask)
     contours, _ = cv2.findContours(median,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
     contours2, _ = cv2.findContours(mask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
     return contours,contours2

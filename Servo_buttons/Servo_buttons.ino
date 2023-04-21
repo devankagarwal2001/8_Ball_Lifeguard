@@ -40,8 +40,13 @@ void loop() {
     delay(1500);
     if(first == 1){
       Serial.print("0");
-      while (!Serial.available());
-      Serial.flush();
+      delay(100);
+      while (1){
+        if (Serial.available() > 0 && (Serial.readString().toInt()) == 2){
+          break;
+        }
+      }
+      //Serial.flush();
       /*while(donePinState == 0){
         donePinState = digitalRead(readPin);
       }*/
@@ -59,8 +64,14 @@ void loop() {
     delay(1500);
     if(first == 1){
       Serial.print("1");
-      while (!Serial.available());
-      Serial.flush();
+      delay(100);
+      while (1){
+        if (Serial.available() > 0 && (Serial.readString().toInt()) == 2){
+          break;          
+        }
+      }
+      
+      //Serial.flush();
       /*while(donePinState == 0){
         donePinState = digitalRead(readPin);
       }*/

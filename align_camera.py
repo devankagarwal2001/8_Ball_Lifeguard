@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import Indexer
 import time
-import shot_calculation
+#import shot_calculation
 import math
 
 big_list = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
@@ -248,7 +248,7 @@ def detect_changes(tempList):
                 stablize = True
             else:
                 big_list = newList
-        shot_calculation.start_calc(big_list[0],big_list[1])
+        #shot_calculation.start_calc(big_list[0],big_list[1])
 
 imcap = cv2.VideoCapture(0) 
 """final_list = DetectPoolBalls()

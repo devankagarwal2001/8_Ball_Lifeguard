@@ -661,8 +661,8 @@ def chose_easiest_shot(choice):
     min_indx = -1
     cur_indx = 0
     if(choice == "Solid"):
-        for idx in range(CUE_BALL,LAST_SOLID+1):
-            shot = pocket_for_each_ball[idx]
+        for idx in range(FIRST_BALL,LAST_SOLID+1):
+            shot = pocket_for_each_ball[idx-1]
             if (math.isnan(shot[0])): 
                 cur_indx +=1 
                 continue
@@ -674,7 +674,7 @@ def chose_easiest_shot(choice):
         return min_indx
     else:
         for idx in range(FIRST_STRIPE,NUMBER_OF_BALLS):
-            shot = pocket_for_each_ball[idx]
+            shot = pocket_for_each_ball[idx-1]
             if (math.isnan(shot[0])): 
                 cur_indx +=1 
                 continue
@@ -713,7 +713,7 @@ def start_calc(lX,lY,bottomRight,choice):
     chose_pocket()
     #print_dimensions()
     drawImage(choice)
-    arduino.write(bytes("y", 'utf-8'))
+    arduino.write(bytes("2", 'utf-8'))
     #board.digital[DONEPIN].write(1)
     #time.sleep(1)
     #board.digital[DONEPIN].write(0)
