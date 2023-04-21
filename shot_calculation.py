@@ -7,6 +7,7 @@ import cv2 as cv
 import numpy as np
 import pyfirmata
 import time
+import serial
 
 
 ################### GLOBAL PARAMETERS ###################
@@ -40,7 +41,7 @@ NAN = np.nan            #Not a number, used for default and non-reachable values
 INF = np.inf            #Infinity, Used for the x coordinates of the balls is the same
 ROOT2 = math.sqrt(2)    #The Square Root of 2
 REFLECT_DIST = 100      #The Distance of the Reflection Line
-DONEPIN = 7             #The Pin used to talk back to the arduino with
+DONEPIN = 8             #The Pin used to talk back to the arduino with
 LAST_SOLID = 7
 FIRST_STRIPE = 9
 #brief: A list of the various parametrs for the ball
@@ -137,7 +138,9 @@ def calc_center_edges():
     p5[1] = pockets[5][1] - (RADIUS_POCKET/ROOT2)
 
 #board to connect the arduino to 
-board = pyfirmata.Arduino('/dev/cu.usbmodem14301') 
+board = pyfirmata.Arduino('/dev/cu.usbmodem14201') 
+arduino = serial.Serial(port = '/dev/cu.usbmodem14201',baudrate=115200, timeout=0)
+
 
 ################### Collision Check  ###################
 #taken from: https://www.jeffreythompson.org/collision-detection/line-circle.php
@@ -705,6 +708,7 @@ def start_calc(lX,lY,bottomRight,choice):
     chose_pocket()
     #print_dimensions()
     drawImage()
-    board.digital[DONEPIN].write(1)
-    time.sleep(1)
-    board.digital[DONEPIN].write(0)
+    arduino.write(bytes("y", 'utf-8'))
+    #board.digital[DONEPIN].write(1)
+    #time.sleep(1)
+    #board.digital[DONEPIN].write(0)

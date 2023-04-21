@@ -15,15 +15,18 @@ import pyfirmata
 import serial
 
 big_list = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
-            [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1], [-1,-1],"Your Mom"]
+            [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1], 
+            [-1,-1], 
+            [-1]]
+prev_target = "hi"
 BLUE = (255,0,0)        #BGR Color Representation of the Color Blue
 GREEN = (0,255,0)       #BGR Color Representation of the Color Green
 RED = (0,0,255) 
 kernel = np.ones((3, 3), np.uint8)
-X_MIN = 345
-X_MAX = 1545
-Y_MIN = 120
-Y_MAX = 735
+X_MIN = 335
+X_MAX = 1535
+Y_MIN = 110
+Y_MAX = 725
 
 
 def DetectPoolBalls():
@@ -50,14 +53,14 @@ def DetectPoolBalls():
     return final_list
 
 def IncreaseSaturation(img):
-    cv2.imshow("before", img)
+    #cv2.imshow("before", img)
     hsv = ToHSV(img)
     maxX, maxY, ___ = hsv.shape
     for x in range(maxX):
         for y in range(maxY):
             hsv[x,y][1] = 255
     tmp_img = cv2.cvtColor(hsv.copy(), cv2.COLOR_HSV2BGR)
-    cv2.imshow("after", tmp_img)
+    #cv2.imshow("after", tmp_img)
     return tmp_img
     
 def CombineTheList(centers, centers2):
@@ -121,14 +124,14 @@ def GetContours(hsv, lower_color, upper_color,filter_radius):
     mask = cv2.inRange(hsv, lower_color, upper_color)
     #use a median filter to get rid of speckle noise
     median = cv2.medianBlur(mask,filter_radius)
-    cv2.imshow('median_detect', median)
+    #cv2.imshow('median_detect', median)
     
     mask = cv2.erode(mask, kernel, iterations=3)
     mask = cv2.dilate(mask, kernel, iterations=11)
     
     mask = cv2.erode(mask, kernel, iterations=5)
     #mask = cv2.dilate(mask, kernel, iterations=10)
-    cv2.imshow('eroision&dilate', mask)
+    #cv2.imshow('eroision&dilate', mask)
     
     #get the contours of the filtered mask
     #this modifies median in place!
@@ -168,7 +171,7 @@ def FindTheBalls(img, contours, color, similarity_threshold=15):
             if radius > 15: #and y <1130 and x <1130:
                 cv2.circle(tmp_img,(int(x),int(y)),int(radius),color,2)
                 centers.append((int(y),int(x), int(radius)))
-    cv2.imshow("test", tmp_img)
+    #cv2.imshow("test", tmp_img)
     return centers
 
 def FindTheColors(img, centers):
@@ -222,7 +225,8 @@ def FindTheColors(img, centers):
         else:
             solids.append((centerY,centerX,radius))
             cv2.circle(img,(int(centerY),int(centerX)),int(radius),GREEN,2)
-    cv2.imshow('colors_detected', img)
+    #cv2.imshow('colors_detected', img)
+    cv2.imwrite('colors.jpeg',img)
     solids.sort(key = compare)
     stripes.sort(key = compare)
     return cue, solids, eight_ball, stripes
@@ -270,10 +274,12 @@ def compare(ball):
 
 #to call from Devanks Code
 #call after
-def detect_changes(tempList):
+def detect_changes(tempList, target):
 
     global big_list
-    if (checkEquality(tempList,big_list)):
+    global prev_target
+    print(prev_target, target)
+    if (checkEquality(tempList,big_list) and prev_target == target):
         return
     else:
         stablize = False
@@ -281,13 +287,17 @@ def detect_changes(tempList):
             time.sleep(.5)
             print("stabilizing")
             newList = DetectPoolBalls()
-            if(checkEquality(newList,big_list)):
+            newList.append(target)
+            if(checkEquality(newList,big_list) and prev_target == target):
                 stablize = True
             else:
                 big_list = newList
+                prev_target = target
+                
+        print(newList[3], target, prev_target, big_list[3])
         shot_calculation.start_calc(big_list[0],big_list[1],big_list[2],big_list[3])
 
-arduino = serial.Serial(port = '/dev/cu.usbmodem14301',baudrate=115200, timeout=0)
+arduino = serial.Serial(port = '/dev/cu.usbmodem14201',baudrate=115200, timeout=0)
 imcap = cv2.VideoCapture(0) 
 final_list = DetectPoolBalls()
 final_list = DetectPoolBalls()
@@ -304,14 +314,16 @@ while True:
             final_list = DetectPoolBalls()
             #print(final_list)
             final_list.append("Stripe")
-            detect_changes(final_list)
+            detect_changes(final_list, "Stripe")
+            print("Stripes done")
             #call Devank's function with my code
         elif data ==  b'0':
             print ("Devank")
             final_list = DetectPoolBalls()
             #print(final_list)
             final_list.append("Solid")
-            detect_changes(final_list)
+            detect_changes(final_list,"Solid")
+            print("Solids done")
             #call Devank's function with my code
         elif data != "b''":
             print ("You Entered :", data)

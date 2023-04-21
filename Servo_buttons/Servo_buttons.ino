@@ -3,6 +3,7 @@
 const int buttonPin1 = 2;  // the number of the pushbutton pin
 const int buttonPin2 = 4;  // the number of the pushbutton pinz
 const int donePin = 7;
+const int readPin = 8;
 Servo myservo;  // create servo object to control a servo
 
 // variables will change:
@@ -20,7 +21,8 @@ void setup() {
   // initialize the pushbutton pin as an input:
   pinMode(buttonPin1, INPUT);
   pinMode(buttonPin2, INPUT);
-  pinMode(donePin, INPUT);
+  pinMode(donePin, OUTPUT);
+  pinMode(readPin, INPUT);
   myservo.attach(9);
 }
 
@@ -38,9 +40,11 @@ void loop() {
     delay(1500);
     if(first == 1){
       Serial.print("0");
-      while(donePinState == 0){
-        donePinState = digitalRead(donePin);
-      }
+      while (!Serial.available());
+      Serial.flush();
+      /*while(donePinState == 0){
+        donePinState = digitalRead(readPin);
+      }*/
     }
     pos = base;
     myservo.write(pos); 
@@ -55,9 +59,11 @@ void loop() {
     delay(1500);
     if(first == 1){
       Serial.print("1");
-      while(donePinState == 0){
-        donePinState = digitalRead(donePin);
-      }
+      while (!Serial.available());
+      Serial.flush();
+      /*while(donePinState == 0){
+        donePinState = digitalRead(readPin);
+      }*/
     }
     pos = base;
     myservo.write(pos); 
