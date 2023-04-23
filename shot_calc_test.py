@@ -351,7 +351,7 @@ def create_second_lines():
 #brief: Draws the image that is going to be projected onto the pool table
 def drawImage():
     img = np.zeros((600,1200,3), np.uint8)
-    cv.rectangle (img,pockets[0],pockets[3],GREEN,1)
+    cv.rectangle (img,(100,100),(1300,700),GREEN,1)
     for target_ball in range(NUMBER_OF_BALLS):
         if listX[target_ball]>0:
             if (target_ball==CUE_BALL):

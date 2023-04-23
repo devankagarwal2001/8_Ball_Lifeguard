@@ -8,7 +8,7 @@ import numpy as np
 import pyfirmata
 import time
 import serial
-
+from PIL import Image
 
 ################### GLOBAL PARAMETERS ###################
 NUMBER_OF_BALLS = 16    #The total number of balls on the table
@@ -356,21 +356,21 @@ def create_second_lines():
 
 #brief: Draws the image that is going to be projected onto the pool table
 def drawImage(choice):
-    img = np.zeros((600,1200,3), np.uint8)
-    cv.rectangle (img,pockets[0],pockets[3],GREEN,1)
+    img = np.zeros((800,1400,3), np.uint8)
+    cv.rectangle (img,(100,100),(700,1300),GREEN,1)
     for target_ball in range(NUMBER_OF_BALLS):
         if listX[target_ball]>0:
             if (target_ball==CUE_BALL):
-                cv.circle(img,(listX[target_ball],listY[target_ball]),RADIUS_BALL,WHITE,-1)
+                cv.circle(img,(listX[target_ball]+100,listY[target_ball]+100),RADIUS_BALL,WHITE,-1)
             else:
-                cv.circle(img,(listX[target_ball],listY[target_ball]),RADIUS_BALL,YELLOW,-1)
+                cv.circle(img,(listX[target_ball]+100,listY[target_ball]+100),RADIUS_BALL,YELLOW,-1)
     for pocket in pockets:
-        cv.circle(img,(pocket[0],pocket[1]),RADIUS_POCKET,BLUE,-1)   
+        cv.circle(img,(pocket[0]+100,pocket[1]+100),RADIUS_POCKET,BLUE,-1)   
     chosen_shot = chose_easiest_shot(choice)
     if (chosen_shot>=0):
         shot_params = ball_to_shots.get(chosen_shot+1)
-        cv.line(img,(listX[CUE_BALL],listY[CUE_BALL]),(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]),RED,2)
-        cv.circle(img,(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]),RADIUS_BALL,WHITE,1)
+        cv.line(img,(listX[CUE_BALL]+100,listY[CUE_BALL]+100),(shot_params[GHOST_BALL][0]+100,shot_params[GHOST_BALL][1]+100),RED,2)
+        cv.circle(img,(shot_params[GHOST_BALL][0]+100,shot_params[GHOST_BALL][1]+100),RADIUS_BALL,WHITE,1)
         pocketX = int(center_edges[pocket_for_each_ball[chosen_shot][0]][POCKETX])
         pocketY = int(center_edges[pocket_for_each_ball[chosen_shot][0]][POCKETY])
         m = 0
@@ -382,8 +382,12 @@ def drawImage(choice):
         newX = shot_params[GHOST_BALL][0] + int(REFLECT_DIST * math.cos(theta))
         newY = shot_params[GHOST_BALL][1] + int(REFLECT_DIST * math.sin(theta))
         #cv.line(img,(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]),(newX,newY),GREY,2)
-        cv.line(img,(listX[chosen_shot+1],listY[chosen_shot+1]),(pocketX,pocketY),RED,2)
+        cv.line(img,(listX[chosen_shot+1]+100,listY[chosen_shot+1]+100),(pocketX+100,pocketY+100),RED,2)
     cv.imwrite('ghost.jpeg',img)
+    im = Image.open("ghost.jpeg")
+    im_rotate = im.rotate(2)
+    im_rotate.show()
+    im_rotate.save('ghost.jpeg')
 
 
 def find_edges():

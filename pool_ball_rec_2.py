@@ -43,12 +43,12 @@ def DetectPoolBalls():
     centers = FindTheBalls(img, contours, RED, similarity_threshold=30)
     centers2 = FindTheBalls(img, contours2, GREEN, similarity_threshold=30)    
     #print(len(centers))
-    print(centers,centers2)
+    #print(centers,centers2)
     centers = CombineTheList(centers,centers2)
     #IncreaseSaturation(img)
     cue, solids, eight_ball, stripes = FindTheColors(img,centers)
     final_list = BuildTheList(cue, solids, eight_ball, stripes)
-    print(final_list)
+    #print(final_list)
     final_list.append((X_MAX-X_MIN, Y_MAX-Y_MIN))
     return final_list
 
@@ -188,7 +188,7 @@ def FindTheColors(img, centers):
         numOfBlackPixels = 0
         numOfOtherPixels = 0
         maxX, maxY, ___ = img.shape
-        print(centerY, centerX)
+        #print(centerY, centerX)
         if (centerY > 820 and centerY < 840):
             tmp_img = img[centerX - radius:centerX + radius,centerY - radius:centerY + radius]
             #cv2.imshow("tmp_img", tmp_img)
@@ -205,7 +205,7 @@ def FindTheColors(img, centers):
                     numOfBlackPixels +=1
                 else:
                     numOfOtherPixels +=1
-        print(numOfBlackPixels, numOfWhitePixels, numOfOtherPixels)
+        #print(numOfBlackPixels, numOfWhitePixels, numOfOtherPixels)
         if numOfBlackPixels > 200:
             eight_ball.append((centerY,centerX,radius))
             cv2.circle(img,(int(centerY),int(centerX)),int(radius),(0,0,0),2)
@@ -265,8 +265,8 @@ def checkEquality(tempList, big_list):
     for i in range(2):
         for j in range(16):
             if abs(tempList[i][j] - big_list[i][j])>3:
-                print("DIFFERENT ball")
-                print(tempList[i][j])
+                #("DIFFERENT ball")
+                #print(tempList[i][j])
                 return False
     return True
 
@@ -280,7 +280,7 @@ def detect_changes(tempList, target):
 
     global big_list
     global prev_target
-    print(prev_target, target)
+    #(prev_target, target)
     if (checkEquality(tempList,big_list) and prev_target == target):
         return
     else:
@@ -296,10 +296,10 @@ def detect_changes(tempList, target):
                 big_list = newList
                 prev_target = target
                 
-        print(newList[3], target, prev_target, big_list[3])
+        #print(newList[3], target, prev_target, big_list[3])
         shot_calculation.start_calc(big_list[0],big_list[1],big_list[2],big_list[3])
 
-arduino = serial.Serial(port = '/dev/cu.usbmodem14401',baudrate=115200, timeout=0)
+arduino = serial.Serial(port = '/dev/cu.usbmodem21301',baudrate=115200, timeout=0)
 imcap = cv2.VideoCapture(0) 
 final_list = DetectPoolBalls()
 final_list = DetectPoolBalls()
