@@ -23,8 +23,8 @@ DISTANCE_CUE = 6        #The distance from the cue ball to the target ball
 POCKETX = 0             #The Index which gets the x corrdinate of the pocket
 POCKETY = 1             #The Index which gets the y corrdinate of the pocket
 NUMBER_OF_PARAMS = 5    #The Number of parameters in the dictionary 
-RADIUS_BALL = 25        #The Radius of each ball
-RADIUS_POCKET = 41      #The Radius of  each pocket
+RADIUS_BALL = 21        #The Radius of each ball
+RADIUS_POCKET = 42      #The Radius of  each pocket
 CUE_BALL = 0            #The Cue ball Index
 NO_POCKETS = 6          #The Number of Pockets on a standard pool table
 BLUE = (255,0,0)        #BGR Color Representation of the Color Blue
@@ -366,14 +366,14 @@ def drawImage(choice):
                 cv.circle(img,(listX[target_ball]+100,listY[target_ball]+100),RADIUS_BALL,YELLOW,-1)
     for pocket in pockets:
         cv.circle(img,(pocket[0]+100,pocket[1]+100),RADIUS_POCKET,BLUE,-1)   
-    chosen_shot = choose_easiest_shot(choice)
-    print("Chosen Shot = {c}".format(c = chosen_shot))
-    if (chosen_shot>=0):
-        shot_params = ball_to_shots.get(chosen_shot+1)
-        cv.line(img,(listX[CUE_BALL]+100,listY[CUE_BALL]+100),(int(shot_params[GHOST_BALL][0]+100),int(shot_params[GHOST_BALL][1]+100)),RED,2)
+    chosen_shot = chose_easiest_shot(choice)
+    print("Chosen Shot is = {c}".format(c = chosen_shot))
+    if (chosen_shot>0):
+        shot_params = ball_to_shots.get(chosen_shot)
+        cv.line(img,(listX[CUE_BALL]+100,listY[CUE_BALL]+100),(shot_params[GHOST_BALL][0]+100,shot_params[GHOST_BALL][1]+100),RED,2)
         cv.circle(img,(shot_params[GHOST_BALL][0]+100,shot_params[GHOST_BALL][1]+100),RADIUS_BALL,WHITE,1)
-        pocketX = int(center_edges[pocket_for_each_ball[chosen_shot][0]][POCKETX])
-        pocketY = int(center_edges[pocket_for_each_ball[chosen_shot][0]][POCKETY])
+        pocketX = int(center_edges[pocket_for_each_ball[chosen_shot-1][0]][POCKETX])
+        pocketY = int(center_edges[pocket_for_each_ball[chosen_shot-1][0]][POCKETY])
         m = 0
         if (listX[chosen_shot+1]==pocketX): m = INF
         else: 
@@ -383,7 +383,7 @@ def drawImage(choice):
         newX = shot_params[GHOST_BALL][0] + int(REFLECT_DIST * math.cos(theta))
         newY = shot_params[GHOST_BALL][1] + int(REFLECT_DIST * math.sin(theta))
         #cv.line(img,(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]),(newX,newY),GREY,2)
-        cv.line(img,(listX[chosen_shot+1]+100,listY[chosen_shot+1]+100),(pocketX+100,pocketY+100),RED,2)
+        cv.line(img,(listX[chosen_shot]+100,listY[chosen_shot]+100),(pocketX+100,pocketY+100),RED,2)
     cv.imwrite('ghost.jpeg',img)
     im = Image.open("ghost.jpeg")
     im_rotate = im.rotate(2)
@@ -543,7 +543,7 @@ def remove_impossible_pockets():
             
         
 
-def choose_pocket():
+def chose_pocket():
     if(listX[CUE_BALL]<0 or listY[CUE_BALL]<0): return
     for target_ball in range(FIRST_BALL, NUMBER_OF_BALLS):
         if(listX[target_ball]<0 or listY[target_ball]<0): 
@@ -661,24 +661,25 @@ def choose_pocket():
             pocket_for_each_ball[target_ball-1][0] = NAN
             pocket_for_each_ball[target_ball-1][1] = INF
             
-def choose_easiest_shot(choice):
+def chose_easiest_shot(choice):
+    min_hardness = INF
+    min_indx = -1
     if(choice == "Solid"):
-        min_hardness = INF
-        min_indx = -1
         for idx in range(FIRST_BALL,LAST_SOLID+1):
             shot = pocket_for_each_ball[idx-1]
-            if (not math.isnan(shot[0])): 
+            if (math.isnan(shot[0])): 
+                continue
+            else:
                 if shot[1] < min_hardness:
                     min_hardness = shot[1]
                     min_indx = idx
         return min_indx
     else:
-        min_hardness = INF
-        min_indx = -1
-        cur_indx = FIRST_STRIPE
         for idx in range(FIRST_STRIPE,NUMBER_OF_BALLS):
             shot = pocket_for_each_ball[idx-1]
-            if (not math.isnan(shot[0])): 
+            if (math.isnan(shot[0])): 
+                continue
+            else:
                 if shot[1] < min_hardness:
                     min_hardness = shot[1]
                     min_indx = idx
@@ -709,11 +710,10 @@ def start_calc(lX,lY,bottomRight,choice):
     create_second_lines()
     find_edges()
     remove_impossible_pockets()
-    choose_pocket()
-    print_dimensions()
-    print("Choice = {c}".format(c = choice))
-    print("Pockets for Each Ball are = {p}".format(p = pocket_for_each_ball))
+    chose_pocket()
+    #print_dimensions()
     drawImage(choice)
+    print_dimensions()
     arduino.write(bytes("2", 'utf-8'))
     #board.digital[DONEPIN].write(1)
     #time.sleep(1)

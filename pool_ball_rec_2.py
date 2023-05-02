@@ -362,20 +362,20 @@ final_list = DetectPoolBalls()
 final_list = DetectPoolBalls()
 final_list = DetectPoolBalls()
 while True:
-    #data = arduino.readline()
-    cv2.waitKey()
-    #if data:
-        #data = data.decode()
-        #data = data.encode()
-        #if data == b'1':
-    print ("Jimmy")
-    final_list = DetectPoolBalls()
-    print(final_list)
-    final_list.append("Stripe")
-    detect_changes(final_list, "Stripe")
-    print("Stripes done")
+    data = arduino.readline()
+    #cv2.waitKey()
+    if data:
+        data = data.decode()
+        data = data.encode()
+        if data == b'1':
+            print ("Jimmy")
+            final_list = DetectPoolBalls()
+            print(final_list)
+            final_list.append("Stripe")
+            detect_changes(final_list, "Stripe")
+            print("Stripes done")
             #call Devank's function with my code
-    '''elif data ==  b'0':
+        elif data ==  b'0':
             print ("Devank")
             final_list = DetectPoolBalls()
             print(final_list)
@@ -384,7 +384,7 @@ while True:
             print("Solids done")
             #call Devank's function with my code
         elif data != "b''":
-            print ("You Entered :", data)'''
+            print ("You Entered :", data)
     #break
 #imcap.release()
 cv2.destroyWindow('pool_ball_detect')
