@@ -665,17 +665,12 @@ def choose_easiest_shot(choice):
     if(choice == "Solid"):
         min_hardness = INF
         min_indx = -1
-        cur_indx = 1
         for idx in range(FIRST_BALL,LAST_SOLID+1):
             shot = pocket_for_each_ball[idx-1]
-            if (math.isnan(shot[0])): 
-                cur_indx +=1 
-                continue
-            else:
+            if (not math.isnan(shot[0])): 
                 if shot[1] < min_hardness:
                     min_hardness = shot[1]
-                    min_indx = cur_indx
-                cur_indx +=1
+                    min_indx = idx
         return min_indx
     else:
         min_hardness = INF
@@ -683,14 +678,10 @@ def choose_easiest_shot(choice):
         cur_indx = FIRST_STRIPE
         for idx in range(FIRST_STRIPE,NUMBER_OF_BALLS):
             shot = pocket_for_each_ball[idx-1]
-            if (math.isnan(shot[0])): 
-                cur_indx +=1 
-                continue
-            else:
+            if (not math.isnan(shot[0])): 
                 if shot[1] < min_hardness:
                     min_hardness = shot[1]
-                    min_indx = cur_indx
-                cur_indx +=1
+                    min_indx = idx
         return min_indx
 
 def distance(x0,y0,x1,y1):
