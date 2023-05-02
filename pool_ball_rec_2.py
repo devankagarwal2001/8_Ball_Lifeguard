@@ -22,20 +22,35 @@ prev_target = "hi"
 BLUE = (255,0,0)        #BGR Color Representation of the Color Blue
 GREEN = (0,255,0)       #BGR Color Representation of the Color Green
 RED = (0,0,255) 
+BLACK = (0,0,0)
+WHITE = (255,255,255)
 kernel = np.ones((3, 3), np.uint8)
-X_MIN = 335
-X_MAX = 1535
-Y_MIN = 110
-Y_MAX = 725
-
+X_MIN = 325
+X_MAX = 1525
+Y_MIN = 195
+Y_MAX = 795
+#img = img[30:645,305:1505]
 
 def DetectPoolBalls():
     success,img = imcap.read()
     #img = LoadImage('img/pool_balls.jpeg')
     img = img[Y_MIN:Y_MAX,X_MIN:X_MAX]
+    #success,img = imcap.read()
+    cv2.imshow("preHough", img)
+    circles, img = HoughCircleWrapper(img)
+    cue, solids, eight_ball, stripes = FindTheColors(img,circles)
+    if len(cue) == 1 and len(solids) == 6 and len(eight_ball) == 1 and len(stripes) == 7:
+        print("pass!")
+        success = 1
+    else:
+        cv2.imwrite("fail.png",img)
+    final_list = BuildTheList(cue, solids, eight_ball, stripes)
+    print(final_list)
+    final_list.append((X_MAX-X_MIN, Y_MAX-Y_MIN))
+    return final_list
 
     #Now the table is cropped and warped, lets find the balls
-    hsv = ToHSV(img)
+    '''hsv = ToHSV(img)
     
     lower_color, upper_color = GetClothColor(hsv)    
     
@@ -50,18 +65,49 @@ def DetectPoolBalls():
     final_list = BuildTheList(cue, solids, eight_ball, stripes)
     #print(final_list)
     final_list.append((X_MAX-X_MIN, Y_MAX-Y_MIN))
-    return final_list
+    return final_list'''
+    
+def IsPocket(ball,img):
+     height, width, ____ = img.shape
+     if (ball[0] +30 > width or ball[0] - 30 < 0) and ((ball[1] +30 > height or ball[1] - 30 < 0)):
+         return True
+     if (ball[0] < width/2 +30 or ball[0] > width/2-30) and ((ball[1] +30 > height or ball[1] - 30 < 0)):
+         return True
+     return False
+    
 
-def IncreaseSaturation(img):
-    #cv2.imshow("before", img)
-    hsv = ToHSV(img)
-    maxX, maxY, ___ = hsv.shape
-    for x in range(maxX):
-        for y in range(maxY):
-            hsv[x,y][1] = 255
-    tmp_img = cv2.cvtColor(hsv.copy(), cv2.COLOR_HSV2BGR)
-    #cv2.imshow("after", tmp_img)
-    return tmp_img
+def HoughCirclesTest(test):
+    gray = cv2.cvtColor(test, cv2.COLOR_BGR2GRAY)
+    img = cv2.medianBlur(gray,5)
+    cv2.imshow ("gray", img)
+    cimg = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+    
+    #test to find radius
+    #circles = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, 1,5, param1 = 100, param2 = 30, minRadius = 0, maxRadius = 100)
+    circles = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, .5,23, param1 = 40, param2 = 17, minRadius = 16, maxRadius = 25)
+    circles = np.uint16(np.around(circles))
+    circles2 = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, 1,10, param1 = 100, param2 = 30, minRadius = 10, maxRadius = 25)
+    circles2 = np.uint16(np.around(circles2))
+    #for i in circles[0,:]:
+        #if (not (int(i[0]) < 70 or int (i[1]) < 70)):
+        #cv2.circle(test, (int(i[0]), int(i[1])), int(i[2]), (0, 255, 0), 2)
+        #cv2.circle(test,  (int(i[0]), int(i[1])), 2, (0, 255, 0), 2)
+    cv2.imshow("Circle Detection", test)
+    return circles
+
+def HoughCircleWrapper(img):
+    circlesDetected = []
+    for i in range(30):
+        circles = HoughCirclesTest(img)
+        
+        for ball in circles[0,:]:
+            inList = False
+            for ball2 in circlesDetected:
+                if CheckTwoEqualBalls(ball,ball2) or IsPocket(ball, img):
+                    inList = True
+            if not inList:
+                circlesDetected.append(ball)   
+    return circlesDetected, img
     
 def CombineTheList(centers, centers2):
     if len(centers) == 0:
@@ -183,12 +229,12 @@ def FindTheColors(img, centers):
     eight_ball = []
     new_tmp_centers = []
     maxWhitePixels = -1
-    for (centerX,centerY,radius) in centers:
+    for (centerY,centerX,radius) in centers:
         numOfWhitePixels = 0
         numOfBlackPixels = 0
         numOfOtherPixels = 0
         maxX, maxY, ___ = img.shape
-        #print(centerY, centerX)
+        print(centerY, centerX, radius)
         if (centerY > 820 and centerY < 840):
             tmp_img = img[centerX - radius:centerX + radius,centerY - radius:centerY + radius]
             #cv2.imshow("tmp_img", tmp_img)
@@ -199,29 +245,30 @@ def FindTheColors(img, centers):
                     print(img[x,y])"""
                 if lengthOfLine(centerX,centerY,x,y) >radius:
                     continue
-                if (0 < x < maxX and 0 < y < maxY and img[x,y][0] > 180 and img[x,y][1] > 180 and img[x,y][2] > 180):
+                if (0 < x < maxX and 0 < y < maxY and img[x,y][0] > 190 and img[x,y][1] > 190 and img[x,y][2] > 190):
                     numOfWhitePixels +=1
-                elif (0 < x < maxX and 0 < y < maxY and img[x,y][0] < 60 and img[x,y][1] < 60 and img[x,y][2] < 60):
+                elif (0 < x < maxX and 0 < y < maxY and img[x,y][0] < 90 and img[x,y][1] < 90 and img[x,y][2] < 90):
                     numOfBlackPixels +=1
                 else:
                     numOfOtherPixels +=1
-        #print(numOfBlackPixels, numOfWhitePixels, numOfOtherPixels)
-        if numOfBlackPixels > 200:
+        print(numOfBlackPixels, numOfWhitePixels, numOfOtherPixels)
+        if numOfBlackPixels > 500:
             eight_ball.append((centerY,centerX,radius))
-            cv2.circle(img,(int(centerY),int(centerX)),int(radius),(0,0,0),2)
+            cv2.circle(img,(int(centerY),int(centerX)),int(radius),BLACK,2)
         elif numOfWhitePixels > 500 and numOfWhitePixels > maxWhitePixels:
             cue.append((centerY,centerX,radius))
-            cv2.circle(img,(int(centerY),int(centerX)),int(radius),(255,255,255),2)
+            cv2.circle(img,(int(centerY),int(centerX)),int(radius),WHITE,2)
             if maxWhitePixels == -1:
                 maxWhitePixels = numOfWhitePixels
             else:
+                cue.pop()
                 tmp_x,tmp_y,tmp_rad = cue.pop()
                 cue.append((centerY,centerX,radius))
-                cv2.circle(img,(int(centerY),int(centerX)),int(radius),(255,255,255),2)
+                cv2.circle(img,(int(centerY),int(centerX)),int(radius),WHITE,2)
                 cv2.circle(img,(int(tmp_x),int(tmp_y)),int(tmp_rad),RED,2)
                 stripes.append((tmp_y,tmp_x,tmp_rad))
                 maxWhitePixels = numOfWhitePixels
-        elif numOfWhitePixels > 150:
+        elif numOfWhitePixels > 250:
             stripes.append((centerY,centerX,radius))
             cv2.circle(img,(int(centerY),int(centerX)),int(radius),RED,2)
         else:
@@ -264,9 +311,15 @@ def lengthOfLine(x1,y1,x2,y2):
 def checkEquality(tempList, big_list):
     for i in range(2):
         for j in range(16):
-            if abs(tempList[i][j] - big_list[i][j])>3:
-                #("DIFFERENT ball")
-                #print(tempList[i][j])
+            if abs(int(tempList[i][j]) - int(big_list[i][j]))>6:
+                print("DIFFERENT ball")
+                print(j)
+                print(tempList[i][j] - big_list[i][j])
+                print(abs(tempList[i][j] - big_list[i][j]))
+                print(tempList[0][j])
+                print(big_list[0][j])
+                print(tempList[1][j])
+                print(big_list[1][j])
                 return False
     return True
 
@@ -293,13 +346,15 @@ def detect_changes(tempList, target):
             if(checkEquality(newList,big_list) and prev_target == target):
                 stablize = True
             else:
+                print(newList)
+                print(big_list)
                 big_list = newList
                 prev_target = target
                 
         #print(newList[3], target, prev_target, big_list[3])
         shot_calculation.start_calc(big_list[0],big_list[1],big_list[2],big_list[3])
 
-arduino = serial.Serial(port = '/dev/cu.usbmodem21301',baudrate=115200, timeout=0)
+arduino = serial.Serial(port = '/dev/cu.usbmodem141101',baudrate=115200, timeout=0)
 imcap = cv2.VideoCapture(0) 
 final_list = DetectPoolBalls()
 final_list = DetectPoolBalls()
@@ -307,28 +362,29 @@ final_list = DetectPoolBalls()
 final_list = DetectPoolBalls()
 final_list = DetectPoolBalls()
 while True:
-    data = arduino.readline()
-    if data:
-        data = data.decode()
-        data = data.encode()
-        if data == b'1':
-            print ("Jimmy")
-            final_list = DetectPoolBalls()
-            #print(final_list)
-            final_list.append("Stripe")
-            detect_changes(final_list, "Stripe")
-            print("Stripes done")
+    #data = arduino.readline()
+    cv2.waitKey()
+    #if data:
+        #data = data.decode()
+        #data = data.encode()
+        #if data == b'1':
+    print ("Jimmy")
+    final_list = DetectPoolBalls()
+    print(final_list)
+    final_list.append("Stripe")
+    detect_changes(final_list, "Stripe")
+    print("Stripes done")
             #call Devank's function with my code
-        elif data ==  b'0':
+    '''elif data ==  b'0':
             print ("Devank")
             final_list = DetectPoolBalls()
-            #print(final_list)
+            print(final_list)
             final_list.append("Solid")
             detect_changes(final_list,"Solid")
             print("Solids done")
             #call Devank's function with my code
         elif data != "b''":
-            print ("You Entered :", data)
+            print ("You Entered :", data)'''
     #break
 #imcap.release()
 cv2.destroyWindow('pool_ball_detect')

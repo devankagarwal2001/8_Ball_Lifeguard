@@ -1,69 +1,49 @@
-Devank
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-calculating
-Solids done
-Devank
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-calculating
-Solids done
-Devank
-stabilizing
-stabilizing
-calculating
-Solids done
-Devank
-stabilizing
-stabilizing
-calculating
-Solids done
-Devank
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-stabilizing
-calculating
-Solids done
+472 42
+0 825 302
+
+128 418
+782 22 451
+
+32 416
+9 252 1110
+
+490 328
+0 296 831
+
+84 478
+19 56 1296
+
+
+
+184 158
+30 306 791
+
+32 314
+16 260 1095
+
+368 328
+0 1 1254
+
+624 330
+6 0 1001
+
+294 100
+79 0 1048
+
+488 174
+50 195 1010
+
+38 252
+0 272 983
+
+294 190
+1 116 1138
+
+370 230
+0 175 724
+
+162 222
+0 9 1118
+
+294 322
+0 200 927

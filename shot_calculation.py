@@ -23,8 +23,8 @@ DISTANCE_CUE = 6        #The distance from the cue ball to the target ball
 POCKETX = 0             #The Index which gets the x corrdinate of the pocket
 POCKETY = 1             #The Index which gets the y corrdinate of the pocket
 NUMBER_OF_PARAMS = 5    #The Number of parameters in the dictionary 
-RADIUS_BALL = 15        #The Radius of each ball
-RADIUS_POCKET = 30      #The Radius of  each pocket
+RADIUS_BALL = 25        #The Radius of each ball
+RADIUS_POCKET = 41      #The Radius of  each pocket
 CUE_BALL = 0            #The Cue ball Index
 NO_POCKETS = 6          #The Number of Pockets on a standard pool table
 BLUE = (255,0,0)        #BGR Color Representation of the Color Blue
@@ -138,8 +138,8 @@ def calc_center_edges():
     p5[1] = pockets[5][1] - (RADIUS_POCKET/ROOT2)
 
 #board to connect the arduino to 
-board = pyfirmata.Arduino('/dev/cu.usbmodem14401') 
-arduino = serial.Serial(port = '/dev/cu.usbmodem14401',baudrate=115200, timeout=0)
+board = pyfirmata.Arduino('/dev/cu.usbmodem141101') 
+arduino = serial.Serial(port = '/dev/cu.usbmodem141101',baudrate=115200, timeout=0)
 
 
 ################### Collision Check  ###################
@@ -357,7 +357,7 @@ def create_second_lines():
 #brief: Draws the image that is going to be projected onto the pool table
 def drawImage(choice):
     img = np.zeros((800,1400,3), np.uint8)
-    cv.rectangle (img,(100,100),(700,1300),GREEN,1)
+    cv.rectangle (img,(100,100),(1300,700),GREEN,1)
     for target_ball in range(NUMBER_OF_BALLS):
         if listX[target_ball]>0:
             if (target_ball==CUE_BALL):
@@ -367,9 +367,10 @@ def drawImage(choice):
     for pocket in pockets:
         cv.circle(img,(pocket[0]+100,pocket[1]+100),RADIUS_POCKET,BLUE,-1)   
     chosen_shot = chose_easiest_shot(choice)
+    print("Chosen Shot = {c}".format(c = chosen_shot))
     if (chosen_shot>=0):
         shot_params = ball_to_shots.get(chosen_shot+1)
-        cv.line(img,(listX[CUE_BALL]+100,listY[CUE_BALL]+100),(shot_params[GHOST_BALL][0]+100,shot_params[GHOST_BALL][1]+100),RED,2)
+        cv.line(img,(listX[CUE_BALL]+100,listY[CUE_BALL]+100),(int(shot_params[GHOST_BALL][0]+100),int(shot_params[GHOST_BALL][1]+100)),RED,2)
         cv.circle(img,(shot_params[GHOST_BALL][0]+100,shot_params[GHOST_BALL][1]+100),RADIUS_BALL,WHITE,1)
         pocketX = int(center_edges[pocket_for_each_ball[chosen_shot][0]][POCKETX])
         pocketY = int(center_edges[pocket_for_each_ball[chosen_shot][0]][POCKETY])
@@ -677,6 +678,7 @@ def chose_easiest_shot(choice):
                 cur_indx +=1
         return min_indx
     else:
+        cur_indx = 9
         for idx in range(FIRST_STRIPE,NUMBER_OF_BALLS):
             shot = pocket_for_each_ball[idx-1]
             if (math.isnan(shot[0])): 
@@ -715,7 +717,9 @@ def start_calc(lX,lY,bottomRight,choice):
     find_edges()
     remove_impossible_pockets()
     chose_pocket()
-    #print_dimensions()
+    print_dimensions()
+    print("Choice = {c}".format(c = choice))
+    print("Pockets for Each Ball are = {p}".format(p = pocket_for_each_ball))
     drawImage(choice)
     arduino.write(bytes("2", 'utf-8'))
     #board.digital[DONEPIN].write(1)

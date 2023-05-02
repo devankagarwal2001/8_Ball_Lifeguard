@@ -30,38 +30,18 @@ def DetectPoolBalls():
     success,img = imcap.read()
     
     #img = LoadImage('img/pool_balls.jpeg')
-    img = img[250:855,305:1505]
-    """cv2.imwrite("test.png", img)
-    img = mpimg.imread('test.png')     
-    gray = rgb2gray(img)  
-    mpimg.imsave("test.png", gray)  
-    img = cv2.imread("test.png", cv2.IMREAD_GRAYSCALE)"""
-   
-    img2 = img.copy()
-    img3 = img.copy()
-    #img = img[40:640,360:1460]
-    #Now the table is cropped and warped, lets find the balls
-    #out = IncreaseBrightness(img)
-    print("NO MASK")
+    img = img[195:795,325:1525]
     cv2.imshow("preHough", img)
     circles, img = HoughCircleWrapper(img)
     cue, solids, eight_ball, stripes = FindTheColors(img,circles)
+    if len(cue) == 1 and len(solids) == 6 and len(eight_ball) == 1 and len(stripes) == 7:
+        print("pass!")
+        success = 1
+    else:
+        cv2.imwrite("fail.png",img)
     final_list = BuildTheList(cue, solids, eight_ball, stripes)
     print(final_list)
-    return final_list, img
-    '''cv2.waitKey()
-    out = IncreaseBrightness(img2)
-    img2 = MakeBackgroundWrongColor(img2)
-    print("MASK")
-    HoughCirclesTest(img2)
-    hsv = ToHSV(img2)
-    cv2.imshow("hsv",hsv)
-    
-    lower_color, upper_color = GetClothColor(hsv)    
-    
-    contours,contours2 = GetContours(hsv, lower_color, upper_color,15)
-    centers = FindTheBalls(img2, contours, RED, similarity_threshold=11)
-    centers2 = FindTheBalls(img2, contours2, GREEN, similarity_threshold=11)'''
+    return final_list, img, success
     #cv2.waitKey()
     #HoughCirclesTest(out)
     
@@ -109,19 +89,12 @@ def IsPocket(ball,img):
      height, width, ____ = img.shape
      if (ball[0] +30 > width or ball[0] - 30 < 0) and ((ball[1] +30 > height or ball[1] - 30 < 0)):
          return True
+     if (ball[0] < width/2 +30 or ball[0] > width/2-30) and ((ball[1] +30 > height or ball[1] - 30 < 0)):
+         return True
      return False
     
 
 def HoughCirclesTest(test):
-    '''hsv = ToHSV(test)
-    lower_color, upper_color = GetClothColor(hsv)
-    mask = cv2.inRange(hsv,lower_color,upper_color)
-
-    # Change image to red where we found brown
-    test[mask>0]=PINK
-    cv2.imwrite("result.png", test)'''
-    hsv = ToHSV(test)
-    cv2.imshow ("hsv", hsv)
     gray = cv2.cvtColor(test, cv2.COLOR_BGR2GRAY)
     img = cv2.medianBlur(gray,5)
     cv2.imshow ("gray", img)
@@ -129,7 +102,7 @@ def HoughCirclesTest(test):
     
     #test to find radius
     #circles = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, 1,5, param1 = 100, param2 = 30, minRadius = 0, maxRadius = 100)
-    circles = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, .5,20, param1 = 60, param2 = 20, minRadius = 16, maxRadius = 25)
+    circles = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, .5,23, param1 = 40, param2 = 17, minRadius = 16, maxRadius = 25)
     circles = np.uint16(np.around(circles))
     circles2 = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, 1,10, param1 = 100, param2 = 30, minRadius = 10, maxRadius = 25)
     circles2 = np.uint16(np.around(circles2))
@@ -278,19 +251,21 @@ def FindTheColors(img, centers):
         print(centerY, centerX)
         for x in range(centerX - radius, centerX + radius):
             for y in range(centerY - radius, centerY + radius):
-                """if (centerY > 655 and centerY < 675):
-                    print(x,y)
-                    print(img[x,y])"""
+                
+                
                 if lengthOfLine(centerX,centerY,x,y) >radius:
                     continue
-                if (0 < x < maxX and 0 < y < maxY and img[x,y][0] > 170 and img[x,y][1] > 170 and img[x,y][2] > 170):
+                #if (centerY > 120 and centerY < 130):
+                #    print(x,y)
+                #    print(img[x,y])
+                if (0 < x < maxX and 0 < y < maxY and img[x,y][0] > 190 and img[x,y][1] > 190 and img[x,y][2] > 190):
                     numOfWhitePixels +=1
                 elif (0 < x < maxX and 0 < y < maxY and img[x,y][0] < 90 and img[x,y][1] < 90 and img[x,y][2] < 90):
                     numOfBlackPixels +=1
                 else:
                     numOfOtherPixels +=1
         print(numOfBlackPixels, numOfWhitePixels, numOfOtherPixels)
-        if numOfBlackPixels > 200:
+        if numOfBlackPixels > 500:
             eight_ball.append((centerY,centerX,radius))
             cv2.circle(img,(int(centerY),int(centerX)),int(radius),BLACK,2)
         elif numOfWhitePixels > 500 and numOfWhitePixels > maxWhitePixels:
@@ -306,7 +281,7 @@ def FindTheColors(img, centers):
                 cv2.circle(img,(int(tmp_x),int(tmp_y)),int(tmp_rad),RED,2)
                 stripes.append((tmp_y,tmp_x,tmp_rad))
                 maxWhitePixels = numOfWhitePixels
-        elif numOfWhitePixels > 260:
+        elif numOfWhitePixels > 250:
             stripes.append((centerY,centerX,radius))
             cv2.circle(img,(int(centerY),int(centerX)),int(radius),RED,2)
         else:
@@ -385,11 +360,15 @@ final_list = DetectPoolBalls()
 final_list = DetectPoolBalls()
 final_list = DetectPoolBalls()
 while True:
-    numOfPoolBalls,img = DetectPoolBalls()
+    numOfPoolBalls,img, success = DetectPoolBalls()
     cv2.waitKey()
-#for i in range(100):
-#    final_list, img = DetectPoolBalls()
-cv2.waitKey()
+'''successes = 0
+for i in range(100):
+    final_list,img, success = DetectPoolBalls()
+    successes = successes + success
+#    cv2.waitKey()
+print(successes)
+cv2.waitKey()'''
 
 """while True:
     final_list = DetectPoolBalls()
