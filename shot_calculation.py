@@ -366,7 +366,7 @@ def drawImage(choice):
                 cv.circle(img,(listX[target_ball]+100,listY[target_ball]+100),RADIUS_BALL,YELLOW,-1)
     for pocket in pockets:
         cv.circle(img,(pocket[0]+100,pocket[1]+100),RADIUS_POCKET,BLUE,-1)   
-    chosen_shot = chose_easiest_shot(choice)
+    chosen_shot = choose_easiest_shot(choice)
     print("Chosen Shot = {c}".format(c = chosen_shot))
     if (chosen_shot>=0):
         shot_params = ball_to_shots.get(chosen_shot+1)
@@ -543,7 +543,7 @@ def remove_impossible_pockets():
             
         
 
-def chose_pocket():
+def choose_pocket():
     if(listX[CUE_BALL]<0 or listY[CUE_BALL]<0): return
     for target_ball in range(FIRST_BALL, NUMBER_OF_BALLS):
         if(listX[target_ball]<0 or listY[target_ball]<0): 
@@ -661,11 +661,11 @@ def chose_pocket():
             pocket_for_each_ball[target_ball-1][0] = NAN
             pocket_for_each_ball[target_ball-1][1] = INF
             
-def chose_easiest_shot(choice):
-    min_hardness = INF
-    min_indx = -1
-    cur_indx = 0
+def choose_easiest_shot(choice):
     if(choice == "Solid"):
+        min_hardness = INF
+        min_indx = -1
+        cur_indx = 1
         for idx in range(FIRST_BALL,LAST_SOLID+1):
             shot = pocket_for_each_ball[idx-1]
             if (math.isnan(shot[0])): 
@@ -678,7 +678,9 @@ def chose_easiest_shot(choice):
                 cur_indx +=1
         return min_indx
     else:
-        cur_indx = 9
+        min_hardness = INF
+        min_indx = -1
+        cur_indx = FIRST_STRIPE
         for idx in range(FIRST_STRIPE,NUMBER_OF_BALLS):
             shot = pocket_for_each_ball[idx-1]
             if (math.isnan(shot[0])): 
@@ -716,7 +718,7 @@ def start_calc(lX,lY,bottomRight,choice):
     create_second_lines()
     find_edges()
     remove_impossible_pockets()
-    chose_pocket()
+    choose_pocket()
     print_dimensions()
     print("Choice = {c}".format(c = choice))
     print("Pockets for Each Ball are = {p}".format(p = pocket_for_each_ball))
