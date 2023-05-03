@@ -1,5 +1,3 @@
-#Author: Devank Agarwal, devanka@andrew.cmu.edu
-
 ''' The Following File Contains Code for a working implementation of a pool table real time 
     optimal shot calculator'''
 
@@ -7,7 +5,10 @@ import math
 from array import *
 import cv2 as cv
 import numpy as np
-
+import pyfirmata
+import time
+import serial
+from PIL import Image
 
 ################### GLOBAL PARAMETERS ###################
 NUMBER_OF_BALLS = 16    #The total number of balls on the table
@@ -22,8 +23,8 @@ DISTANCE_CUE = 6        #The distance from the cue ball to the target ball
 POCKETX = 0             #The Index which gets the x corrdinate of the pocket
 POCKETY = 1             #The Index which gets the y corrdinate of the pocket
 NUMBER_OF_PARAMS = 5    #The Number of parameters in the dictionary 
-RADIUS_BALL = 15        #The Radius of each ball
-RADIUS_POCKET = 30      #The Radius of  each pocket
+RADIUS_BALL = 21        #The Radius of each ball
+RADIUS_POCKET = 42      #The Radius of  each pocket
 CUE_BALL = 0            #The Cue ball Index
 NO_POCKETS = 6          #The Number of Pockets on a standard pool table
 BLUE = (255,0,0)        #BGR Color Representation of the Color Blue
@@ -39,8 +40,10 @@ TABLE_Y_LO = 300        #Table top left corner y coordinate
 NAN = np.nan            #Not a number, used for default and non-reachable values
 INF = np.inf            #Infinity, Used for the x coordinates of the balls is the same
 ROOT2 = math.sqrt(2)    #The Square Root of 2
-REFLECT_DIST = 100        #The Distance of the Reflection Line
-
+REFLECT_DIST = 100      #The Distance of the Reflection Line
+DONEPIN = 8             #The Pin used to talk back to the arduino with
+LAST_SOLID = 7
+FIRST_STRIPE = 9
 #brief: A list of the various parametrs for the ball
 #int (ball number) -> list
 #list = index 0 -> DISTACNE
@@ -109,8 +112,8 @@ pockets = [[0,0],[600,0],[1200,0],[1200,600],[600,600],[0,600]]
 center_edges = [[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN]]
 
 #A list of X and Y coordinates for each ball
-listX = [600,600,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-listY = [500,100,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listX = [494,-1,-1,96,234,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+listY = [88,-1,-1,30,55,-1,-1,-1,-1,500,-1,-1,-1,-1,-1,-1]
 
 
 def calc_center_edges():
@@ -133,6 +136,7 @@ def calc_center_edges():
     p4[1] = pockets[4][1] - (RADIUS_POCKET/ROOT2)
     p5[0] = pockets[5][0] + (RADIUS_POCKET/ROOT2)
     p5[1] = pockets[5][1] - (RADIUS_POCKET/ROOT2)
+
 
 
 
@@ -309,6 +313,8 @@ def create_second_lines():
     for target_ball in range(FIRST_BALL, NUMBER_OF_BALLS):
         if(listX[target_ball]<0): continue
         if(listY[target_ball]<0): continue
+        print("----------------")
+        print("We are looking for ball {t}".format(t = target_ball))
         shot_params = ball_to_shots.get(target_ball)
         if(math.isnan(shot_params[FIRST_SLOPE])): 
             for pocket in range(NO_POCKETS):
@@ -320,19 +326,24 @@ def create_second_lines():
                 shot_params[SECOND_SLOPES][pocket] = NAN
                 shot_params[SECOND_INTERCEPT][pocket] = NAN
             continue
+        print('The ball has a Valid First Slope')
         #create a line for each pocket
-        pocket_index = 0;
+        pocket_index = 0
         for pocket in center_edges:
             collision = False
             #check collision for that pocket with every ball
+            print("We Are Checkign for Pocket {i}".format(i = pocket_index))
+            print("Pocket X = {x}, Pocket Y = {y}".format(x = pocket[POCKETX],y = pocket[POCKETY]))
             for collision_ball in range(CUE_BALL, NUMBER_OF_BALLS):
                 if (collision_ball == target_ball): continue
                 if (listX[collision_ball]<0): continue
                 if (listY[collision_ball]<0): continue
-                upperCheck = checkCollision(listX[target_ball],listY[target_ball]+RADIUS_BALL,pocket[POCKETX],pocket[POCKETY]+RADIUS_POCKET,listX[collision_ball],listY[collision_ball],RADIUS_BALL)
-                lowerCheck = checkCollision(listX[target_ball],listY[target_ball]-RADIUS_BALL,pocket[POCKETX],pocket[POCKETY]-RADIUS_POCKET,listX[collision_ball],listY[collision_ball],RADIUS_BALL)
+                print('We Are Checking for collisions with ball {c}'.format(c = collision_ball))
+                upperCheck = checkCollision(listX[target_ball],listY[target_ball]+RADIUS_BALL,pocket[POCKETX],pocket[POCKETY]+RADIUS_BALL,listX[collision_ball],listY[collision_ball],RADIUS_BALL)
+                lowerCheck = checkCollision(listX[target_ball],listY[target_ball]-RADIUS_BALL,pocket[POCKETX],pocket[POCKETY]-RADIUS_BALL,listX[collision_ball],listY[collision_ball],RADIUS_BALL)
                 if (upperCheck or lowerCheck): 
                     collision = True
+                    print('Collision Detected with ball {c}'.format(c = collision_ball))
                     break
             # a successful shot can be made to that pocket
             if(not collision):
@@ -349,24 +360,25 @@ def create_second_lines():
             pocket_index+=1
 
 #brief: Draws the image that is going to be projected onto the pool table
-def drawImage():
-    img = np.zeros((600,1200,3), np.uint8)
+def drawImage(choice):
+    img = np.zeros((800,1400,3), np.uint8)
     cv.rectangle (img,(100,100),(1300,700),GREEN,1)
     for target_ball in range(NUMBER_OF_BALLS):
         if listX[target_ball]>0:
             if (target_ball==CUE_BALL):
-                cv.circle(img,(listX[target_ball],listY[target_ball]),RADIUS_BALL,WHITE,-1)
+                cv.circle(img,(listX[target_ball]+100,listY[target_ball]+100),RADIUS_BALL,WHITE,-1)
             else:
-                cv.circle(img,(listX[target_ball],listY[target_ball]),RADIUS_BALL,YELLOW,-1)
+                cv.circle(img,(listX[target_ball]+100,listY[target_ball]+100),RADIUS_BALL,YELLOW,-1)
     for pocket in pockets:
-        cv.circle(img,(pocket[0],pocket[1]),RADIUS_POCKET,BLUE,-1)   
-    chosen_shot = chose_easiest_shot()
-    if (chosen_shot>=0):
-        shot_params = ball_to_shots.get(chosen_shot+1)
-        cv.line(img,(listX[CUE_BALL],listY[CUE_BALL]),(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]),RED,2)
-        cv.circle(img,(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]),RADIUS_BALL,WHITE,1)
-        pocketX = int(center_edges[pocket_for_each_ball[chosen_shot][0]][POCKETX])
-        pocketY = int(center_edges[pocket_for_each_ball[chosen_shot][0]][POCKETY])
+        cv.circle(img,(pocket[0]+100,pocket[1]+100),RADIUS_POCKET,BLUE,-1)   
+    chosen_shot = chose_easiest_shot(choice)
+    print("Chosen Shot is = {c}".format(c = chosen_shot))
+    if (chosen_shot>0):
+        shot_params = ball_to_shots.get(chosen_shot)
+        cv.line(img,(listX[CUE_BALL]+100,listY[CUE_BALL]+100),(shot_params[GHOST_BALL][0]+100,shot_params[GHOST_BALL][1]+100),RED,2)
+        cv.circle(img,(shot_params[GHOST_BALL][0]+100,shot_params[GHOST_BALL][1]+100),RADIUS_BALL,WHITE,1)
+        pocketX = int(center_edges[pocket_for_each_ball[chosen_shot-1][0]][POCKETX])
+        pocketY = int(center_edges[pocket_for_each_ball[chosen_shot-1][0]][POCKETY])
         m = 0
         if (listX[chosen_shot+1]==pocketX): m = INF
         else: 
@@ -375,9 +387,13 @@ def drawImage():
         theta = math.atan(new_slope)
         newX = shot_params[GHOST_BALL][0] + int(REFLECT_DIST * math.cos(theta))
         newY = shot_params[GHOST_BALL][1] + int(REFLECT_DIST * math.sin(theta))
-        cv.line(img,(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]),(newX,newY),GREY,2)
-        cv.line(img,(listX[chosen_shot+1],listY[chosen_shot+1]),(pocketX,pocketY),RED,2)
+        #cv.line(img,(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]),(newX,newY),GREY,2)
+        cv.line(img,(listX[chosen_shot]+100,listY[chosen_shot]+100),(pocketX+100,pocketY+100),RED,2)
     cv.imwrite('ghost.jpeg',img)
+    im = Image.open("ghost.jpeg")
+    im_rotate = im.rotate(2)
+    im_rotate.show()
+    im_rotate.save('ghost.jpeg')
 
 
 def find_edges():
@@ -650,20 +666,29 @@ def chose_pocket():
             pocket_for_each_ball[target_ball-1][0] = NAN
             pocket_for_each_ball[target_ball-1][1] = INF
             
-def chose_easiest_shot():
+def chose_easiest_shot(choice):
     min_hardness = INF
     min_indx = -1
-    cur_indx = 0
-    for shot in pocket_for_each_ball:
-        if (math.isnan(shot[0])): 
-            cur_indx +=1 
-            continue
-        else:
-            if shot[1] < min_hardness:
-                min_hardness = shot[1]
-                min_indx = cur_indx
-            cur_indx +=1
-    return min_indx
+    if(choice == "Solid"):
+        for idx in range(FIRST_BALL,LAST_SOLID+1):
+            shot = pocket_for_each_ball[idx-1]
+            if (math.isnan(shot[0])): 
+                continue
+            else:
+                if shot[1] < min_hardness:
+                    min_hardness = shot[1]
+                    min_indx = idx
+        return min_indx
+    else:
+        for idx in range(FIRST_STRIPE,NUMBER_OF_BALLS):
+            shot = pocket_for_each_ball[idx-1]
+            if (math.isnan(shot[0])): 
+                continue
+            else:
+                if shot[1] < min_hardness:
+                    min_hardness = shot[1]
+                    min_indx = idx
+        return min_indx
 
 def distance(x0,y0,x1,y1):
     distX = x0-x1
@@ -672,17 +697,28 @@ def distance(x0,y0,x1,y1):
     return distance
 
 #starts the api for the shot calculation
-def start_calc():
+def start_calc(choice):
     calc_center_edges()
+    #print("FIRST")
+    #print_dimensions()
     find_distance_to_all_pockets()
-    find_distance_to_cue_ball()
+    #print("SECOND")
+    #print_dimensions()
     create_first_lines()
+    #print("THIRD")
+    #print_dimensions()
     create_second_lines()
+    #print("FOURTH")
+    #print_dimensions()
     find_edges()
+    #print("FIFTH")
+    #print_dimensions()
     remove_impossible_pockets()
+    #print("SIXTH")
+    #print_dimensions()
     chose_pocket()
+    #print("SEVENTH")
     print_dimensions()
-    drawImage()
-
-
-start_calc()
+    drawImage(choice)
+    
+start_calc("Solid")

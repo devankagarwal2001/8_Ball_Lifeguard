@@ -335,8 +335,8 @@ def create_second_lines():
                 if (collision_ball == target_ball): continue
                 if (listX[collision_ball]<0): continue
                 if (listY[collision_ball]<0): continue
-                upperCheck = checkCollision(listX[target_ball],listY[target_ball]+RADIUS_BALL,pocket[POCKETX],pocket[POCKETY]+RADIUS_POCKET,listX[collision_ball],listY[collision_ball],RADIUS_BALL)
-                lowerCheck = checkCollision(listX[target_ball],listY[target_ball]-RADIUS_BALL,pocket[POCKETX],pocket[POCKETY]-RADIUS_POCKET,listX[collision_ball],listY[collision_ball],RADIUS_BALL)
+                upperCheck = checkCollision(listX[target_ball],listY[target_ball]+RADIUS_BALL,pocket[POCKETX],pocket[POCKETY]+RADIUS_BALL,listX[collision_ball],listY[collision_ball],RADIUS_BALL)
+                lowerCheck = checkCollision(listX[target_ball],listY[target_ball]-RADIUS_BALL,pocket[POCKETX],pocket[POCKETY]-RADIUS_BALL,listX[collision_ball],listY[collision_ball],RADIUS_BALL)
                 if (upperCheck or lowerCheck): 
                     collision = True
                     break

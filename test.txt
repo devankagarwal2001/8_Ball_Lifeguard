@@ -1,49 +1,57 @@
-472 42
-0 825 302
-
-128 418
-782 22 451
-
-32 416
-9 252 1110
-
-490 328
-0 296 831
-
-84 478
-19 56 1296
-
-
-
-184 158
-30 306 791
-
-32 314
-16 260 1095
-
-368 328
-0 1 1254
-
-624 330
-6 0 1001
-
-294 100
-79 0 1048
-
-488 174
-50 195 1010
-
-38 252
-0 272 983
-
-294 190
-1 116 1138
-
-370 230
-0 175 724
-
-162 222
-0 9 1118
-
-294 322
-0 200 927
+----------------
+We are looking for ball 3
+----------------
+We are looking for ball 4
+The ball has a Valid First Slope
+We Are Checkign for Pocket 0
+Pocket X = 29.698484809834994, Pocket Y = 29.698484809834994
+We Are Checking for collisions with ball 0
+We Are Checking for collisions with ball 3
+Collision Detected with ball 3
+We Are Checkign for Pocket 1
+Pocket X = 600, Pocket Y = 29.698484809834994
+We Are Checking for collisions with ball 0
+We Are Checking for collisions with ball 3
+We Are Checkign for Pocket 2
+Pocket X = 1170.301515190165, Pocket Y = 29.698484809834994
+We Are Checking for collisions with ball 0
+Collision Detected with ball 0
+We Are Checkign for Pocket 3
+Pocket X = 1170.301515190165, Pocket Y = 570.301515190165
+We Are Checking for collisions with ball 0
+We Are Checking for collisions with ball 3
+We Are Checkign for Pocket 4
+Pocket X = 600, Pocket Y = 570.301515190165
+We Are Checking for collisions with ball 0
+We Are Checking for collisions with ball 3
+We Are Checkign for Pocket 5
+Pocket X = 29.698484809834994, Pocket Y = 570.301515190165
+We Are Checking for collisions with ball 0
+We Are Checking for collisions with ball 3
+For Ball 3
+Dimensions are 96,30
+Distances to Each Pocket = [66.30220077736169, 504.0000901898827, 1074.3015575020331, 1202.5179719474768, 738.8786959418901, 544.3543131392456]
+First Slope = nan
+First Intercept = nan
+Second Slopes = [nan, nan, nan, nan, nan, nan]
+Second Intercepts = [nan, nan, nan, nan, nan, nan]
+Bounday X Values are = [nan, nan]
+Bounday Y Values are = [nan, nan]
+Pocket Chosen for this ball and its hardness = [nan, inf]
+Ghost Coordinates for this ball are = [nan, nan]
+Distance from Cue Ball to target Ball = nan
+-------------------------------------------------
+For Ball 4
+Dimensions are 234,55
+Distances to Each Pocket = [205.86227381410944, nan, nan, nan, nan, 554.3236966486974]
+First Slope = 0.12692307692307692
+First Intercept = 25.3
+Second Slopes = [nan, nan, nan, nan, nan, -2.5222598800137113]
+Second Intercepts = [nan, nan, nan, nan, nan, 645.2088119232085]
+Bounday X Values are = [202.90384615384616, 152.1346153846154]
+Bounday Y Values are = [700, 300]
+Pocket Chosen for this ball and its hardness = [5, 11013.786673409453]
+Ghost Coordinates for this ball are = [249, 15]
+Distance from Cue Ball to target Ball = nan
+-------------------------------------------------
+Chosen Shot is = 4
