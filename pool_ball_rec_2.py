@@ -266,7 +266,7 @@ def FindTheColors(img, centers):
                 cue.append((centerY,centerX,radius))
                 cv2.circle(img,(int(centerY),int(centerX)),int(radius),WHITE,2)
                 cv2.circle(img,(int(tmp_x),int(tmp_y)),int(tmp_rad),RED,2)
-                stripes.append((tmp_y,tmp_x,tmp_rad))
+                stripes.append((tmp_x,tmp_y,tmp_rad))
                 maxWhitePixels = numOfWhitePixels
         elif numOfWhitePixels > 250:
             stripes.append((centerY,centerX,radius))
@@ -334,25 +334,22 @@ def detect_changes(tempList, target):
     global big_list
     global prev_target
     #(prev_target, target)
-    if (checkEquality(tempList,big_list) and prev_target == target):
-        return
-    else:
-        stablize = False
-        while(not stablize):
-            time.sleep(.5)
-            print("stabilizing")
-            newList = DetectPoolBalls()
-            newList.append(target)
-            if(checkEquality(newList,big_list) and prev_target == target):
-                stablize = True
-            else:
-                print(newList)
-                print(big_list)
-                big_list = newList
-                prev_target = target
+    stablize = False
+    while(not stablize):
+        time.sleep(.5)
+        print("stabilizing")
+        newList = DetectPoolBalls()
+        newList.append(target)
+        if(checkEquality(newList,big_list) and prev_target == target):
+            stablize = True
+        else:
+            print(newList)
+            print(big_list)
+            big_list = newList
+            prev_target = target
                 
         #print(newList[3], target, prev_target, big_list[3])
-        shot_calculation.start_calc(big_list[0],big_list[1],big_list[2],big_list[3])
+    shot_calculation.start_calc(big_list[0],big_list[1],big_list[2],big_list[3])
 
 arduino = serial.Serial(port = '/dev/cu.usbmodem141101',baudrate=115200, timeout=0)
 imcap = cv2.VideoCapture(0) 
