@@ -327,7 +327,7 @@ def create_second_lines():
                 shot_params[SECOND_INTERCEPT][pocket] = NAN
             continue
         #create a line for each pocket
-        pocket_index = 0;
+        pocket_index = 0
         for pocket in center_edges:
             collision = False
             #check collision for that pocket with every ball
@@ -375,9 +375,9 @@ def drawImage(choice):
         pocketX = int(center_edges[pocket_for_each_ball[chosen_shot-1][0]][POCKETX])
         pocketY = int(center_edges[pocket_for_each_ball[chosen_shot-1][0]][POCKETY])
         m = 0
-        if (listX[chosen_shot+1]==pocketX): m = INF
+        if (listX[chosen_shot]==pocketX): m = INF
         else: 
-            m = (listY[chosen_shot+1]-pocketY)/(listX[chosen_shot+1]-pocketX)
+            m = (listY[chosen_shot]-pocketY)/(listX[chosen_shot]-pocketX)
         new_slope = -1/m
         theta = math.atan(new_slope)
         newX = shot_params[GHOST_BALL][0] + int(REFLECT_DIST * math.cos(theta))
