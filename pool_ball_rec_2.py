@@ -39,13 +39,8 @@ def DetectPoolBalls():
     cv2.imshow("preHough", img)
     circles, img = HoughCircleWrapper(img)
     cue, solids, eight_ball, stripes = FindTheColors(img,circles)
-    if len(cue) == 1 and len(solids) == 6 and len(eight_ball) == 1 and len(stripes) == 7:
-        print("pass!")
-        success = 1
-    else:
-        cv2.imwrite("fail.png",img)
     final_list = BuildTheList(cue, solids, eight_ball, stripes)
-    print(final_list)
+    #print(final_list)
     final_list.append((X_MAX-X_MIN, Y_MAX-Y_MIN))
     return final_list
 
@@ -234,7 +229,7 @@ def FindTheColors(img, centers):
         numOfBlackPixels = 0
         numOfOtherPixels = 0
         maxX, maxY, ___ = img.shape
-        print(centerY, centerX)
+        #print(centerY, centerX)
         if (centerY > 820 and centerY < 840):
             tmp_img = img[centerX - radius:centerX + radius,centerY - radius:centerY + radius]
             #cv2.imshow("tmp_img", tmp_img)
@@ -251,7 +246,7 @@ def FindTheColors(img, centers):
                     numOfBlackPixels +=1
                 else:
                     numOfOtherPixels +=1
-        print(numOfBlackPixels, numOfWhitePixels, numOfOtherPixels)
+        #print(numOfBlackPixels, numOfWhitePixels, numOfOtherPixels)
         if numOfBlackPixels > 500:
             eight_ball.append((centerY,centerX,radius))
             cv2.circle(img,(int(centerY),int(centerX)),int(radius),BLACK,2)
@@ -312,14 +307,14 @@ def checkEquality(tempList, big_list):
     for i in range(2):
         for j in range(16):
             if abs(int(tempList[i][j]) - int(big_list[i][j]))>6:
-                print("DIFFERENT ball")
+                '''print("DIFFERENT ball")
                 print(j)
                 print(tempList[i][j] - big_list[i][j])
                 print(abs(tempList[i][j] - big_list[i][j]))
                 print(tempList[0][j])
                 print(big_list[0][j])
                 print(tempList[1][j])
-                print(big_list[1][j])
+                print(big_list[1][j])'''
                 return False
     return True
 
@@ -367,7 +362,7 @@ while True:
         if data == b'1':
             print ("Jimmy")
             final_list = DetectPoolBalls()
-            print(final_list)
+            #print(final_list)
             final_list.append("Stripe")
             detect_changes(final_list, "Stripe")
             print("Stripes done")
@@ -375,7 +370,7 @@ while True:
         elif data ==  b'0':
             print ("Devank")
             final_list = DetectPoolBalls()
-            print(final_list)
+            #print(final_list)
             final_list.append("Solid")
             detect_changes(final_list,"Solid")
             print("Solids done")

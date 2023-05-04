@@ -360,15 +360,16 @@ def create_second_lines():
 def drawImage(choice):
     img = np.zeros((800,1400,3), np.uint8)
     cv.rectangle (img,(100,100),(1300,700),GREEN,1)
+    chosen_shot = chose_easiest_shot(choice)
     for target_ball in range(NUMBER_OF_BALLS):
         if listX[target_ball]>0:
             if (target_ball==CUE_BALL):
                 cv.circle(img,(listX[target_ball]+100,listY[target_ball]+100),RADIUS_BALL,WHITE,-1)
-            else:
+            elif (target_ball == chosen_shot):
                 cv.circle(img,(listX[target_ball]+100,listY[target_ball]+100),RADIUS_BALL,YELLOW,-1)
     for pocket in pockets:
         cv.circle(img,(pocket[0]+100,pocket[1]+100),RADIUS_POCKET,BLUE,-1)   
-    chosen_shot = chose_easiest_shot(choice)
+
     print("Chosen Shot is = {c}".format(c = chosen_shot))
     if (chosen_shot>0):
         shot_params = ball_to_shots.get(chosen_shot)
@@ -388,11 +389,11 @@ def drawImage(choice):
         cv.line(img,(listX[chosen_shot]+100,listY[chosen_shot]+100),(pocketX+100,pocketY+100),RED,2)
     f = open("values.txt","r")
     shot_feedback = f.readline()
-    shot_feedback_broken = shot_feedback.split(",")
-    acc = "Acceleration = {a}m/(s^2)".format(a = shot_feedback_broken[0])
-    direction = "Direction = {d} degrees".format(d = shot_feedback_broken[1])
-    cv.putText(img, acc, (750,150), FONT, 1, WHITE, 1, cv.LINE_AA)
-    cv.putText(img, direction, (750,200), FONT, 1, WHITE, 1, cv.LINE_AA)
+    #shot_feedback_broken = shot_feedback.split(",")
+    acc = "Acceleration = {a}m/(s^2)".format(a = shot_feedback)
+    #direction = "Direction = {d} degrees".format(d = shot_feedback_broken[1])
+    cv.putText(img, acc, (750,150), FONT, 1, YELLOW, 1, cv.LINE_AA)
+    #cv.putText(img, direction, (750,200), FONT, 1, YELLOW, 1, cv.LINE_AA)
     cv.imwrite('ghost.jpeg',img)
     im = Image.open("ghost.jpeg")
     im_rotate = im.rotate(2)
@@ -723,7 +724,7 @@ def start_calc(lX,lY,bottomRight,choice):
     chose_pocket()
     #print_dimensions()
     drawImage(choice)
-    print_dimensions()
+    #print_dimensions()
     arduino.write(bytes("2", 'utf-8'))
     #board.digital[DONEPIN].write(1)
     #time.sleep(1)
