@@ -42,8 +42,10 @@ INF = np.inf            #Infinity, Used for the x coordinates of the balls is th
 ROOT2 = math.sqrt(2)    #The Square Root of 2
 REFLECT_DIST = 100      #The Distance of the Reflection Line
 DONEPIN = 8             #The Pin used to talk back to the arduino with
-LAST_SOLID = 7
-FIRST_STRIPE = 9
+LAST_SOLID = 7          #The Value of the the Last Solid
+FIRST_STRIPE = 9        #The Value of the first stripe
+FONT = cv.FONT_HERSHEY_SIMPLEX # font for the feedback
+
 #brief: A list of the various parametrs for the ball
 #int (ball number) -> list
 #list = index 0 -> DISTACNE
@@ -384,11 +386,19 @@ def drawImage(choice):
         newY = shot_params[GHOST_BALL][1] + int(REFLECT_DIST * math.sin(theta))
         #cv.line(img,(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]),(newX,newY),GREY,2)
         cv.line(img,(listX[chosen_shot]+100,listY[chosen_shot]+100),(pocketX+100,pocketY+100),RED,2)
+    f = open("values.txt","r")
+    shot_feedback = f.readline()
+    shot_feedback_broken = shot_feedback.split(",")
+    acc = "Acceleration = {a}m/(s^2)".format(a = shot_feedback_broken[0])
+    direction = "Direction = {d} degrees".format(d = shot_feedback_broken[1])
+    cv.putText(img, acc, (750,150), FONT, 1, WHITE, 1, cv.LINE_AA)
+    cv.putText(img, direction, (750,200), FONT, 1, WHITE, 1, cv.LINE_AA)
     cv.imwrite('ghost.jpeg',img)
     im = Image.open("ghost.jpeg")
     im_rotate = im.rotate(2)
     im_rotate.show()
     im_rotate.save('ghost.jpeg')
+
 
 
 def find_edges():
