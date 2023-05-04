@@ -12,7 +12,7 @@ int buttonState2 = 0;  // variable for reading the pushbutton status
 int donePinState = 0;
 const int base = 0;    
 int pos = 0;
-const int angleChange = 103;
+const int angleChange = 95;
 int first = 0;
 
 void setup() {

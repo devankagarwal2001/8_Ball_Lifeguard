@@ -234,7 +234,7 @@ def FindTheColors(img, centers):
         numOfBlackPixels = 0
         numOfOtherPixels = 0
         maxX, maxY, ___ = img.shape
-        print(centerY, centerX, radius)
+        print(centerY, centerX)
         if (centerY > 820 and centerY < 840):
             tmp_img = img[centerX - radius:centerX + radius,centerY - radius:centerY + radius]
             #cv2.imshow("tmp_img", tmp_img)
