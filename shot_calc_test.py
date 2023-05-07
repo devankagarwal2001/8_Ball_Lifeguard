@@ -611,7 +611,6 @@ def chose_pocket():
             collision = False
             #now that we have ghost coordinates check for collisions
             for collision_ball in range(FIRST_BALL,NUMBER_OF_BALLS):
-                if (target_ball == collision_ball): continue
                 if (listX[collision_ball]<0): continue
                 if (listY[collision_ball]<0): continue
                 upperCheck = checkCollision(listX[CUE_BALL],listY[CUE_BALL]+RADIUS_BALL,xGhost,yGhost+RADIUS_BALL,listX[collision_ball],listY[collision_ball],RADIUS_BALL)
@@ -667,6 +666,7 @@ def chose_pocket():
                 xGhost = listX[target_ball] + xdelta
                 yGhost = listY[target_ball] + ydelta
             shot_params[GHOST_BALL][0] = int(xGhost)
+            upperCheck = 
             shot_params[GHOST_BALL][1] = int(yGhost)
         else: 
             shot_params[GHOST_BALL][0] = NAN
