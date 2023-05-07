@@ -1,6 +1,6 @@
 import serial
 
-arduino_port = "/dev/cu.usbserial-AQ01LH22" #serial port of Arduino
+arduino_port = "/dev/cu.usbserial-AQ01L2Z7" #serial port of Arduino
 baud = 115200 #arduino uno runs at 9600 baud
 fileName="values.txt" #name of the CSV file generated
 

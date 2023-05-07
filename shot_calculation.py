@@ -373,7 +373,7 @@ def drawImage(choice):
     print("Chosen Shot is = {c}".format(c = chosen_shot))
     if (chosen_shot>0):
         shot_params = ball_to_shots.get(chosen_shot)
-        cv.line(img,(listX[CUE_BALL]+100,listY[CUE_BALL]+100),(shot_params[GHOST_BALL][0]+100,shot_params[GHOST_BALL][1]+100),RED,2)
+        cv.line(img,(listX[CUE_BALL]+100,listY[CUE_BALL]+100),(shot_params[GHOST_BALL][0]+100,shot_params[GHOST_BALL][1]+100),YELLOW,4)
         cv.circle(img,(shot_params[GHOST_BALL][0]+100,shot_params[GHOST_BALL][1]+100),RADIUS_BALL,WHITE,1)
         pocketX = int(center_edges[pocket_for_each_ball[chosen_shot-1][0]][POCKETX])
         pocketY = int(center_edges[pocket_for_each_ball[chosen_shot-1][0]][POCKETY])
@@ -386,7 +386,7 @@ def drawImage(choice):
         newX = shot_params[GHOST_BALL][0] + int(REFLECT_DIST * math.cos(theta))
         newY = shot_params[GHOST_BALL][1] + int(REFLECT_DIST * math.sin(theta))
         #cv.line(img,(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]),(newX,newY),GREY,2)
-        cv.line(img,(listX[chosen_shot]+100,listY[chosen_shot]+100),(pocketX+100,pocketY+100),RED,2)
+        cv.line(img,(listX[chosen_shot]+100,listY[chosen_shot]+100),(pocketX+100,pocketY+100),YELLOW,4)
     f = open("values.txt","r")
     shot_feedback = f.readline()
     #shot_feedback_broken = shot_feedback.split(",")
@@ -609,7 +609,6 @@ def chose_pocket():
             collision = False
             #now that we have ghost coordinates check for collisions
             for collision_ball in range(FIRST_BALL,NUMBER_OF_BALLS):
-                if (target_ball == collision_ball): continue
                 if (listX[collision_ball]<0): continue
                 if (listY[collision_ball]<0): continue
                 upperCheck = checkCollision(listX[CUE_BALL],listY[CUE_BALL]+RADIUS_BALL,xGhost,yGhost+RADIUS_BALL,listX[collision_ball],listY[collision_ball],RADIUS_BALL)

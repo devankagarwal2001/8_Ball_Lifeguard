@@ -69,20 +69,14 @@ def HoughCircleWrapper(img):
     circlesDetected = []
     for i in range(30):
         circles = HoughCirclesTest(img)
-        
-        for ball in circles[0,:]:
-            inList = False
-            for ball2 in circlesDetected:
-                if CheckTwoEqualBalls(ball,ball2) or IsPocket(ball, img):
-                    inList = True
-            if not inList:
-                circlesDetected.append(ball)
-    #img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
-    '''for i in circlesDetected:
-        #if (not (int(i[0]) < 70 or int (i[1]) < 70)):
-        cv2.circle(img, (int(i[0]), int(i[1])), int(i[2]), (0, 255, 0), 2)
-        cv2.circle(img,  (int(i[0]), int(i[1])), 2, (0, 255, 0), 2)'''
-        
+        if circles is not None:
+            for ball in circles[0,:]:
+                inList = False
+                for ball2 in circlesDetected:
+                    if CheckTwoEqualBalls(ball,ball2) or IsPocket(ball, img):
+                        inList = True
+                if not inList:
+                    circlesDetected.append(ball)   
     return circlesDetected, img
             
 def IsPocket(ball,img):
@@ -103,9 +97,11 @@ def HoughCirclesTest(test):
     #test to find radius
     #circles = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, 1,5, param1 = 100, param2 = 30, minRadius = 0, maxRadius = 100)
     circles = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, .5,23, param1 = 40, param2 = 17, minRadius = 16, maxRadius = 25)
-    circles = np.uint16(np.around(circles))
-    circles2 = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, 1,10, param1 = 100, param2 = 30, minRadius = 10, maxRadius = 25)
-    circles2 = np.uint16(np.around(circles2))
+    print(circles)
+    if circles is not None:
+        circles = np.uint16(np.around(circles))
+    else:
+        return None
     #for i in circles[0,:]:
         #if (not (int(i[0]) < 70 or int (i[1]) < 70)):
         #cv2.circle(test, (int(i[0]), int(i[1])), int(i[2]), (0, 255, 0), 2)
