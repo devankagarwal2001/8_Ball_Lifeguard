@@ -33,6 +33,7 @@ RED = (0,0,255)         #BGR Color Representation of the Color Red
 WHITE = (255,255,255)   #BGR Color Representation of the Color White
 YELLOW = (0,255,255)    #BGR Color Representation of the Color Yellow
 GREY = (150,150,150)    #BGR Color Representation of the Color Grey
+BROWN = (0,75,150)
 TABLE_X_HI = 900        #Table bottom right corner x coordinate
 TABLE_X_LO = 100        #Table top left corner x coordinate
 TABLE_Y_HI = 700        #Table bottom right corner y coordinate
@@ -371,9 +372,22 @@ def drawImage(choice):
         cv.circle(img,(pocket[0]+100,pocket[1]+100),RADIUS_POCKET,BLUE,-1)   
 
     print("Chosen Shot is = {c}".format(c = chosen_shot))
+    print_dimensions()
     if (chosen_shot>0):
         shot_params = ball_to_shots.get(chosen_shot)
         cv.line(img,(listX[CUE_BALL]+100,listY[CUE_BALL]+100),(shot_params[GHOST_BALL][0]+100,shot_params[GHOST_BALL][1]+100),YELLOW,4)
+        if(shot_params[GHOST_BALL][0] == listX[CUE_BALL]):
+            slope_og = INF
+        else:
+            slope_og = (shot_params[GHOST_BALL][1]- listY[CUE_BALL])/(shot_params[GHOST_BALL][0] - listX[CUE_BALL])
+        theta_og = math.atan(slope_og)
+        x_extended0 = listX[CUE_BALL] + int(REFLECT_DIST * math.cos(theta_og))
+        y_extended0 = listY[CUE_BALL] + int(REFLECT_DIST * math.sin(theta_og))
+        x_extended1 = listX[CUE_BALL] - int(REFLECT_DIST * math.cos(theta_og))
+        y_extended1 = listY[CUE_BALL] - int(REFLECT_DIST * math.sin(theta_og))
+        
+        cv.line(img,(listX[CUE_BALL]+100,listY[CUE_BALL]+100),(x_extended0+100,y_extended0+100),BROWN,3)
+        cv.line(img,(listX[CUE_BALL]+100,listY[CUE_BALL]+100),(x_extended1+100,y_extended1+100),BROWN,3)
         cv.circle(img,(shot_params[GHOST_BALL][0]+100,shot_params[GHOST_BALL][1]+100),RADIUS_BALL,WHITE,1)
         pocketX = int(center_edges[pocket_for_each_ball[chosen_shot-1][0]][POCKETX])
         pocketY = int(center_edges[pocket_for_each_ball[chosen_shot-1][0]][POCKETY])
@@ -387,6 +401,8 @@ def drawImage(choice):
         newY = shot_params[GHOST_BALL][1] + int(REFLECT_DIST * math.sin(theta))
         #cv.line(img,(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]),(newX,newY),GREY,2)
         cv.line(img,(listX[chosen_shot]+100,listY[chosen_shot]+100),(pocketX+100,pocketY+100),YELLOW,4)
+    else:
+        cv.putText(img, "No Shot Found :(", (600,400), FONT, 1, YELLOW, 1, cv.LINE_AA)
     f = open("values.txt","r")
     shot_feedback = f.readline()
     #shot_feedback_broken = shot_feedback.split(",")
