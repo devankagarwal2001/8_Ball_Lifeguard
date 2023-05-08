@@ -41,7 +41,7 @@ TABLE_Y_LO = 300        #Table top left corner y coordinate
 NAN = np.nan            #Not a number, used for default and non-reachable values
 INF = np.inf            #Infinity, Used for the x coordinates of the balls is the same
 ROOT2 = math.sqrt(2)    #The Square Root of 2
-REFLECT_DIST = 100      #The Distance of the Reflection Line
+REFLECT_DIST = 250      #The Distance of the Reflection Line
 DONEPIN = 8             #The Pin used to talk back to the arduino with
 LAST_SOLID = 7          #The Value of the the Last Solid
 FIRST_STRIPE = 9        #The Value of the first stripe
@@ -111,7 +111,7 @@ pocket_for_each_ball = [[NAN,INF],[NAN,INF],[NAN,INF],[NAN,INF],[NAN,INF],
 
 
 #A list of pockets with each element being an x-y coordinate for the pocket
-pockets = [[0,0],[600,0],[1200,0],[1200,600],[600,600],[0,600]]
+pockets = [[0,0],[710,0],[1420,0],[1420,740],[710,740],[0,740]]
 center_edges = [[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN],[NAN,NAN]]
 
 #A list of X and Y coordinates for each ball
@@ -141,8 +141,8 @@ def calc_center_edges():
     p5[1] = pockets[5][1] - (RADIUS_POCKET/ROOT2)
 
 #board to connect the arduino to 
-board = pyfirmata.Arduino('/dev/cu.usbmodem141101') 
-arduino = serial.Serial(port = '/dev/cu.usbmodem141101',baudrate=115200, timeout=0)
+board = pyfirmata.Arduino('/dev/cu.usbmodem1101') 
+arduino = serial.Serial(port = '/dev/cu.usbmodem1101',baudrate=115200, timeout=0)
 
 
 ################### Collision Check  ###################
@@ -360,22 +360,22 @@ def create_second_lines():
 #brief: Draws the image that is going to be projected onto the pool table
 def drawImage(choice):
     img = np.zeros((800,1400,3), np.uint8)
-    cv.rectangle (img,(100,100),(1300,700),GREEN,1)
+    cv.rectangle (img,pockets[0],pockets[3],GREEN,1)
     chosen_shot = chose_easiest_shot(choice)
     for target_ball in range(NUMBER_OF_BALLS):
         if listX[target_ball]>0:
             if (target_ball==CUE_BALL):
-                cv.circle(img,(listX[target_ball]+100,listY[target_ball]+100),RADIUS_BALL,WHITE,-1)
+                cv.circle(img,(listX[target_ball],listY[target_ball]+20),RADIUS_BALL,WHITE,-1)
             elif (target_ball == chosen_shot):
-                cv.circle(img,(listX[target_ball]+100,listY[target_ball]+100),RADIUS_BALL,YELLOW,-1)
+                cv.circle(img,(listX[target_ball],listY[target_ball]+20),RADIUS_BALL,YELLOW,-1)
     for pocket in pockets:
-        cv.circle(img,(pocket[0]+100,pocket[1]+100),RADIUS_POCKET,BLUE,-1)   
+        cv.circle(img,(pocket[0],pocket[1]+20),RADIUS_POCKET,BLUE,-1)   
 
     print("Chosen Shot is = {c}".format(c = chosen_shot))
     print_dimensions()
     if (chosen_shot>0):
         shot_params = ball_to_shots.get(chosen_shot)
-        cv.line(img,(listX[CUE_BALL]+100,listY[CUE_BALL]+100),(shot_params[GHOST_BALL][0]+100,shot_params[GHOST_BALL][1]+100),YELLOW,4)
+        cv.line(img,(listX[CUE_BALL],listY[CUE_BALL]+20),(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]+20),YELLOW,4)
         if(shot_params[GHOST_BALL][0] == listX[CUE_BALL]):
             slope_og = INF
         else:
@@ -386,9 +386,9 @@ def drawImage(choice):
         x_extended1 = listX[CUE_BALL] - int(REFLECT_DIST * math.cos(theta_og))
         y_extended1 = listY[CUE_BALL] - int(REFLECT_DIST * math.sin(theta_og))
         
-        cv.line(img,(listX[CUE_BALL]+100,listY[CUE_BALL]+100),(x_extended0+100,y_extended0+100),BROWN,3)
-        cv.line(img,(listX[CUE_BALL]+100,listY[CUE_BALL]+100),(x_extended1+100,y_extended1+100),BROWN,3)
-        cv.circle(img,(shot_params[GHOST_BALL][0]+100,shot_params[GHOST_BALL][1]+100),RADIUS_BALL,WHITE,1)
+        cv.line(img,(listX[CUE_BALL],listY[CUE_BALL]+20),(x_extended0,y_extended0+20),YELLOW,3)
+        cv.line(img,(listX[CUE_BALL],listY[CUE_BALL]+20),(x_extended1,y_extended1+20),YELLOW,3)
+        cv.circle(img,(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]+20),RADIUS_BALL,WHITE,1)
         pocketX = int(center_edges[pocket_for_each_ball[chosen_shot-1][0]][POCKETX])
         pocketY = int(center_edges[pocket_for_each_ball[chosen_shot-1][0]][POCKETY])
         m = 0
@@ -400,7 +400,7 @@ def drawImage(choice):
         newX = shot_params[GHOST_BALL][0] + int(REFLECT_DIST * math.cos(theta))
         newY = shot_params[GHOST_BALL][1] + int(REFLECT_DIST * math.sin(theta))
         #cv.line(img,(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]),(newX,newY),GREY,2)
-        cv.line(img,(listX[chosen_shot]+100,listY[chosen_shot]+100),(pocketX+100,pocketY+100),YELLOW,4)
+        cv.line(img,(listX[chosen_shot],listY[chosen_shot]+20),(pocketX,pocketY+20),YELLOW,4)
     else:
         cv.putText(img, "No Shot Found :(", (600,400), FONT, 1, YELLOW, 1, cv.LINE_AA)
     f = open("values.txt","r")
@@ -720,8 +720,8 @@ def distance(x0,y0,x1,y1):
 #starts the api for the shot calculation
 def start_calc(lX,lY,bottomRight,choice):
     print("calculating")
-    xScale = bottomRight[0]/1200
-    yScale = bottomRight[1]/600
+    xScale = bottomRight[0]/1440
+    yScale = bottomRight[1]/740
     #print_dimensions()
     #print("Old List X = {lx}".format(lx = listX))
     #print("Old List Y = {lx}".format(lx = listY))

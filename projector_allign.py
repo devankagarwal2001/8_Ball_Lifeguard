@@ -15,7 +15,7 @@ YELLOW = (0,255,255)    #BGR Color Representation of the Color Yellow
 GREY = (150,150,150)    #BGR Color Representation of the Color Grey
 RADIUS_POCKET = 30  
 
-pockets = [[100,100],[700,100],[1300,100],[1300,700],[700,700],[100,700]]
+pockets = [[0,30],[700,30],[1400,30],[1400,740],[700,740],[0,740]]
 img = np.zeros((800,1400,3), np.uint8)
 cv.rectangle (img,pockets[0],pockets[3],WHITE,-1)
 for pocket in pockets:
