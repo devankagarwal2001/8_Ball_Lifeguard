@@ -347,7 +347,7 @@ def detect_changes(tempList, target):
         #print(newList[3], target, prev_target, big_list[3])
     shot_calculation.start_calc(big_list[0],big_list[1],big_list[2],big_list[3])
 
-arduino = serial.Serial(port = '/dev/cu.usbmodem1101',baudrate=115200, timeout=0)
+arduino = serial.Serial(port = '/dev/cu.usbmodem142101',baudrate=115200, timeout=0)
 imcap = cv2.VideoCapture(0) 
 final_list = DetectPoolBalls()
 final_list = DetectPoolBalls()

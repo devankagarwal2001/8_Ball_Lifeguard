@@ -141,8 +141,8 @@ def calc_center_edges():
     p5[1] = pockets[5][1] - (RADIUS_POCKET/ROOT2)
 
 #board to connect the arduino to 
-board = pyfirmata.Arduino('/dev/cu.usbmodem1101') 
-arduino = serial.Serial(port = '/dev/cu.usbmodem1101',baudrate=115200, timeout=0)
+board = pyfirmata.Arduino('/dev/cu.usbmodem142101') 
+arduino = serial.Serial(port = '/dev/cu.usbmodem142101',baudrate=115200, timeout=0)
 
 
 ################### Collision Check  ###################
@@ -365,17 +365,17 @@ def drawImage(choice):
     for target_ball in range(NUMBER_OF_BALLS):
         if listX[target_ball]>0:
             if (target_ball==CUE_BALL):
-                cv.circle(img,(listX[target_ball],listY[target_ball]+20),RADIUS_BALL,WHITE,-1)
+                cv.circle(img,(listX[target_ball]-15,listY[target_ball]+50),RADIUS_BALL,WHITE,-1)
             elif (target_ball == chosen_shot):
-                cv.circle(img,(listX[target_ball],listY[target_ball]+20),RADIUS_BALL,YELLOW,-1)
+                cv.circle(img,(listX[target_ball]-15,listY[target_ball]+50),RADIUS_BALL,YELLOW,-1)
     for pocket in pockets:
-        cv.circle(img,(pocket[0],pocket[1]+20),RADIUS_POCKET,BLUE,-1)   
+        cv.circle(img,(pocket[0],pocket[1]),RADIUS_POCKET,BLUE,-1)   
 
     print("Chosen Shot is = {c}".format(c = chosen_shot))
     print_dimensions()
     if (chosen_shot>0):
         shot_params = ball_to_shots.get(chosen_shot)
-        cv.line(img,(listX[CUE_BALL],listY[CUE_BALL]+20),(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]+20),YELLOW,4)
+        cv.line(img,(listX[CUE_BALL]-15,listY[CUE_BALL]+50),(shot_params[GHOST_BALL][0]-15,shot_params[GHOST_BALL][1]+50),YELLOW,4)
         if(shot_params[GHOST_BALL][0] == listX[CUE_BALL]):
             slope_og = INF
         else:
@@ -386,9 +386,9 @@ def drawImage(choice):
         x_extended1 = listX[CUE_BALL] - int(REFLECT_DIST * math.cos(theta_og))
         y_extended1 = listY[CUE_BALL] - int(REFLECT_DIST * math.sin(theta_og))
         
-        cv.line(img,(listX[CUE_BALL],listY[CUE_BALL]+20),(x_extended0,y_extended0+20),YELLOW,3)
-        cv.line(img,(listX[CUE_BALL],listY[CUE_BALL]+20),(x_extended1,y_extended1+20),YELLOW,3)
-        cv.circle(img,(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]+20),RADIUS_BALL,WHITE,1)
+        cv.line(img,(listX[CUE_BALL]-15,listY[CUE_BALL]+50),(x_extended0-15,y_extended0+50),YELLOW,3)
+        cv.line(img,(listX[CUE_BALL]-15,listY[CUE_BALL]+50),(x_extended1-15,y_extended1+50),YELLOW,3)
+        cv.circle(img,(shot_params[GHOST_BALL][0]-15,shot_params[GHOST_BALL][1]+50),RADIUS_BALL,WHITE,1)
         pocketX = int(center_edges[pocket_for_each_ball[chosen_shot-1][0]][POCKETX])
         pocketY = int(center_edges[pocket_for_each_ball[chosen_shot-1][0]][POCKETY])
         m = 0
@@ -400,7 +400,7 @@ def drawImage(choice):
         newX = shot_params[GHOST_BALL][0] + int(REFLECT_DIST * math.cos(theta))
         newY = shot_params[GHOST_BALL][1] + int(REFLECT_DIST * math.sin(theta))
         #cv.line(img,(shot_params[GHOST_BALL][0],shot_params[GHOST_BALL][1]),(newX,newY),GREY,2)
-        cv.line(img,(listX[chosen_shot],listY[chosen_shot]+20),(pocketX,pocketY+20),YELLOW,4)
+        cv.line(img,(listX[chosen_shot]-15,listY[chosen_shot]+50),(pocketX,pocketY),YELLOW,4)
     else:
         cv.putText(img, "No Shot Found :(", (600,400), FONT, 1, YELLOW, 1, cv.LINE_AA)
     f = open("values.txt","r")
