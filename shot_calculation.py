@@ -722,14 +722,9 @@ def start_calc(lX,lY,bottomRight,choice):
     print("calculating")
     xScale = bottomRight[0]/1440
     yScale = bottomRight[1]/740
-    #print_dimensions()
-    #print("Old List X = {lx}".format(lx = listX))
-    #print("Old List Y = {lx}".format(lx = listY))
     for target_ball in range(CUE_BALL,NUMBER_OF_BALLS):
         listX[target_ball] = int(lX[target_ball] / xScale)
         listY[target_ball] = int(lY[target_ball] / yScale)
-    #print("New List X = {lx}".format(lx = listX))
-    #print("New List X = {lx}".format(lx = listY))
     calc_center_edges()
     find_distance_to_all_pockets()
     create_first_lines()
@@ -737,10 +732,5 @@ def start_calc(lX,lY,bottomRight,choice):
     find_edges()
     remove_impossible_pockets()
     chose_pocket()
-    #print_dimensions()
     drawImage(choice)
-    #print_dimensions()
     arduino.write(bytes("2", 'utf-8'))
-    #board.digital[DONEPIN].write(1)
-    #time.sleep(1)
-    #board.digital[DONEPIN].write(0)
