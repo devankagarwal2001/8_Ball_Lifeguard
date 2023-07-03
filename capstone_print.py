@@ -1,3 +1,5 @@
+#File Used for Print Debugging and Testing
+
 import serial
 
 arduino_port = "/dev/cu.usbserial-AQ01L2Z7" #serial port of Arduino

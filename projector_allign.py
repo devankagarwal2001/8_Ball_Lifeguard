@@ -1,3 +1,6 @@
+#Used to Allign the projector on the pool table frame to the pool table. Look 
+#At allign.jpeg for reference. 
+
 import math
 from array import *
 import cv2 as cv

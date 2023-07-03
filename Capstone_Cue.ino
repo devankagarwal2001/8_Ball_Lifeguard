@@ -1,3 +1,9 @@
+/*
+The Code which allows the cue stick to talk to the arduino on the pool table to
+display the shot speed and direction
+Author: Justin Rager
+*/
+
 #include <Adafruit_ICM20X.h>
 #include <Adafruit_ICM20948.h>
 #include <Adafruit_Sensor.h>

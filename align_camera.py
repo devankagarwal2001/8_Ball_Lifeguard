@@ -3,13 +3,13 @@
 Created on Sun Jul 12 21:32:26 2015
 @author: Stuart Grieve
 """
+#Used to align the camera on the frame to the pool table 
 
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import Indexer
 import time
-#import shot_calculation
 import math
 
 big_list = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
